@@ -8,7 +8,7 @@
  */
 import type { SiteProfile } from "./models.js";
 
-export type StrategyId = "small_space" | "removable" | "bushfire" | "bushfire_unknown";
+export type StrategyId = "chemical_free" | "phase_out_sprays" | "small_space" | "removable" | "bushfire" | "bushfire_unknown";
 
 export interface SiteStrategy {
   id: StrategyId;
@@ -18,7 +18,7 @@ export interface SiteStrategy {
   /** Rules the plan should follow; save_plan warns when they are missed. */
   planRules: string[];
   /** Caution tag that actions should carry for this strategy. */
-  cautionTag: "renter" | "bushfire" | "safety";
+  cautionTag: "renter" | "bushfire" | "safety" | "other";
   citationIds: string[];
   /** Query for search_knowledge to get more detail. */
   searchQuery: string;
@@ -35,16 +35,61 @@ export const STRATEGY_CITATIONS = {
   apzStandards: "kb:rfs-standards-asset-protection-zones",
   bushfireGuide: "kb:greener-bushfire-prone-habitat#1",
   weeds: "kb:nsw-weedwise-greater-sydney",
+  chemicalFree: "kb:greener-chemical-free-rewilding#1",
+  lantana: "kb:weedwise-lantana",
+  groundAsparagus: "kb:weedwise-ground-asparagus",
 } as const;
 
 const C = STRATEGY_CITATIONS;
 
 /** Strategies that apply to this site, from its answers. Pure and deterministic. */
 export function siteStrategies(profile: SiteProfile): SiteStrategy[] {
-  const out: SiteStrategy[] = [];
+  // D-17 applies to every site: local natives only, no chemicals.
+  const out: SiteStrategy[] = [
+    {
+      id: "chemical_free",
+      situation: "Every Greener plan (D-17)",
+      summary: "Rewild with local natives only and no chemicals. Remove weeds by hand, keep coming back, and fill every gap with local natives.",
+      guidance: [
+        "Plant only species with native records near the site. check_species and save_plan block anything else.",
+        "Clear weeds a small section at a time, starting at the edge, and only as much as you can follow up.",
+        "Hand pull after rain, dig out roots and crowns, and bag seeds, fruit and crowns.",
+        "Recheck 1–3 months after clearing and again at 3–6 months. Pull seedlings while they are small.",
+        "Replant or cover cleared ground straight away, so weeds don't return and the soil doesn't erode.",
+        "Manage pests by exclusion (guards, netting, keeping cats in) and by habitat, never by baits or sprays.",
+        "Use compost and leaf mulch, not synthetic fertiliser.",
+      ],
+      planRules: [
+        "No action may use herbicide, pesticide, poison, bait, spray, fungicide or synthetic fertiliser. save_plan refuses it.",
+        "Weed-control actions need follow-up upkeep hours (maintenanceHoursPerMonth).",
+        "The replanting action for a cleared area should depend on its weed-control action.",
+      ],
+      cautionTag: "other",
+      citationIds: [C.chemicalFree, C.lantana, C.groundAsparagus, C.weeds],
+      searchQuery: "hand weeding physical removal crowning follow-up",
+    },
+  ];
   const site = profile.answers.site_type?.optionIds[0];
   const tenure = profile.answers.tenure?.optionIds[0];
   const fire = profile.answers.bushfire_prone;
+
+  const sprays = profile.answers.sprays?.optionIds[0];
+  if (sprays === "sometimes" || sprays === "often") {
+    out.push({
+      id: "phase_out_sprays",
+      situation: sprays === "often" ? "Sprays are used often now" : "Sprays are used sometimes now",
+      summary: "Stop spraying, starting with the areas you rewild first, and plan the hand work that replaces it.",
+      guidance: [
+        "Make a quick-win action to stop spraying in the first rewilding area.",
+        "For each spray job, plan a hand method instead, and count its hours in the plan.",
+        "Ask your council how to dispose of leftover chemicals safely. Do not pour them down drains or onto soil.",
+      ],
+      planRules: ["Add an early action that ends spraying, and give the replacement hand work realistic hours."],
+      cautionTag: "other",
+      citationIds: [C.chemicalFree],
+      searchQuery: "chemical-free weed control",
+    });
+  }
 
   if (site && SMALL_SITES.has(site)) {
     out.push({

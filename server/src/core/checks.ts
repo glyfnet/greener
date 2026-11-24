@@ -55,9 +55,10 @@ function lookup<T>(map: Map<string, T>, name: string): T | undefined {
   return map.get(normaliseName(name)) ?? map.get(binomial(name));
 }
 
-export function buildSpeciesIndex(research: Pick<ResearchReport, "keyNativePlants" | "keyFauna" | "threatenedSpecies" | "invasiveSpecies">, declaredWeeds: DeclaredWeed[], state = "NSW"): SpeciesIndex {
+export function buildSpeciesIndex(research: Pick<ResearchReport, "keyNativePlants" | "keyFauna" | "threatenedSpecies" | "invasiveSpecies">, declaredWeeds: DeclaredWeed[], state = "NSW", extraNatives: SpeciesRecord[] = []): SpeciesIndex {
   const idx: SpeciesIndex = { native: new Map(), introduced: new Map(), biosecurity: new Map(), declared: new Map(), declaredGenera: new Map(), declaredRelated: new Map() };
-  const all = [...research.keyNativePlants, ...research.keyFauna, ...research.threatenedSpecies, ...research.invasiveSpecies];
+  // extraNatives: species confirmed native near the site by a live ALA query (D-17).
+  const all = [...research.keyNativePlants, ...research.keyFauna, ...research.threatenedSpecies, ...research.invasiveSpecies, ...extraNatives];
   for (const r of all) {
     const key = normaliseName(r.scientificName);
     if (r.tags.includes("native")) idx.native.set(key, r);
@@ -99,19 +100,52 @@ export function checkSpecies(name: string, idx: SpeciesIndex): SpeciesCheck {
     return { name, verdict: "introduced", blocking: true, message: `ALA records show ${name} as introduced near this site. Choose a local native instead.`, citationIds: intro.citationIds };
   }
   const related = idx.declaredRelated.get(normaliseName(name));
+  if (related && !native) {
+    return { name, verdict: "related_declared", blocking: true, message: `${related.scientificName} is a priority weed (${related.sourceUrl}), and there are no native records of ${name} near this site. Do not plant it (D-17).`, citationIds: [DECLARED_WEEDS_CITATION] };
+  }
   if (related) {
     return { name, verdict: "related_declared", blocking: false, message: `Warning: ${related.scientificName} is a priority weed (${related.sourceUrl}). Make sure ${name} is not that form before you plant it.`, citationIds: [DECLARED_WEEDS_CITATION, ...(native?.citationIds ?? [])] };
   }
   if (native) {
     return { name, verdict: "local_native", blocking: false, message: `${name} has native records within the research radius.`, citationIds: native.citationIds };
   }
+  // D-17: local natives only. No native record near the site means no planting.
   return {
     name,
     verdict: "not_recorded_locally",
-    blocking: false,
-    message: `Warning: no native records of ${name} near this site in the research data. It may not be local. Check with a local nursery or council list before you plant it (FR-22).`,
+    blocking: true,
+    message: `No native records of ${name} near this site. Greener plants local natives only (D-17). Choose a species from the research report, or check this one with check_species.`,
     citationIds: [],
   };
+}
+
+/**
+ * Chemical methods that a rewilding plan must not use (D-17). Matched as
+ * whole words, case-insensitive. Product names are not listed: the generic
+ * words catch the methods, and a product name would be an invented list.
+ */
+export const CHEMICAL_TERMS = [
+  "herbicide", "herbicides", "pesticide", "pesticides", "insecticide", "insecticides", "fungicide", "fungicides",
+  "rodenticide", "rodenticides", "molluscicide", "glyphosate", "weedkiller", "weed killer", "poison", "poisons", "poisoned",
+  "bait", "baits", "baiting", "1080", "snail pellets", "slug pellets", "spray", "sprays", "spraying", "spot spray",
+  "cut and paint", "gouge and paint", "scrape and paint", "stem injection", "basal bark", "chemical", "chemicals",
+  "synthetic fertiliser", "synthetic fertilizer",
+];
+
+const NEGATION = /\b(no|not|never|without|avoid|avoiding|instead of|don't|do not|free of|chemical-free|stop|stopping|phase out|rather than)\b[^.;:]{0,40}$/i;
+
+/** Chemical terms used as a method in this text. Mentions after a negation ("do not spray") are allowed. */
+export function chemicalUses(text: string): string[] {
+  const found = new Set<string>();
+  const lower = text.toLowerCase();
+  for (const term of CHEMICAL_TERMS) {
+    const re = new RegExp(`(?<![a-z0-9-])${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![a-z0-9-])`, "g");
+    for (const m of lower.matchAll(re)) {
+      const before = lower.slice(Math.max(0, (m.index ?? 0) - 60), m.index);
+      if (!NEGATION.test(before)) found.add(term);
+    }
+  }
+  return [...found];
 }
 
 export interface PlanIssue {
@@ -135,9 +169,15 @@ function answerOf(profile: SiteProfile, id: string): string | undefined {
 }
 
 /** Check a plan against species data, citations and site constraints (FR-22–FR-25). */
-export function checkPlan(plan: ActionPlan, research: ResearchReport, profile: SiteProfile, declaredWeeds: DeclaredWeed[]): PlanCheckResult {
+export function checkPlan(plan: ActionPlan, research: ResearchReport, profile: SiteProfile, declaredWeeds: DeclaredWeed[], extraNatives: SpeciesRecord[] = []): PlanCheckResult {
   const issues: PlanIssue[] = [];
-  const idx = buildSpeciesIndex(research, declaredWeeds, profile.location?.state ?? "NSW");
+  const idx = buildSpeciesIndex(research, declaredWeeds, profile.location?.state ?? "NSW", extraNatives);
+
+  // D-17: no chemicals in any action's title or steps.
+  for (const a of plan.actions) {
+    const used = chemicalUses([a.title, ...a.steps].join(". "));
+    if (used.length) issues.push({ severity: "error", code: "uses_chemicals", message: `Action '${a.id}' uses chemicals (${used.join(", ")}). Greener plans are chemical-free (D-17): use hand removal, smothering, exclusion or revegetation instead.`, actionId: a.id, strategyId: "chemical_free" });
+  }
 
   // FR-22, FR-24: every planted species, in the list and in actions.
   const names = new Map<string, string | undefined>();

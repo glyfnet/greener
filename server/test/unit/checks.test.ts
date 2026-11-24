@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildSpeciesIndex, checkPlan, checkSpecies, normaliseName, type DeclaredWeed } from "../../src/core/checks.js";
+import { buildSpeciesIndex, chemicalUses, checkPlan, checkSpecies, normaliseName, type DeclaredWeed } from "../../src/core/checks.js";
 import { action, plan, profile, research } from "../helpers.js";
 
 const weeds: DeclaredWeed[] = [{ scientificName: "Senecio madagascariensis", state: "NSW", category: "Test category", sourceUrl: "https://example.invalid/weeds", asOf: "2026-01-01" }];
@@ -26,11 +26,16 @@ describe("checkSpecies (FR-22, FR-24, NFR-03)", () => {
     expect(checkSpecies("Lantana camara", idx())).toMatchObject({ verdict: "introduced", blocking: true });
   });
 
-  it("warns, without blocking, on mixed records and on species not recorded locally", () => {
+  it("warns on mixed records, and blocks species with no local native records (D-17)", () => {
     expect(checkSpecies("Callistemon linearis", idx())).toMatchObject({ verdict: "mixed_records", blocking: false });
     const far = checkSpecies("Eucalyptus unknownii", idx());
-    expect(far).toMatchObject({ verdict: "not_recorded_locally", blocking: false });
-    expect(far.message).toMatch(/^Warning/);
+    expect(far).toMatchObject({ verdict: "not_recorded_locally", blocking: true });
+    expect(far.message).toContain("local natives only");
+  });
+
+  it("accepts a species confirmed native by a live check", () => {
+    const i = buildSpeciesIndex(research(), weeds, "NSW", [{ scientificName: "Banksia serrata", tags: ["native"], citationIds: ["ala:native:banksia-serrata"] }]);
+    expect(checkSpecies("Banksia serrata", i)).toMatchObject({ verdict: "local_native", blocking: false, citationIds: ["ala:native:banksia-serrata"] });
   });
 
   it("ignores declared weeds from other states", () => {
@@ -56,11 +61,23 @@ describe("checkPlan (FR-22–FR-25)", () => {
     expect(r2.errors).toEqual([expect.objectContaining({ code: "introduced", actionId: "a1" })]);
   });
 
-  it("warns on a species with no local records (FR-22)", () => {
+  it("refuses a species with no local native records (D-17)", () => {
     const p = plan({ plantingList: [{ scientificName: "Eucalyptus unknownii", citationIds: ["ala:occ:native-plants"] }] });
     const r = checkPlan(p, research(), profile(), weeds);
-    expect(r.ok).toBe(true);
-    expect(r.warnings.map((w) => w.code)).toContain("not_recorded_locally");
+    expect(r.ok).toBe(false);
+    expect(r.errors.map((e) => e.code)).toContain("not_recorded_locally");
+  });
+
+  it("refuses actions that use chemicals, and allows text that rules them out (D-17)", () => {
+    const sprayed = plan({ actions: [action("a1", { title: "Spot spray lantana", steps: ["Apply glyphosate to regrowth"] })] });
+    const r = checkPlan(sprayed, research(), profile(), weeds);
+    expect(r.ok).toBe(false);
+    expect(r.errors[0]).toMatchObject({ code: "uses_chemicals", actionId: "a1", strategyId: "chemical_free" });
+    expect(r.errors[0]?.message).toContain("glyphosate");
+    const baited = plan({ actions: [action("a1", { steps: ["Lay 1080 baits for foxes"] })] });
+    expect(checkPlan(baited, research(), profile(), weeds).errors[0]?.code).toBe("uses_chemicals");
+    const clean = plan({ actions: [action("a1", { title: "Hand pull lantana", steps: ["Do not use herbicide or sprays.", "Grub out roots after rain, without chemicals.", "Keep the area chemical-free."] })] });
+    expect(checkPlan(clean, research(), profile(), weeds).ok).toBe(true);
   });
 
   it("refuses unknown citations and unknown quick wins (FR-25)", () => {
@@ -113,8 +130,23 @@ describe("declared weed list forms", () => {
   it("blocks every species in a genus listed as '<Genus> species'", () => {
     expect(checkSpecies("Cortaderia selloana", i)).toMatchObject({ verdict: "declared_weed", blocking: true, citationIds: ["kb:nsw-weedwise-greater-sydney"] });
   });
-  it("blocks a listed subspecies but only warns on the species", () => {
+  it("blocks a listed subspecies; the species is blocked too unless it has local native records", () => {
     expect(checkSpecies("Olea europaea subsp. cuspidata", i).blocking).toBe(true);
-    expect(checkSpecies("Olea europaea", i)).toMatchObject({ verdict: "related_declared", blocking: false });
+    expect(checkSpecies("Olea europaea", i)).toMatchObject({ verdict: "related_declared", blocking: true });
+    const withNative = buildSpeciesIndex({ ...research(), keyNativePlants: [{ scientificName: "Olea europaea", tags: ["native"], citationIds: ["x"] }] }, list);
+    expect(checkSpecies("Olea europaea", withNative)).toMatchObject({ verdict: "related_declared", blocking: false });
+  });
+});
+
+describe("chemicalUses (D-17)", () => {
+  it("finds chemical methods as whole words", () => {
+    expect(chemicalUses("Cut and paint the stems")).toEqual(["cut and paint"]);
+    expect(chemicalUses("Use snail pellets around seedlings")).toEqual(["snail pellets"]);
+    expect(chemicalUses("Spray the regrowth with herbicide")).toEqual(expect.arrayContaining(["herbicide", "spray"]));
+  });
+  it("ignores negated mentions and unrelated words", () => {
+    expect(chemicalUses("Never use poison. Lantana is poisonous to stock.")).toEqual([]);
+    expect(chemicalUses("A chemical-free garden; avoid sprays")).toEqual([]);
+    expect(chemicalUses("Grub out the roots with a mattock")).toEqual([]);
   });
 });

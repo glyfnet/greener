@@ -158,8 +158,9 @@ describe("site strategies (FR-23)", async () => {
     for (const id of Object.values(STRATEGY_CITATIONS)) expect(ids.has(id)).toBe(true);
   });
   it("picks strategies from the answers", () => {
-    expect(siteStrategies(profile({ site_type: { optionIds: ["townhouse"] }, tenure: { optionIds: ["strata"] } })).map((s) => [s.id, s.situation])).toEqual([["small_space", "Townhouse or courtyard"], ["removable", "Strata or shared site"]]);
-    expect(siteStrategies(profile({ bushfire_prone: { notSure: true } })).map((s) => s.id)).toEqual(["bushfire_unknown"]);
-    expect(siteStrategies(profile({ site_type: { optionIds: ["suburban"] }, tenure: { optionIds: ["own"] } }))).toEqual([]);
+    expect(siteStrategies(profile({ site_type: { optionIds: ["townhouse"] }, tenure: { optionIds: ["strata"] } })).map((s) => [s.id, s.situation])).toEqual([["chemical_free", "Every Greener plan (D-17)"], ["small_space", "Townhouse or courtyard"], ["removable", "Strata or shared site"]]);
+    expect(siteStrategies(profile({ bushfire_prone: { notSure: true } })).map((s) => s.id)).toEqual(["chemical_free", "bushfire_unknown"]);
+    expect(siteStrategies(profile({ site_type: { optionIds: ["suburban"] }, tenure: { optionIds: ["own"] } })).map((s) => s.id)).toEqual(["chemical_free"]);
+    expect(siteStrategies(profile({ sprays: { optionIds: ["often"] } })).map((s) => s.id)).toEqual(["chemical_free", "phase_out_sprays"]);
   });
 });

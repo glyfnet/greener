@@ -203,6 +203,27 @@ describe("knowledge and plan tools", () => {
     expect(results[2]?.nameWarning).toContain("could not match");
   });
 
+  it("confirms local natives live and blocks non-local species (D-17)", async () => {
+    const r = await call("check_species", { names: ["Banksia serrata", "Eucalyptus marginata", "Jacaranda mimosifolia"], research: research(), location });
+    expect(r.data.allowed).toEqual(["Banksia serrata"]);
+    expect(r.data.blocked).toEqual(["Eucalyptus marginata", "Jacaranda mimosifolia"]);
+    expect((r.data.citations as { id: string }[]).map((c) => c.id)).toEqual(["ala:native:banksia-serrata"]);
+    const noLoc = await call("check_species", { names: ["Banksia serrata"], research: research() });
+    expect(noLoc.data.blocked).toEqual(["Banksia serrata"]);
+    expect(noLoc.data.note).toContain("Pass the site location");
+  });
+
+  it("saves a plan with a live-confirmed native, and refuses chemicals and non-natives (D-17)", async () => {
+    const banksia = plan({ plantingList: [{ scientificName: "Banksia serrata", citationIds: ["ala:native:banksia-serrata"] }], citations: [{ id: "ala:native:banksia-serrata", source: "research", title: "ALA native records" }] });
+    expect((await call("save_plan", { plan: banksia, research: research(), profile: profile() })).isError).toBeUndefined();
+    const jarrah = plan({ plantingList: [{ scientificName: "Eucalyptus marginata", citationIds: ["ala:occ:native-plants"] }] });
+    const r = await call("save_plan", { plan: jarrah, research: research(), profile: profile() });
+    expect(r.isError).toBe(true);
+    expect((r.data.fixHints as string[])[0]).toContain("local natives only");
+    const sprayed = plan({ actions: [action("a1", { title: "Spray weeds", category: "weed_control" })] });
+    expect((await call("save_plan", { plan: sprayed, research: research(), profile: profile() })).isError).toBe(true);
+  });
+
   it("returns dated costs, and no data for unknown items (FR-68, FR-70)", async () => {
     const r = await call("get_cost_reference", { items: ["Native tube stock", "Gold nest box"], region: "NSW southern tablelands" });
     expect(r.data.matches).toEqual([expect.objectContaining({ found: true, lowAud: 2.2, highAud: 2.75, asOf: "2026-11-24" }), expect.objectContaining({ found: false })]);
@@ -212,11 +233,11 @@ describe("knowledge and plan tools", () => {
   it("gives strategies for apartments, renters and bushfire-prone land with resolvable citations", async () => {
     const apt = await call("get_site_strategies", { profile: profile({ site_type: { optionIds: ["apartment"] }, tenure: { optionIds: ["rent"] } }) });
     const s1 = apt.data.strategies as { id: string; citationIds: string[]; citations: { id: string }[] }[];
-    expect(s1.map((s) => s.id)).toEqual(["small_space", "removable"]);
+    expect(s1.map((s) => s.id)).toEqual(["chemical_free", "small_space", "removable"]);
     for (const s of s1) expect(s.citations.map((c) => c.id)).toEqual(s.citationIds);
     const fire = await call("get_site_strategies", { profile: profile({ site_type: { optionIds: ["rural"] }, bushfire_prone: { optionIds: ["yes"] } }) });
-    expect((fire.data.strategies as { id: string }[]).map((s) => s.id)).toEqual(["bushfire"]);
-    expect((await call("get_site_strategies", { profile: profile() })).data.note).toContain("No special");
+    expect((fire.data.strategies as { id: string }[]).map((s) => s.id)).toEqual(["chemical_free", "bushfire"]);
+    expect((await call("get_site_strategies", { profile: profile() })).data.strategies).toHaveLength(1);
   });
 
   it("saves a bushfire-prone plan with warnings and the strategy (FR-23)", async () => {
@@ -224,7 +245,7 @@ describe("knowledge and plan tools", () => {
     const r = await call("save_plan", { plan: plan(), research: research(), profile: fire });
     expect(r.isError).toBeUndefined();
     expect((r.data.warnings as { code: string }[]).map((w) => w.code)).toContain("bushfire_caution");
-    expect((r.data.strategies as { id: string }[])[0]?.id).toBe("bushfire");
+    expect((r.data.strategies as { id: string }[]).map((x) => x.id)).toContain("bushfire");
   });
 
   it("schedules from a profile or a capacity, and needs one of them", async () => {

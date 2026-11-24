@@ -125,6 +125,29 @@ export async function speciesNear(lat: number, lon: number, radiusKm: number, de
   };
 }
 
+/** Native-establishment filter shared by the near-site queries. */
+export const NATIVE_FQ = "(establishmentMeans:native OR degreeOfEstablishment:native)";
+
+export function nativeRecordsUrl(name: string, lat: number, lon: number, radiusKm: number): string {
+  const p = new URLSearchParams({ q: "*:*", lat: String(roundCoord(lat)), lon: String(roundCoord(lon)), radius: String(radiusKm), pageSize: "0" });
+  // Quotes inside the name would break the filter, so they are removed.
+  p.append("fq", `species:"${name.replace(/"/g, "").trim()}"`);
+  p.append("fq", NATIVE_FQ);
+  return `${OCC}?${p.toString()}`;
+}
+
+/**
+ * Count native-tagged ALA records of one species within the radius (D-17).
+ * Used for species that are not in the research report's short lists.
+ */
+export async function nativeRecordsNear(name: string, lat: number, lon: number, radiusKm: number, deps: HttpDeps, today: string): Promise<{ ok: true; count: number; citation: Citation } | { ok: false; error: string }> {
+  const url = nativeRecordsUrl(name, lat, lon, radiusKm);
+  const r = await fetchJson<FacetResponse>(url, deps);
+  if (!r.ok) return { ok: false, error: r.error };
+  const slug = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  return { ok: true, count: r.data.totalRecords ?? 0, citation: { id: `ala:native:${slug}`, source: "research", title: `ALA native records of ${name.trim()} within ${radiusKm} km`, url, publisher: ALA_PUBLISHER, licence: ALA_LICENCE, accessed: today } };
+}
+
 interface SpeciesSearchResponse {
   searchResults?: {
     results?: {

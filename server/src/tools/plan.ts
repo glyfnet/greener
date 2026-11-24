@@ -10,7 +10,10 @@ import { PLAN_SECTIONS, planSection, planToMarkdown, searchSite } from "../core/
 import { markDone as markDoneCore, ScheduleCapacity, schedulePlan as scheduleCore, type ScheduleResult } from "../core/schedule.js";
 import { siteStrategies } from "../core/strategies.js";
 import type { Citation } from "../core/models.js";
-import { matchName } from "../connectors/ala.js";
+import { matchName, nativeRecordsNear } from "../connectors/ala.js";
+import { limited } from "../connectors/http.js";
+import type { SpeciesRecord, Location as LocationT } from "../core/models.js";
+import { Location } from "../core/models.js";
 import { fail, ok, type ToolContext } from "./context.js";
 import { defineTool } from "./define.js";
 
@@ -34,6 +37,40 @@ function resolveCapacity(ctx: ToolContext, profile: SiteProfile | undefined, cap
 function compact(s: ScheduleResult, includeMonthly: boolean) {
   const { monthly, ...rest } = s;
   return includeMonthly ? s : { ...rest, monthlySummary: { months: monthly.length, peakWorkHours: Math.max(...monthly.map((m) => m.workHours)), maintenanceHoursMonth36: monthly.at(-1)?.maintenanceHours ?? 0 } };
+}
+
+/** Most species checked live per call, to stay polite to ALA (NFR-08). */
+const MAX_LIVE_CHECKS = 40;
+
+/**
+ * Ask ALA for native records of species that the research lists do not
+ * cover, so local natives are not blocked by D-17 just because they were
+ * outside the research report's top lists.
+ */
+async function liveNatives(ctx: ToolContext, names: string[], location: LocationT, radiusKm: number) {
+  const natives: SpeciesRecord[] = [];
+  const citations: Citation[] = [];
+  const gaps: string[] = [];
+  const unique = [...new Set(names.map((n) => n.trim()))].slice(0, MAX_LIVE_CHECKS);
+  const results = await limited(unique.map((n) => () => nativeRecordsNear(n, location.lat, location.lon, radiusKm, ctx.http, ctx.today)));
+  unique.forEach((n, i) => {
+    const r = results[i];
+    if (!r) return;
+    if (!r.ok) gaps.push(`${n}: ${r.error}`);
+    else if (r.count > 0) {
+      natives.push({ scientificName: n, tags: ["native"], recordCount: r.count, citationIds: [r.citation.id] });
+      citations.push(r.citation);
+    }
+  });
+  return { natives, citations, gaps };
+}
+
+/** Names that the research index alone would block only for lack of native records. */
+function needsLiveCheck(names: string[], idx: ReturnType<typeof buildSpeciesIndex>): string[] {
+  return names.filter((n) => {
+    const v = checkSpecies(n, idx).verdict;
+    return v === "not_recorded_locally" || v === "related_declared";
+  });
 }
 
 /** Resolve KB citation IDs to full citations from the shipped index, so the plan can copy them. */
@@ -65,24 +102,42 @@ export const getSiteStrategies = defineTool({
 export const checkSpeciesTool = defineTool({
   name: "check_species",
   title: "Check species for planting",
-  description: "Check candidate planting species before they go in a plan (FR-22, FR-24, NFR-01). Resolves each name to the ALA taxonomy, then checks it against the site research and the declared weed list. Blocked species must not be planted; warnings must be shown to the user.",
-  input: z.object({ names: z.array(z.string().min(2)).min(1).max(40), research: ResearchReport }),
-  handler: async ({ names, research }, ctx) => {
-    const idx = buildSpeciesIndex(research, ctx.data.declaredWeeds);
+  description: "Check candidate planting species before they go in a plan (FR-22, FR-24, NFR-01, D-17). Resolves each name to the ALA taxonomy, checks it against the site research and the declared weed list, and asks ALA for native records near the site for species the research does not cover. Only local natives may be planted: blocked species must not go in the plan. Copy the returned citations into the plan.",
+  input: z.object({ names: z.array(z.string().min(2)).min(1).max(40), research: ResearchReport, location: Location.optional().describe("Site location; needed to check species that are not in the research report") }),
+  handler: async ({ names, research, location }, ctx) => {
+    const matches = await limited(names.map((n) => () => matchName(n, ctx.http)));
+    const accepted = names.map((n, i) => {
+      const m = matches[i];
+      return m?.ok && m.match.matched && m.match.scientificName ? m.match.scientificName : n;
+    });
+    let idx = buildSpeciesIndex(research, ctx.data.declaredWeeds);
+    let live: Awaited<ReturnType<typeof liveNatives>> | undefined;
+    if (location) {
+      live = await liveNatives(ctx, needsLiveCheck(accepted, idx), location, research.radiusKm);
+      idx = buildSpeciesIndex(research, ctx.data.declaredWeeds, "NSW", live.natives);
+    }
     const results = [];
-    for (const name of names) {
-      const m = await matchName(name, ctx.http);
-      const accepted = m.ok && m.match.matched ? m.match.scientificName : undefined;
-      const check = checkSpecies(accepted ?? name, idx);
+    for (const [i, name] of names.entries()) {
+      const m = matches[i];
+      const acceptedName = m?.ok && m.match.matched ? m.match.scientificName : undefined;
+      const check = checkSpecies(accepted[i] ?? name, idx);
       results.push({
         query: name,
-        alaName: accepted ?? null,
-        ...(m.ok ? {} : { nameCheckGap: m.error }),
-        ...(m.ok && !m.match.matched ? { nameWarning: `ALA could not match '${name}'. Check the spelling (NFR-01).` } : {}),
+        alaName: acceptedName ?? null,
+        ...(m && !m.ok ? { nameCheckGap: m.error } : {}),
+        ...(m?.ok && !m.match.matched ? { nameWarning: `ALA could not match '${name}'. Check the spelling (NFR-01).` } : {}),
         ...check,
       });
     }
-    return ok({ results, declaredWeedListLoaded: ctx.data.declaredWeeds.length > 0 });
+    return ok({
+      results,
+      allowed: results.filter((r) => !r.blocking).map((r) => r.alaName ?? r.query),
+      blocked: results.filter((r) => r.blocking).map((r) => r.alaName ?? r.query),
+      citations: live?.citations ?? [],
+      ...(live?.gaps.length ? { dataGaps: live.gaps } : {}),
+      ...(location ? {} : { note: "No location given, so species outside the research report could not be checked live and are blocked. Pass the site location." }),
+      declaredWeedListLoaded: ctx.data.declaredWeeds.length > 0,
+    });
   },
 });
 
@@ -138,11 +193,18 @@ export const savePlan = defineTool({
   title: "Check and save the plan",
   description: "Validate the plan against its schema, then run the native-species, weed, citation and site-constraint checks (FR-22–FR-25). Refuses a plan that plants a weed or has broken citations; fix the listed items and call again. Apartment, rented and bushfire-prone sites are accepted: missing cautions come back as warnings with the strategy that fixes them. On success, save the plan as plans/v<version>.json and export it as Markdown.",
   input: z.object({ plan: z.unknown(), research: ResearchReport, profile: SiteProfile, startMonth: StartMonth.optional() }),
-  handler: ({ plan, research, profile, startMonth }, ctx) => {
+  handler: async ({ plan, research, profile, startMonth }, ctx) => {
     const parsed = ActionPlan.safeParse(plan);
     if (!parsed.success) return fail("The plan does not match the schema.", parsed.error.issues.slice(0, 15).map((i) => `${i.path.join(".")}: ${i.message}`));
     const p = parsed.data;
-    const check = checkPlan(p, research, profile, ctx.data.declaredWeeds);
+    // D-17: confirm natives that the research lists do not cover.
+    const planted = [...p.plantingList, ...p.actions.flatMap((a) => a.plantings)].map((x) => x.scientificName);
+    let extra: SpeciesRecord[] = [];
+    if (profile.location) {
+      const live = await liveNatives(ctx, needsLiveCheck(planted, buildSpeciesIndex(research, ctx.data.declaredWeeds)), profile.location, research.radiusKm);
+      extra = live.natives;
+    }
+    const check = checkPlan(p, research, profile, ctx.data.declaredWeeds, extra);
     if (!check.ok) return fail("The plan was refused. Fix these items and call save_plan again.", check.errors.map((e) => `${e.actionId ? `${e.actionId}: ` : ""}${e.message}`));
     let schedule;
     if (startMonth) {

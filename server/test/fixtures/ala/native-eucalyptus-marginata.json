@@ -1,0 +1,46 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&lat=-33.87&lon=151.21&radius=10&pageSize=0&fq=species%3A%22Eucalyptus+marginata%22&fq=%28establishmentMeans%3Anative+OR+degreeOfEstablishment%3Anative%29",
+  "recordedAt": "2026-11-24T10:23:00.825Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 0,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [],
+    "query": "?q=*%3A*&fq=species%3A%22Eucalyptus%20marginata%22&fq=(establishmentMeans%3Anative%20OR%20degreeOfEstablishment%3Anative)&lat=-33.87&lon=151.21&radius=10.0",
+    "urlParameters": "?q=*%3A*&fq=species%3A%22Eucalyptus%20marginata%22&fq=(establishmentMeans%3Anative%20OR%20degreeOfEstablishment%3Anative)&lat=-33.87&lon=151.21&radius=10.0",
+    "queryTitle": "[all records] - within 10 km of point(-33.87, 151.21)",
+    "activeFacetMap": {
+      "(establishmentMeans": {
+        "name": "(establishmentMeans",
+        "displayName": "(Establishment means:native OR degreeOfEstablishment:native) - within 10 km of point(-33.87, 151.21)",
+        "value": "native OR degreeOfEstablishment:native)"
+      },
+      "species": {
+        "name": "species",
+        "displayName": "Species:\"Eucalyptus marginata\" - within 10 km of point(-33.87, 151.21)",
+        "value": "\"Eucalyptus marginata\""
+      }
+    },
+    "activeFacetObj": {
+      "species": [
+        {
+          "name": "species",
+          "displayName": "Species:\"Eucalyptus marginata\" - within 10 km of point(-33.87, 151.21)",
+          "value": "species:\"Eucalyptus marginata\""
+        }
+      ],
+      "establishmentMeans": [
+        {
+          "name": "establishmentMeans",
+          "displayName": "(Establishment means:native OR degreeOfEstablishment:native) - within 10 km of point(-33.87, 151.21)",
+          "value": "(establishmentMeans:native OR degreeOfEstablishment:native)"
+        }
+      ]
+    }
+  }
+}
