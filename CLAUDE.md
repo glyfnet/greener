@@ -67,7 +67,7 @@ Node 22 is required (`.nvmrc`).
 
 ## Decision IDs in play
 
-D-01…D-17 are closed (specification Section 2) — don't reopen them without
+D-01…D-22 are closed (specification Section 2) — don't reopen them without
 a new decision row. Open questions are tracked in specification Section 13;
 check there before assuming an unconfirmed candidate (e.g. a data source
 under "To check" in Section 8) is final.

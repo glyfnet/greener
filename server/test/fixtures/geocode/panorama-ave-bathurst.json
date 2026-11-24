@@ -1,0 +1,39 @@
+{
+  "url": "https://maps.six.nsw.gov.au/services/public/Address_Location?houseNumber=346&roadName=Panorama&roadType=Ave&suburb=Bathurst&postCode=2795&projection=EPSG%3A4326",
+  "recordedAt": "2026-11-24T21:36:01.769Z",
+  "status": 200,
+  "body": {
+    "addressResult": {
+      "numRecs": 1,
+      "searchMethod": {
+        "methodDescriptions": [
+          "Input parameters matched",
+          "Address Returned"
+        ]
+      },
+      "addresses": [
+        {
+          "objectId": 7020427,
+          "propid": 3953275,
+          "houseNumberString": "346",
+          "houseNumberFirst": 346,
+          "houseNumberSecond": 0,
+          "roadName": "Panorama",
+          "roadType": "Avenue",
+          "suburbName": "Bathurst",
+          "postCode": 2795,
+          "council": "Bathurst Regional",
+          "addressType": "Assigned",
+          "shortAddressString": "346 PANORAMA AVENUE BATHURST",
+          "addressPoint": {
+            "addressstringOid": 0,
+            "coordRefSys": "EPSG:4283",
+            "centreX": 149.56705027301055,
+            "centreY": -33.429684292575985
+          },
+          "addressString": "346  Panorama Avenue  Bathurst 2795"
+        }
+      ]
+    }
+  }
+}

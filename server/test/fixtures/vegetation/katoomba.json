@@ -1,0 +1,26 @@
+{
+  "url": "https://mapprod3.environment.nsw.gov.au/arcgis/rest/services/VIS/SVTM_NSW_1750_PCT/MapServer/identify?geometry=150.313%2C-33.733&geometryType=esriGeometryPoint&sr=4326&layers=all%3A2&tolerance=0&mapExtent=150.3030%2C-33.7430%2C150.3230%2C-33.7230&imageDisplay=100%2C100%2C96&returnGeometry=false&f=json",
+  "recordedAt": "2026-11-24T21:36:02.729Z",
+  "status": 200,
+  "body": {
+    "results": [
+      {
+        "layerId": 2,
+        "layerName": "NSW_PlantCommunityType_5m",
+        "displayFieldName": "",
+        "attributes": {
+          "Pixel Value": "3692",
+          "OID": "1260",
+          "Count": "6359988",
+          "PCTID": "3692",
+          "PCTName": "Upper Blue Mountains Moist Forest",
+          "vegClass": "Sydney Montane Dry Sclerophyll Forests",
+          "vegForm": "Dry Sclerophyll Forests (Shrubby sub-formation)",
+          "form_PCT": "(Dry Sclerophyll Forests (Shrubby sub-formation)) Upper Blue Mountains Moist Forest",
+          "labels": "PCT : 3692",
+          "PCT_form": "(Dry Sclerophyll Forests (Shrubby sub-formation)) - 3692 - Upper Blue Mountains Moist Forest"
+        }
+      }
+    ]
+  }
+}
