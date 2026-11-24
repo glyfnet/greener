@@ -38,6 +38,7 @@ describe("tool contract (Section 12.3)", () => {
         "get_site_strategies",
         "check_species",
         "get_cost_reference",
+        "find_native_nurseries",
         "schedule_plan",
         "mark_done",
         "save_plan",
@@ -277,6 +278,18 @@ describe("knowledge and plan tools", () => {
     expect((r.data.fixHints as string[])[0]).toContain("invasive here");
     const sprayed = plan({ actions: [action("a1", { title: "Spray weeds", category: "weed_control" })] });
     expect((await call("save_plan", { plan: sprayed, research: research(), profile: profile() })).isError).toBe(true);
+  });
+
+  it("finds native nurseries near Armidale and Uralla, with citations (FR-20)", async () => {
+    const uralla = { lat: -30.645, lon: 151.508, precision: "exact" as const, state: "NSW" as const };
+    const r = await call("find_native_nurseries", { location: uralla });
+    const list = r.data.nurseries as { id: string; distanceKm: number; localResource: { citationId: string }; citation: { id: string } }[];
+    expect(list[0]?.id).toBe("aps-armidale-stall-uralla");
+    expect(list.map((n) => n.id)).toContain("armidale-tree-group");
+    for (const n of list) expect(n.localResource.citationId).toBe(n.citation.id);
+    expect(list.find((n) => n.id === "armidale-tree-group")?.distanceKm).toBe(21);
+    const sydney = await call("find_native_nurseries", { location });
+    expect(sydney.data).toMatchObject({ nurseries: [], dataGap: { topic: "native plant nurseries" } });
   });
 
   it("returns dated costs, and no data for unknown items (FR-68, FR-70)", async () => {

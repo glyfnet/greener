@@ -24,6 +24,7 @@ The server is stateless (D-09): tools that need site data take it as input, and 
 | [`get_site_strategies`](#get_site_strategies) | Get strategies for this site |
 | [`check_species`](#check_species) | Check species for planting |
 | [`get_cost_reference`](#get_cost_reference) | Get cost estimates |
+| [`find_native_nurseries`](#find_native_nurseries) | Find native plant nurseries |
 | [`schedule_plan`](#schedule_plan) | Put actions into phases |
 | [`mark_done`](#mark_done) | Mark an action done |
 | [`save_plan`](#save_plan) | Check and save the plan |
@@ -2089,6 +2090,70 @@ Input schema:
   },
   "required": [
     "items"
+  ]
+}
+```
+
+## find_native_nurseries
+
+Find nurseries and plant stalls that specialise in Australian native plants near the site (FR-20 local resources, D-17). Returns name, town, distance, what they offer, how to visit, a website and a citation for each. Add the ones the user may use to the plan's localResources. The directory is small and growing; it says when there is nothing nearby.
+
+Input schema:
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "location": {
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": "number",
+          "minimum": -44,
+          "maximum": -10,
+          "description": "Latitude, Australia only (D-02)"
+        },
+        "lon": {
+          "type": "number",
+          "minimum": 112,
+          "maximum": 154,
+          "description": "Longitude, Australia only (D-02)"
+        },
+        "label": {
+          "description": "Suburb or place name the user gave",
+          "type": "string",
+          "maxLength": 200
+        },
+        "precision": {
+          "default": "approximate",
+          "type": "string",
+          "enum": [
+            "exact",
+            "approximate"
+          ]
+        },
+        "state": {
+          "default": "NSW",
+          "description": "MVP covers NSW only (D-02)",
+          "type": "string",
+          "const": "NSW"
+        }
+      },
+      "required": [
+        "lat",
+        "lon"
+      ]
+    },
+    "radiusKm": {
+      "default": 100,
+      "type": "number",
+      "minimum": 5,
+      "maximum": 300
+    }
+  },
+  "required": [
+    "location"
   ]
 }
 ```

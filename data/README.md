@@ -4,6 +4,7 @@
 | --- | --- | --- |
 | `question-bank.yaml` | The simple-mode question bank (spec Section 7.3). Compiled to JSON by `npm run build:index`. | Draft ranges (Q-15) |
 | `cost-reference.csv` | Dated price ranges for materials (Section 7.7, FR-68). | **Started.** 2 rows from the Yass Area Network nurseries, checked 24 Nov 2026. TODO(Q-12): add Sydney and coast prices (see "Price sources to add"). |
+| `native-nurseries.csv` | Native plant nurseries and plant stalls, used by `find_native_nurseries` for the plan's local resources (FR-20). | **Started.** 4 entries in Armidale and Uralla, checked 25 Nov 2026. TODO: add other regions. |
 | `declared-weeds.csv` | Declared weeds, used by `check_species` and `save_plan` to block planting (FR-24). | **Started.** 135 NSW WeedWise priority weeds from two regions: Greater Sydney (126, read on 24 Nov 2026 from https://weeds.dpi.nsw.gov.au/Region?Id=81) and the Northern Tablelands, which covers Armidale Regional, Glen Innes Severn, Inverell, Tenterfield, Uralla and Walcha (104, read on 25 Nov 2026 from https://weeds.dpi.nsw.gov.au/Region?Id=8). TODO: add the other NSW regions. |
 
 ## Rules
@@ -15,6 +16,16 @@
 As well as this list, the weed check blocks species that ALA records as introduced
 or invasive (`stateInvasive`) near the site. See `docs/architecture.md`,
 "Species checks".
+
+## Native nursery notes
+
+- Columns: `id,name,kind,town,council,lat,lon,coord_precision,mail_order,website,offers,visiting,source_url,as_of`. `kind` is `nursery` or `market_stall`.
+- Each row's `source_url` is the page its details came from: the nursery's own site, or the Australian Plants Society (APS) listing.
+- Coordinates come from the NSW Address Location Service (D-19, CC BY). `address` means the exact address of public premises (Armidale Tree Group, 80 Mann St). `town` means a street in the town centre, rounded to 2 decimal places: Beardy St for Armidale, King St for Uralla.
+- A home-based business (Cool Natives Nursery) is listed by town only. Its street address, phone and email stay out of the repository; the APS listing has them.
+- Leads still to check by hand:
+  - Mole Station Native Nursery, west of Tenterfield. APS Armidale's 2026 stalls sell its plants, so it is trading, but its website (molestationnursery.com) was last updated in 2004 and now shows unrelated posts. The ANPSA directory lists it.
+  - Field's Native Nursery, Uralla. It appears only in a business directory snippet; not confirmed.
 
 ## Declared weed list notes
 

@@ -4,6 +4,7 @@
 import { z } from "zod";
 import { buildSpeciesIndex, checkPlan, checkSpecies, type AustraliaRecord } from "../core/checks.js";
 import { lookupCosts } from "../core/cost.js";
+import { nurseriesNear, type Nursery } from "../core/nurseries.js";
 import { Action, ActionPlan, LocalPrice, ResearchReport, SiteProfile } from "../core/models.js";
 import { capacityFromProfile } from "../core/questionnaire.js";
 import { PLAN_SECTIONS, planSection, planToMarkdown, searchSite } from "../core/render.js";
@@ -163,6 +164,50 @@ export const getCostReference = defineTool({
   },
 });
 
+export const DEFAULT_NURSERY_RADIUS_KM = 100;
+
+export const findNativeNurseries = defineTool({
+  name: "find_native_nurseries",
+  title: "Find native plant nurseries",
+  description:
+    "Find nurseries and plant stalls that specialise in Australian native plants near the site (FR-20 local resources, D-17). Returns name, town, distance, what they offer, how to visit, a website and a citation for each. Add the ones the user may use to the plan's localResources. The directory is small and growing; it says when there is nothing nearby.",
+  input: z.object({ location: Location, radiusKm: z.number().min(5).max(300).default(DEFAULT_NURSERY_RADIUS_KM) }),
+  handler: ({ location, radiusKm }, ctx) => {
+    const near = nurseriesNear(ctx.data.nurseries, location.lat, location.lon, radiusKm);
+    const citation = (n: Nursery): Citation => ({ id: `nursery:${n.id}`, source: "research", title: `${n.name} (native plant ${n.kind === "market_stall" ? "stall" : "nursery"}, ${n.town})`, url: n.sourceUrl, publisher: n.name, accessed: n.asOf });
+    const results = near.map((n) => ({
+      id: n.id,
+      name: n.name,
+      kind: n.kind,
+      town: n.town,
+      council: n.council,
+      distanceKm: n.distanceKm,
+      ...(n.coordPrecision === "town" ? { distanceNote: "Distance to the town centre." } : {}),
+      mailOrder: n.mailOrder,
+      offers: n.offers,
+      visiting: n.visiting,
+      ...(n.website ? { website: n.website } : {}),
+      checkedOn: n.asOf,
+      localResource: { title: `${n.name}, ${n.town}: native plants`, url: n.website ?? n.sourceUrl, citationId: `nursery:${n.id}` },
+      citation: citation(n),
+    }));
+    const notes = [
+      "Ask for local provenance stock: plants grown from seed collected near the site. Check every species with check_species before it goes in the plan.",
+      "Opening hours, stall dates and stock change. Tell the user to check with the nursery before they go.",
+    ];
+    if (!results.length) {
+      return ok({
+        nurseries: [],
+        radiusKm,
+        dataGap: { topic: "native plant nurseries", reason: `No native nurseries in Greener's directory within ${radiusKm} km. The directory covers the Armidale and Uralla area so far.` },
+        nextStep: "Suggest the user ask their council, Landcare group or the local Australian Plants Society group for native nurseries. Do not invent nursery names.",
+        notes,
+      });
+    }
+    return ok({ nurseries: results, radiusKm, notes, nextStep: "Add the nurseries the user may use to plan.localResources (use each localResource) and copy each citation into plan.citations." });
+  },
+});
+
 export const schedulePlanTool = defineTool({
   name: "schedule_plan",
   title: "Put actions into phases",
@@ -256,4 +301,4 @@ export const getPlanSection = defineTool({
   handler: ({ plan, section, actionId }) => ok({ section, ...(actionId ? { actionId } : {}), data: planSection(plan, section, actionId) }),
 });
 
-export const planTools = [getSiteStrategies, checkSpeciesTool, getCostReference, schedulePlanTool, markDone, savePlan, exportPlan, searchSiteTool, getPlanSection];
+export const planTools = [getSiteStrategies, checkSpeciesTool, getCostReference, findNativeNurseries, schedulePlanTool, markDone, savePlan, exportPlan, searchSiteTool, getPlanSection];
