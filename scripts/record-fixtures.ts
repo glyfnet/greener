@@ -13,6 +13,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { establishmentUrl, NEAR_QUERIES, occurrenceUrl } from "../server/src/connectors/ala.js";
 import { bushfireUrl } from "../server/src/connectors/bushfire.js";
+import { climateUrl } from "../server/src/connectors/climate.js";
 import { addressUrl } from "../server/src/connectors/geocode.js";
 import { SOIL_ATTRIBUTES, soilUrl } from "../server/src/connectors/soil.js";
 import { vegetationUrl } from "../server/src/connectors/vegetation.js";
@@ -29,11 +30,6 @@ const LIVE_SPECIES = ["Banksia serrata", "Eucalyptus marginata", "Jacaranda mimo
 type Target = { name: string; url: string };
 const q = (base: string, params: Record<string, string>) => `${base}?${new URLSearchParams(params)}`;
 const NAMEMATCH = "https://api.ala.org.au/namematching/api/search";
-
-// TODO: when each remaining connector lands, import its URL builder here instead of the literal URLs below, as for the other sources.
-const CLIMATE = "https://archive-api.open-meteo.com/v1/archive";
-const climateUrl = (lat: number, lon: number) =>
-  q(CLIMATE, { latitude: lat.toFixed(1), longitude: lon.toFixed(1), start_date: "1991-01-01", end_date: "2020-12-31", daily: "temperature_2m_max,temperature_2m_min,precipitation_sum", timezone: "Australia/Sydney" });
 
 const SOURCES: Record<string, Target[]> = {
   ala: [

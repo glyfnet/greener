@@ -22,6 +22,8 @@ export const ALLOWED_HOSTS = new Set([
   "mapprod3.environment.nsw.gov.au",
   // D-22: Soil and Landscape Grid of Australia.
   "soils.csiro.au",
+  // D-21: Open-Meteo Historical Weather API.
+  "archive-api.open-meteo.com",
 ]);
 
 /** FR-16 default cache time to live. */

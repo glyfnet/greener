@@ -14,11 +14,9 @@ export interface PendingSource {
   question: string;
 }
 
-export const PENDING: Record<"geocode" | "climate", PendingSource> = {
+export const PENDING: Record<"geocode", PendingSource> = {
   // TODO(D-19): street addresses work; suburb-only lookup waits for the NSW Administrative Boundaries Theme licence.
   geocode: { topic: "suburb or postcode lookup", requirement: "FR-02", candidate: "NSW Administrative Boundaries Theme (suburb centroids)", question: "D-19, suburb lookup licence: To check" },
-  // TODO(Q-06): BOM data or Open-Meteo? Check licence and attribution terms.
-  climate: { topic: "climate normals", requirement: "FR-12", candidate: "Bureau of Meteorology or Open-Meteo", question: "Q-06" },
 };
 
 export function pendingGap(key: keyof typeof PENDING): DataGap {
