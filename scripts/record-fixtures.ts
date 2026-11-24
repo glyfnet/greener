@@ -14,6 +14,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { establishmentUrl, NEAR_QUERIES, occurrenceUrl } from "../server/src/connectors/ala.js";
 import { bushfireUrl } from "../server/src/connectors/bushfire.js";
 import { addressUrl } from "../server/src/connectors/geocode.js";
+import { vegetationUrl } from "../server/src/connectors/vegetation.js";
 import { path } from "./lib.js";
 
 /** Public test point: Hyde Park, Sydney. Not a user site. */
@@ -28,8 +29,7 @@ type Target = { name: string; url: string };
 const q = (base: string, params: Record<string, string>) => `${base}?${new URLSearchParams(params)}`;
 const NAMEMATCH = "https://api.ala.org.au/namematching/api/search";
 
-// TODO: when each remaining connector lands, import its URL builder here instead of the literal URLs below, as for ALA, bushfire and geocode.
-const VEG = "https://mapprod3.environment.nsw.gov.au/arcgis/rest/services/VIS/SVTM_NSW_1750_PCT/MapServer/identify";
+// TODO: when each remaining connector lands, import its URL builder here instead of the literal URLs below, as for ALA, bushfire, geocode and vegetation.
 const identifyParams = (lat: number, lon: number, layers: string) => ({
   geometry: `${lon},${lat}`,
   geometryType: "esriGeometryPoint",
@@ -73,8 +73,8 @@ const SOURCES: Record<string, Target[]> = {
     { name: "not-found", url: addressUrl({ houseNumber: "1", roadName: "Notarealname", roadType: "St", suburb: "Bathurst" }) },
   ],
   vegetation: [
-    { name: "sydney", url: q(VEG, identifyParams(TEST_POINT.lat, TEST_POINT.lon, "all:2")) },
-    { name: "katoomba", url: q(VEG, identifyParams(FIRE_POINT.lat, FIRE_POINT.lon, "all:2")) },
+    { name: "sydney", url: vegetationUrl(TEST_POINT.lat, TEST_POINT.lon) },
+    { name: "katoomba", url: vegetationUrl(FIRE_POINT.lat, FIRE_POINT.lon) },
   ],
   climate: [
     { name: "katoomba", url: climateUrl(FIRE_POINT.lat, FIRE_POINT.lon) },
