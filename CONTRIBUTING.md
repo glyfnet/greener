@@ -12,6 +12,9 @@ npm install
 npm run dev         # wrangler dev, local MCP server
 ```
 
+For local testing in Claude Code, the Cloudflare account and deploying,
+see [`docs/developer-setup.md`](docs/developer-setup.md).
+
 ## Before opening a pull request
 
 Run the full check suite and make sure it passes:
