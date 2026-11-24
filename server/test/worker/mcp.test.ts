@@ -21,7 +21,7 @@ describe("Worker", () => {
     const init = (await (await post({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "t", version: "1" } } })).json()) as { result: { serverInfo: { name: string } } };
     expect(init.result.serverInfo.name).toBe("greener");
     const list = (await (await post({ jsonrpc: "2.0", id: 2, method: "tools/list", params: {} })).json()) as { result: { tools: unknown[] } };
-    expect(list.result.tools.length).toBe(23);
+    expect(list.result.tools.length).toBe(24);
   });
 
   it("runs the intake and the scheduler inside the Workers runtime", async () => {

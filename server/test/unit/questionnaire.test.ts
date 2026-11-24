@@ -150,3 +150,16 @@ describe("capacity (FR-60)", () => {
     expect(midpoint([200, 1000])).toBe(600);
   });
 });
+
+describe("site strategies (FR-23)", async () => {
+  const { siteStrategies, STRATEGY_CITATIONS } = await import("../../src/core/strategies.js");
+  it("cites KB items that exist in the shipped index", () => {
+    const ids = new Set(STATIC_DATA.kbIndex.chunks.map((c) => c.chunkId));
+    for (const id of Object.values(STRATEGY_CITATIONS)) expect(ids.has(id)).toBe(true);
+  });
+  it("picks strategies from the answers", () => {
+    expect(siteStrategies(profile({ site_type: { optionIds: ["townhouse"] }, tenure: { optionIds: ["strata"] } })).map((s) => [s.id, s.situation])).toEqual([["small_space", "Townhouse or courtyard"], ["removable", "Strata or shared site"]]);
+    expect(siteStrategies(profile({ bushfire_prone: { notSure: true } })).map((s) => s.id)).toEqual(["bushfire_unknown"]);
+    expect(siteStrategies(profile({ site_type: { optionIds: ["suburban"] }, tenure: { optionIds: ["own"] } }))).toEqual([]);
+  });
+});

@@ -7,7 +7,7 @@
  */
 import type { ActionPlan, ResearchReport, SiteProfile, SpeciesRecord } from "./models.js";
 
-export type SpeciesVerdict = "local_native" | "mixed_records" | "not_recorded_locally" | "introduced" | "declared_weed" | "biosecurity_pest";
+export type SpeciesVerdict = "local_native" | "mixed_records" | "related_declared" | "not_recorded_locally" | "introduced" | "declared_weed" | "biosecurity_pest";
 
 export interface SpeciesCheck {
   name: string;
@@ -32,7 +32,14 @@ export interface SpeciesIndex {
   introduced: Map<string, SpeciesRecord>;
   biosecurity: Map<string, SpeciesRecord>;
   declared: Map<string, DeclaredWeed>;
+  /** Genera declared as a whole ("Cortaderia species"). */
+  declaredGenera: Map<string, DeclaredWeed>;
+  /** Binomials of declared infraspecific taxa (e.g. Olea europaea for African olive). */
+  declaredRelated: Map<string, DeclaredWeed>;
 }
+
+/** KB item that documents the declared weed list (see data/README.md). */
+export const DECLARED_WEEDS_CITATION = "kb:nsw-weedwise-greater-sydney";
 
 /** Lower case, single spaces, no authorship after the binomial's rank markers. */
 export function normaliseName(name: string): string {
@@ -49,7 +56,7 @@ function lookup<T>(map: Map<string, T>, name: string): T | undefined {
 }
 
 export function buildSpeciesIndex(research: Pick<ResearchReport, "keyNativePlants" | "keyFauna" | "threatenedSpecies" | "invasiveSpecies">, declaredWeeds: DeclaredWeed[], state = "NSW"): SpeciesIndex {
-  const idx: SpeciesIndex = { native: new Map(), introduced: new Map(), biosecurity: new Map(), declared: new Map() };
+  const idx: SpeciesIndex = { native: new Map(), introduced: new Map(), biosecurity: new Map(), declared: new Map(), declaredGenera: new Map(), declaredRelated: new Map() };
   const all = [...research.keyNativePlants, ...research.keyFauna, ...research.threatenedSpecies, ...research.invasiveSpecies];
   for (const r of all) {
     const key = normaliseName(r.scientificName);
@@ -57,7 +64,16 @@ export function buildSpeciesIndex(research: Pick<ResearchReport, "keyNativePlant
     if (r.tags.includes("introduced")) idx.introduced.set(key, r);
     if (r.tags.includes("biosecurity_pest")) idx.biosecurity.set(key, r);
   }
-  for (const w of declaredWeeds) if (w.state === state) idx.declared.set(normaliseName(w.scientificName), w);
+  for (const w of declaredWeeds) {
+    if (w.state !== state) continue;
+    const key = normaliseName(w.scientificName);
+    const parts = key.split(" ");
+    if (parts.length === 2 && parts[1] === "species") idx.declaredGenera.set(parts[0] ?? key, w);
+    else {
+      idx.declared.set(key, w);
+      if (parts.length > 2) idx.declaredRelated.set(parts.slice(0, 2).join(" "), w);
+    }
+  }
   return idx;
 }
 
@@ -66,9 +82,9 @@ export function buildSpeciesIndex(research: Pick<ResearchReport, "keyNativePlant
  * any native record, so a declared weed is always blocked (FR-24, NFR-03).
  */
 export function checkSpecies(name: string, idx: SpeciesIndex): SpeciesCheck {
-  const declared = lookup(idx.declared, name);
+  const declared = lookup(idx.declared, name) ?? idx.declaredGenera.get(normaliseName(name).split(" ")[0] ?? "");
   if (declared) {
-    return { name, verdict: "declared_weed", blocking: true, message: `${name} is a declared weed in ${declared.state} (${declared.category}). Do not plant it.`, citationIds: [`weeds:${declared.state.toLowerCase()}`] };
+    return { name, verdict: "declared_weed", blocking: true, message: `${name} is a priority weed in ${declared.state} (${declared.category}; ${declared.sourceUrl}). Do not plant it.`, citationIds: [DECLARED_WEEDS_CITATION] };
   }
   const pest = lookup(idx.biosecurity, name);
   if (pest) {
@@ -81,6 +97,10 @@ export function checkSpecies(name: string, idx: SpeciesIndex): SpeciesCheck {
   }
   if (intro) {
     return { name, verdict: "introduced", blocking: true, message: `ALA records show ${name} as introduced near this site. Choose a local native instead.`, citationIds: intro.citationIds };
+  }
+  const related = idx.declaredRelated.get(normaliseName(name));
+  if (related) {
+    return { name, verdict: "related_declared", blocking: false, message: `Warning: ${related.scientificName} is a priority weed (${related.sourceUrl}). Make sure ${name} is not that form before you plant it.`, citationIds: [DECLARED_WEEDS_CITATION, ...(native?.citationIds ?? [])] };
   }
   if (native) {
     return { name, verdict: "local_native", blocking: false, message: `${name} has native records within the research radius.`, citationIds: native.citationIds };
@@ -99,6 +119,8 @@ export interface PlanIssue {
   code: string;
   message: string;
   actionId?: string;
+  /** Site strategy (get_site_strategies) that explains how to fix it. */
+  strategyId?: string;
 }
 
 export interface PlanCheckResult {
@@ -128,7 +150,7 @@ export function checkPlan(plan: ActionPlan, research: ResearchReport, profile: S
     const c = checkSpecies(original.get(key) ?? key, idx);
     species.push(c);
     if (c.blocking) issues.push({ severity: "error", code: c.verdict, message: c.message, ...(actionId ? { actionId } : {}) });
-    else if (c.verdict === "not_recorded_locally" || c.verdict === "mixed_records") issues.push({ severity: "warning", code: c.verdict, message: c.message, ...(actionId ? { actionId } : {}) });
+    else if (c.verdict === "not_recorded_locally" || c.verdict === "mixed_records" || c.verdict === "related_declared") issues.push({ severity: "warning", code: c.verdict, message: c.message, ...(actionId ? { actionId } : {}) });
   }
 
   // FR-25: every citation ID must resolve.
@@ -142,19 +164,27 @@ export function checkPlan(plan: ActionPlan, research: ResearchReport, profile: S
   const ids = new Set(plan.actions.map((a) => a.id));
   for (const q of plan.quickWins) if (!ids.has(q)) issues.push({ severity: "error", code: "unknown_action", message: `Quick win '${q}' is not an action in the plan.` });
 
-  // FR-23: site constraints.
+  // FR-23: site constraints. These sites are accepted; missing cautions are
+  // warnings that point to the site strategy, so Claude can fix the plan.
   const tenure = answerOf(profile, "tenure");
+  const site = answerOf(profile, "site_type");
   const bushfire = profile.answers.bushfire_prone;
+  const smallSite = site === "apartment" || site === "townhouse";
   for (const a of plan.actions) {
     const tags = new Set(a.cautions.map((c) => c.tag));
     if ((tenure === "rent" || tenure === "strata") && a.permanent && !tags.has("renter")) {
-      issues.push({ severity: "error", code: "renter_permission", message: `Action '${a.id}' is a permanent change on a ${tenure === "rent" ? "rented" : "strata"} site. Add a 'renter' caution about getting permission, or make it removable.`, actionId: a.id });
+      issues.push({ severity: "warning", code: "renter_permission", message: `Action '${a.id}' is a permanent change on a ${tenure === "rent" ? "rented" : "strata"} site. Add a 'renter' caution about getting permission, or make it removable.`, actionId: a.id, strategyId: "removable" });
+    } else if (smallSite && a.permanent && !tags.has("renter") && !tags.has("council")) {
+      issues.push({ severity: "warning", code: "strata_permission", message: `Action '${a.id}' fixes something to the building. Check strata by-laws or the owner's approval, and add a 'renter' caution.`, actionId: a.id, strategyId: "small_space" });
+    }
+    if (smallSite && (a.category === "water" || a.category === "habitat_structure") && !tags.has("safety")) {
+      issues.push({ severity: "warning", code: "small_space_safety", message: `Action '${a.id}' adds weight or a fixture in a small space. Add a 'safety' caution about load, drainage and wind.`, actionId: a.id, strategyId: "small_space" });
     }
     if ((a.category === "planting" || a.category === "habitat_structure") && !tags.has("bushfire")) {
       if (bushfire?.optionIds[0] === "yes") {
-        issues.push({ severity: "error", code: "bushfire_caution", message: `The site is on bushfire-prone land. Action '${a.id}' needs a 'bushfire' caution about asset protection zones and plant placement.`, actionId: a.id });
+        issues.push({ severity: "warning", code: "bushfire_caution", message: `The site is on bushfire-prone land. Add a 'bushfire' caution to action '${a.id}' that says where it goes relative to the house and asset protection zone.`, actionId: a.id, strategyId: "bushfire" });
       } else if (bushfire?.notSure) {
-        issues.push({ severity: "warning", code: "bushfire_unknown", message: `Bushfire-prone status is not known. Check it before you do action '${a.id}'.`, actionId: a.id });
+        issues.push({ severity: "warning", code: "bushfire_unknown", message: `Bushfire-prone status is not known. Check it before you do action '${a.id}'.`, actionId: a.id, strategyId: "bushfire_unknown" });
       }
     }
   }

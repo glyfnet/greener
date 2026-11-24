@@ -36,8 +36,20 @@ describe("cost reference (FR-68–FR-70)", () => {
     expect(other?.found && other.note).toContain("not Riverina");
   });
 
-  it("ships an empty table until real prices are collected (Q-12)", () => {
-    expect(STATIC_DATA.costTable).toEqual([]);
+  it("ships dated, sourced prices (Q-12)", () => {
+    expect(STATIC_DATA.costTable.length).toBeGreaterThan(0);
+    for (const r of STATIC_DATA.costTable) {
+      expect(r.source).toMatch(/https:\/\//);
+      expect(r.asOf).toMatch(/^\d{4}-\d{2}/);
+      expect(r.highAud).toBeGreaterThanOrEqual(r.lowAud);
+    }
+  });
+
+  it("ships the declared weed list with a source for every row", () => {
+    expect(STATIC_DATA.declaredWeeds.length).toBeGreaterThan(100);
+    for (const w of STATIC_DATA.declaredWeeds) expect(w.sourceUrl).toMatch(/^https:\/\/weeds\.dpi\.nsw\.gov\.au\//);
+    const names = STATIC_DATA.declaredWeeds.map((w) => w.scientificName);
+    expect(names).toEqual(expect.arrayContaining(["Lantana camara", "Asparagus aethiopicus", "Senecio madagascariensis"]));
   });
 });
 

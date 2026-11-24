@@ -8,6 +8,8 @@ import { Action, ActionPlan, LocalPrice, ResearchReport, SiteProfile } from "../
 import { capacityFromProfile } from "../core/questionnaire.js";
 import { PLAN_SECTIONS, planSection, planToMarkdown, searchSite } from "../core/render.js";
 import { markDone as markDoneCore, ScheduleCapacity, schedulePlan as scheduleCore, type ScheduleResult } from "../core/schedule.js";
+import { siteStrategies } from "../core/strategies.js";
+import type { Citation } from "../core/models.js";
 import { matchName } from "../connectors/ala.js";
 import { fail, ok, type ToolContext } from "./context.js";
 import { defineTool } from "./define.js";
@@ -33,6 +35,32 @@ function compact(s: ScheduleResult, includeMonthly: boolean) {
   const { monthly, ...rest } = s;
   return includeMonthly ? s : { ...rest, monthlySummary: { months: monthly.length, peakWorkHours: Math.max(...monthly.map((m) => m.workHours)), maintenanceHoursMonth36: monthly.at(-1)?.maintenanceHours ?? 0 } };
 }
+
+/** Resolve KB citation IDs to full citations from the shipped index, so the plan can copy them. */
+function kbCitations(ctx: ToolContext, ids: string[]): Citation[] {
+  const out: Citation[] = [];
+  for (const id of ids) {
+    const c = ctx.data.kbIndex.chunks.find((x) => x.chunkId === id);
+    if (!c) continue;
+    out.push({ id, source: "global_kb", title: c.title, ...(c.url.startsWith("http") ? { url: c.url } : {}), publisher: c.publisher, licence: c.licence, accessed: c.dateChecked });
+  }
+  return out;
+}
+
+function strategiesFor(ctx: ToolContext, profile: SiteProfile) {
+  return siteStrategies(profile).map((s) => ({ ...s, citations: kbCitations(ctx, s.citationIds) }));
+}
+
+export const getSiteStrategies = defineTool({
+  name: "get_site_strategies",
+  title: "Get strategies for this site",
+  description: "Get planning strategies for sites with special constraints: apartments and courtyards, rented or strata sites, and bushfire-prone land (FR-23). Use before drafting actions. Each strategy has guidance, rules for the plan, the caution tag to use, and citations to copy into the plan.",
+  input: z.object({ profile: SiteProfile }),
+  handler: ({ profile }, ctx) => {
+    const strategies = strategiesFor(ctx, profile);
+    return ok({ strategies, ...(strategies.length ? {} : { note: "No special constraints for this site." }) });
+  },
+});
 
 export const checkSpeciesTool = defineTool({
   name: "check_species",
@@ -65,7 +93,8 @@ export const getCostReference = defineTool({
   input: z.object({ items: z.array(z.string().min(1)).min(1).max(50), region: z.string().optional(), localPrices: z.array(LocalPrice).default([]) }),
   handler: ({ items, region, localPrices }, ctx) => {
     const matches = lookupCosts(items, region, ctx.data.costTable, localPrices);
-    return ok({ matches, tableRows: ctx.data.costTable.length, note: "All prices are estimates. Show the date beside each one (FR-68)." });
+    const availableItems = [...new Set(ctx.data.costTable.map((r) => `${r.item} (${r.unit}, ${r.region})`))];
+    return ok({ matches, availableItems, note: "All prices are estimates. Show the date and source beside each one (FR-68). Item names must match an available item." });
   },
 });
 
@@ -107,7 +136,7 @@ export const markDone = defineTool({
 export const savePlan = defineTool({
   name: "save_plan",
   title: "Check and save the plan",
-  description: "Validate the plan against its schema, then run the native-species, weed, citation and site-constraint checks (FR-22–FR-25). Refuses a plan with any error; fix the listed items and call again. On success, save the plan as plans/v<version>.json and export it as Markdown.",
+  description: "Validate the plan against its schema, then run the native-species, weed, citation and site-constraint checks (FR-22–FR-25). Refuses a plan that plants a weed or has broken citations; fix the listed items and call again. Apartment, rented and bushfire-prone sites are accepted: missing cautions come back as warnings with the strategy that fixes them. On success, save the plan as plans/v<version>.json and export it as Markdown.",
   input: z.object({ plan: z.unknown(), research: ResearchReport, profile: SiteProfile, startMonth: StartMonth.optional() }),
   handler: ({ plan, research, profile, startMonth }, ctx) => {
     const parsed = ActionPlan.safeParse(plan);
@@ -120,7 +149,8 @@ export const savePlan = defineTool({
       const cap = resolveCapacity(ctx, profile, undefined);
       if (cap) schedule = compact(scheduleCore({ actions: p.actions, capacity: cap.capacity, startMonth }), false);
     }
-    return ok({ plan: p, warnings: check.warnings, species: check.species, ...(schedule ? { schedule } : {}), saveAs: `plans/v${p.version}.json` });
+    const strategies = strategiesFor(ctx, profile);
+    return ok({ plan: p, warnings: check.warnings, species: check.species, ...(strategies.length ? { strategies } : {}), ...(schedule ? { schedule } : {}), saveAs: `plans/v${p.version}.json`, ...(check.warnings.length ? { nextStep: "Show the warnings to the user. Fix them with the strategy each one names, then save again." } : {}) });
   },
 });
 
@@ -158,4 +188,4 @@ export const getPlanSection = defineTool({
   handler: ({ plan, section, actionId }) => ok({ section, ...(actionId ? { actionId } : {}), data: planSection(plan, section, actionId) }),
 });
 
-export const planTools = [checkSpeciesTool, getCostReference, schedulePlanTool, markDone, savePlan, exportPlan, searchSiteTool, getPlanSection];
+export const planTools = [getSiteStrategies, checkSpeciesTool, getCostReference, schedulePlanTool, markDone, savePlan, exportPlan, searchSiteTool, getPlanSection];

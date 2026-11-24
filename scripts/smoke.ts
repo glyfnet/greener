@@ -62,6 +62,7 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
   weed_status: { names: ["Lantana camara"] },
   save_research: { research },
   search_knowledge: { query: "native plants birds" },
+  get_site_strategies: { profile: { location: loc, answers: { site_type: { optionIds: ["apartment"] }, tenure: { optionIds: ["rent"] } } } },
   check_species: { names: ["Lomandra longifolia"], research },
   get_cost_reference: { items: ["Native tube stock"] },
   schedule_plan: { actions: [action], startMonth: 3, capacity },

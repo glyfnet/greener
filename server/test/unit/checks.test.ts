@@ -71,21 +71,50 @@ describe("checkPlan (FR-22–FR-25)", () => {
     expect(checkPlan(p2, research(), profile(), weeds).errors.map((e) => e.code)).toContain("unknown_citation");
   });
 
-  it("needs a renter caution on permanent works for renters (FR-23)", () => {
+  it("accepts a rented site and warns when a permanent action has no renter caution (FR-23)", () => {
     const p = plan({ actions: [action("a1", { permanent: true })] });
-    expect(checkPlan(p, research(), profile({ tenure: { optionIds: ["rent"] } }), weeds).errors[0]?.code).toBe("renter_permission");
-    const ok = plan({ actions: [action("a1", { permanent: true, cautions: [{ tag: "renter", text: "Ask your landlord first." }] })] });
-    expect(checkPlan(ok, research(), profile({ tenure: { optionIds: ["rent"] } }), weeds).ok).toBe(true);
-    expect(checkPlan(p, research(), profile({ tenure: { optionIds: ["own"] } }), weeds).ok).toBe(true);
+    const r = checkPlan(p, research(), profile({ tenure: { optionIds: ["rent"] } }), weeds);
+    expect(r.ok).toBe(true);
+    expect(r.warnings).toEqual([expect.objectContaining({ code: "renter_permission", strategyId: "removable" })]);
+    const fixed = plan({ actions: [action("a1", { permanent: true, cautions: [{ tag: "renter", text: "Ask your landlord first." }] })] });
+    expect(checkPlan(fixed, research(), profile({ tenure: { optionIds: ["rent"] } }), weeds).warnings).toEqual([]);
+    expect(checkPlan(p, research(), profile({ tenure: { optionIds: ["own"] } }), weeds).warnings).toEqual([]);
   });
 
-  it("needs a bushfire caution on planting for bushfire-prone land (FR-23)", () => {
+  it("accepts an apartment and warns on fixed works and heavy features (FR-23)", () => {
+    const apt = profile({ site_type: { optionIds: ["apartment"] }, tenure: { optionIds: ["own"] } });
+    const p = plan({ actions: [action("bath", { category: "water", permanent: true })] });
+    const r = checkPlan(p, research(), apt, weeds);
+    expect(r.ok).toBe(true);
+    expect(r.warnings.map((w) => w.code).sort()).toEqual(["small_space_safety", "strata_permission"]);
+    const fixed = plan({ actions: [action("bath", { category: "water", permanent: true, cautions: [{ tag: "renter", text: "Strata approval needed." }, { tag: "safety", text: "Check the balcony load." }] })] });
+    expect(checkPlan(fixed, research(), apt, weeds).warnings).toEqual([]);
+  });
+
+  it("accepts bushfire-prone land and warns when planting has no bushfire caution (FR-23)", () => {
     const fire = profile({ bushfire_prone: { optionIds: ["yes"] } });
-    expect(checkPlan(plan(), research(), fire, weeds).errors[0]?.code).toBe("bushfire_caution");
-    const withCaution = plan({ actions: [action("a1", { category: "planting", cautions: [{ tag: "bushfire", text: "Keep the asset protection zone clear." }] })] });
-    expect(checkPlan(withCaution, research(), fire, weeds).ok).toBe(true);
+    const r = checkPlan(plan(), research(), fire, weeds);
+    expect(r.ok).toBe(true);
+    expect(r.warnings).toEqual([expect.objectContaining({ code: "bushfire_caution", strategyId: "bushfire" })]);
+    const withCaution = plan({ actions: [action("a1", { category: "planting", cautions: [{ tag: "bushfire", text: "Plant in a haven 20 m from the house." }] })] });
+    expect(checkPlan(withCaution, research(), fire, weeds).warnings).toEqual([]);
     const unsure = checkPlan(plan(), research(), profile({ bushfire_prone: { notSure: true } }), weeds);
     expect(unsure.ok).toBe(true);
     expect(unsure.warnings.map((w) => w.code)).toContain("bushfire_unknown");
+  });
+});
+
+describe("declared weed list forms", () => {
+  const list: DeclaredWeed[] = [
+    { scientificName: "Cortaderia species", state: "NSW", category: "Test", sourceUrl: "https://example.invalid/p", asOf: "2026-01-01" },
+    { scientificName: "Olea europaea subsp. cuspidata", state: "NSW", category: "Test", sourceUrl: "https://example.invalid/o", asOf: "2026-01-01" },
+  ];
+  const i = buildSpeciesIndex(research(), list);
+  it("blocks every species in a genus listed as '<Genus> species'", () => {
+    expect(checkSpecies("Cortaderia selloana", i)).toMatchObject({ verdict: "declared_weed", blocking: true, citationIds: ["kb:nsw-weedwise-greater-sydney"] });
+  });
+  it("blocks a listed subspecies but only warns on the species", () => {
+    expect(checkSpecies("Olea europaea subsp. cuspidata", i).blocking).toBe(true);
+    expect(checkSpecies("Olea europaea", i)).toMatchObject({ verdict: "related_declared", blocking: false });
   });
 });

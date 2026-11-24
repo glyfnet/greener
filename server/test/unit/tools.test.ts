@@ -35,6 +35,7 @@ describe("tool contract (Section 12.3)", () => {
         "weed_status",
         "save_research",
         "search_knowledge",
+        "get_site_strategies",
         "check_species",
         "get_cost_reference",
         "schedule_plan",
@@ -163,13 +164,16 @@ describe("research tools", () => {
     }
   });
 
-  it("says the declared weed list is empty rather than 'not a weed'", async () => {
-    const r = await call("weed_status", { names: ["Lantana camara"] });
+  it("checks names against the declared weed list", async () => {
+    const r = await call("weed_status", { names: ["Lantana camara", "Lomandra longifolia"] });
+    expect(r.data.results).toEqual([expect.objectContaining({ name: "Lantana camara", declared: true, sourceUrl: "https://weeds.dpi.nsw.gov.au/Weed/Lantana" }), { name: "Lomandra longifolia", declared: false }]);
+    expect(r.data.dataGap).toBeUndefined();
+  });
+
+  it("says 'unknown', not 'not a weed', when the list is empty", async () => {
+    const r = await call("weed_status", { names: ["Lantana camara"] }, testContext({ data: { declaredWeeds: [] } }));
     expect(r.data.results).toEqual([{ name: "Lantana camara", declared: null }]);
     expect(r.data.dataGap).toBeDefined();
-    const withList = testContext({ data: { declaredWeeds: [{ scientificName: "Lantana camara", state: "NSW", category: "Test", sourceUrl: "https://example.invalid", asOf: "2026-01-01" }] } });
-    const r2 = await call("weed_status", { names: ["Lantana camara", "Lomandra longifolia"] }, withList);
-    expect(r2.data.results).toEqual([expect.objectContaining({ declared: true }), { name: "Lomandra longifolia", declared: false }]);
   });
 
   it("validates a research report and its citations (FR-15)", async () => {
@@ -194,14 +198,33 @@ describe("knowledge and plan tools", () => {
     const r = await call("check_species", { names: ["Lomandra longifolia", "Lantana camara", "Notaplant fakeus"], research: research() });
     const results = r.data.results as { query: string; verdict: string; blocking: boolean; alaName: string | null; nameWarning?: string }[];
     expect(results[0]).toMatchObject({ alaName: "Lomandra longifolia", verdict: "local_native", blocking: false });
-    expect(results[1]).toMatchObject({ verdict: "introduced", blocking: true });
+    expect(results[1]).toMatchObject({ verdict: "declared_weed", blocking: true });
     expect(results[2]).toMatchObject({ alaName: null, verdict: "not_recorded_locally" });
     expect(results[2]?.nameWarning).toContain("could not match");
   });
 
-  it("returns no data for costs when the table is empty (FR-70)", async () => {
-    const r = await call("get_cost_reference", { items: ["Native tube stock"] });
-    expect(r.data.matches).toEqual([expect.objectContaining({ found: false })]);
+  it("returns dated costs, and no data for unknown items (FR-68, FR-70)", async () => {
+    const r = await call("get_cost_reference", { items: ["Native tube stock", "Gold nest box"], region: "NSW southern tablelands" });
+    expect(r.data.matches).toEqual([expect.objectContaining({ found: true, lowAud: 2.2, highAud: 2.75, asOf: "2026-11-24" }), expect.objectContaining({ found: false })]);
+    expect(r.data.availableItems).toContain("Native tube stock (each, NSW southern tablelands)");
+  });
+
+  it("gives strategies for apartments, renters and bushfire-prone land with resolvable citations", async () => {
+    const apt = await call("get_site_strategies", { profile: profile({ site_type: { optionIds: ["apartment"] }, tenure: { optionIds: ["rent"] } }) });
+    const s1 = apt.data.strategies as { id: string; citationIds: string[]; citations: { id: string }[] }[];
+    expect(s1.map((s) => s.id)).toEqual(["small_space", "removable"]);
+    for (const s of s1) expect(s.citations.map((c) => c.id)).toEqual(s.citationIds);
+    const fire = await call("get_site_strategies", { profile: profile({ site_type: { optionIds: ["rural"] }, bushfire_prone: { optionIds: ["yes"] } }) });
+    expect((fire.data.strategies as { id: string }[]).map((s) => s.id)).toEqual(["bushfire"]);
+    expect((await call("get_site_strategies", { profile: profile() })).data.note).toContain("No special");
+  });
+
+  it("saves a bushfire-prone plan with warnings and the strategy (FR-23)", async () => {
+    const fire = profile({ bushfire_prone: { optionIds: ["yes"] } });
+    const r = await call("save_plan", { plan: plan(), research: research(), profile: fire });
+    expect(r.isError).toBeUndefined();
+    expect((r.data.warnings as { code: string }[]).map((w) => w.code)).toContain("bushfire_caution");
+    expect((r.data.strategies as { id: string }[])[0]?.id).toBe("bushfire");
   });
 
   it("schedules from a profile or a capacity, and needs one of them", async () => {
