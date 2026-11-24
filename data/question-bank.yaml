@@ -1,0 +1,247 @@
+# Greener question bank, simple mode (specification Section 7.3).
+#
+# Source of truth for questions, options, icons and skip logic. The build
+# script (scripts/build-index.ts) validates this file against the Zod schema
+# in server/src/core/questionnaire.ts and compiles it to JSON for the Worker.
+#
+# Field notes:
+#   select:   one | many | upTo3
+#   notSure:  true adds a "Not sure" choice (FR-08). Every question also gets
+#             an "Other" free-text choice.
+#   showWhen: skip logic (FR-10b). siteTypeNot / siteTypeIn refer to question
+#             `site_type` option IDs.
+#   range:    numeric option bounds. The system uses the middle for
+#             calculations and the high end for capacity checks (Section 7.3).
+#   icon:     placeholder names until the icon set is chosen (Q-14).
+#
+# TODO(Q-15): option ranges are drafts; test with 5–10 people before release.
+# TODO(Q-15): the spec says an apartment user sees "about 14" questions. The
+#             skip rules in Section 7.3 hide 3 questions, so an apartment
+#             user sees 17. Which other questions should apartments skip?
+
+questions:
+  - id: location
+    number: 1
+    text: Where is your site?
+    kind: location
+    select: one
+    options:
+      - { id: use_my_location, label: Use my location, icon: pin }
+      - { id: type_place, label: Type suburb or postcode, icon: search }
+
+  - id: site_type
+    number: 2
+    text: What type of site is it?
+    select: one
+    options:
+      - { id: apartment, label: Apartment or balcony, icon: building }
+      - { id: townhouse, label: Townhouse or courtyard, icon: townhouse }
+      - { id: suburban, label: Suburban house, icon: house }
+      - { id: large_block, label: Large block, icon: trees }
+      - { id: rural, label: Rural or farm, icon: tractor }
+      - { id: community, label: School or community, icon: people }
+
+  - id: area
+    number: 3
+    text: How big is the area you can change?
+    select: one
+    unit: m2
+    options:
+      - { id: lt_20m2, label: "Under 20 m²", range: [0, 20] }
+      - { id: m2_20_200, label: "20–200 m²", range: [20, 200] }
+      - { id: m2_200_1000, label: "200–1,000 m²", range: [200, 1000] }
+      - { id: ha_0_1_2, label: "0.1–2 ha", range: [1000, 20000] }
+      - { id: ha_2_50, label: "2–50 ha", range: [20000, 500000] }
+      # TODO(Q-15): open-ended; capped at the lower bound for calculations.
+      - { id: gt_50ha, label: "Over 50 ha", range: [500000, 500000] }
+
+  - id: tenure
+    number: 4
+    text: Do you own or rent?
+    select: one
+    options:
+      - { id: own, label: Own, icon: key }
+      - { id: rent, label: Rent, icon: door }
+      - { id: strata, label: Strata or shared, icon: building }
+      - { id: public_land, label: Public land, icon: flag }
+
+  - id: land_cover
+    number: 5
+    text: What covers most of the area now?
+    select: one
+    options:
+      - { id: lawn, label: Lawn, icon: grass }
+      - { id: garden_beds, label: Garden beds, icon: flower }
+      - { id: paving_pots, label: Paving or pots, icon: tiles }
+      - { id: pasture, label: Pasture, icon: field }
+      - { id: native_bush, label: Native bush, icon: eucalypt }
+      - { id: mixed, label: Mixed, icon: grid }
+
+  - id: trees
+    number: 6
+    text: Are there trees?
+    select: one
+    showWhen: { siteTypeNot: [apartment] }
+    options:
+      - { id: none, label: None }
+      - { id: one_two_small, label: 1–2 small }
+      - { id: few_large, label: A few large }
+      - { id: many_bushland, label: "Many, or bushland" }
+
+  - id: water
+    number: 7
+    text: What water is there?
+    select: many
+    options:
+      - { id: none, label: None }
+      - { id: bird_bath, label: Bird bath }
+      - { id: pond, label: Pond }
+      - { id: creek_dam, label: Creek or dam }
+      - { id: tank_irrigation, label: Tank or irrigation }
+
+  - id: sun
+    number: 8
+    text: How much sun does the area get?
+    select: one
+    options:
+      - { id: full_sun, label: Full sun }
+      - { id: mostly_sun, label: Mostly sun }
+      - { id: half_shade, label: Half shade }
+      - { id: mostly_shade, label: Mostly shade }
+
+  - id: soil
+    number: 9
+    text: What is the soil like?
+    select: one
+    notSure: true
+    showWhen: { siteTypeNot: [apartment] }
+    options:
+      - { id: sandy, label: Sandy }
+      - { id: loam, label: Loam }
+      - { id: clay, label: Clay }
+      - { id: rocky_shallow, label: Rocky or shallow }
+
+  - id: animals
+    number: 10
+    text: Which animals live with you?
+    select: many
+    options:
+      - { id: none, label: None }
+      - { id: dog, label: Dog }
+      - { id: cat_indoor, label: "Cat, indoor" }
+      - { id: cat_outdoor, label: "Cat, outdoor" }
+      - { id: livestock, label: Livestock, showWhen: { siteTypeIn: [rural] } }
+
+  - id: sprays
+    number: 11
+    text: Do you use sprays (pesticide or herbicide)?
+    select: one
+    notSure: true
+    options:
+      - { id: never, label: Never }
+      - { id: sometimes, label: Sometimes }
+      - { id: often, label: Often }
+
+  - id: bushfire_prone
+    number: 12
+    text: Is the site on bushfire-prone land?
+    select: one
+    notSure: true
+    notSureNote: We look it up.
+    showWhen: { siteTypeNot: [apartment] }
+    options:
+      - { id: "yes", label: "Yes" }
+      - { id: "no", label: "No" }
+
+  - id: goals
+    number: 13
+    text: What do you most want to attract or grow?
+    select: upTo3
+    options:
+      - { id: birds, label: Birds }
+      - { id: pollinators, label: Bees and butterflies }
+      - { id: frogs_lizards, label: Frogs and lizards }
+      - { id: native_plants, label: Native plants }
+      - { id: bush_food, label: Bush food }
+      - { id: threatened, label: Threatened species }
+
+  - id: wildlife_seen
+    number: 14
+    text: What wildlife do you see now?
+    select: many
+    notSure: true
+    options:
+      - { id: birds, label: Birds }
+      - { id: possums_bats, label: Possums or bats }
+      - { id: frogs, label: Frogs }
+      - { id: lizards, label: Lizards }
+      - { id: insects, label: Insects }
+
+  - id: problems
+    number: 15
+    text: Any problem weeds or pests?
+    select: many
+    notSure: true
+    options:
+      - { id: none_known, label: None known }
+      - { id: weeds, label: Weeds }
+      - { id: rabbits_foxes, label: Rabbits or foxes }
+      - { id: pest_birds, label: Pest birds }
+
+  - id: hours_per_week
+    number: 16
+    text: How many hours a week can you give?
+    select: one
+    unit: hours_per_week
+    options:
+      - { id: lt_1, label: Under 1, range: [0, 1] }
+      - { id: h_1_2, label: 1–2, range: [1, 2] }
+      - { id: h_2_5, label: 2–5, range: [2, 5] }
+      - { id: h_5_10, label: 5–10, range: [5, 10] }
+      # TODO(Q-15): open-ended; capped at the lower bound.
+      - { id: gt_10, label: Over 10, range: [10, 10] }
+
+  - id: upfront_budget
+    number: 17
+    text: What can you spend to start?
+    select: one
+    unit: aud
+    options:
+      - { id: lt_100, label: Under $100, range: [0, 100] }
+      - { id: aud_100_500, label: $100–500, range: [100, 500] }
+      - { id: aud_500_2000, label: "$500–2,000", range: [500, 2000] }
+      - { id: aud_2000_10000, label: "$2,000–10,000", range: [2000, 10000] }
+      # TODO(Q-15): open-ended; capped at the lower bound.
+      - { id: gt_10000, label: "Over $10,000", range: [10000, 10000] }
+
+  - id: yearly_budget
+    number: 18
+    text: What can you spend each year after?
+    select: one
+    unit: aud
+    options:
+      - { id: lt_100, label: Under $100, range: [0, 100] }
+      - { id: aud_100_500, label: $100–500, range: [100, 500] }
+      - { id: aud_500_2000, label: "$500–2,000", range: [500, 2000] }
+      - { id: aud_2000_10000, label: "$2,000–10,000", range: [2000, 10000] }
+      - { id: gt_10000, label: "Over $10,000", range: [10000, 10000] }
+
+  - id: help
+    number: 19
+    text: Can you get help?
+    select: one
+    options:
+      - { id: just_me, label: "No, just me" }
+      - { id: family_friends, label: Family or friends }
+      - { id: paid_sometimes, label: Paid help sometimes }
+      - { id: contractor, label: Contractor }
+
+  - id: experience
+    number: 20
+    text: What is your experience?
+    select: one
+    options:
+      - { id: beginner, label: Beginner }
+      - { id: some_gardening, label: Some gardening }
+      - { id: experienced, label: Experienced }
+      - { id: bush_regen, label: Bush regeneration trained }
