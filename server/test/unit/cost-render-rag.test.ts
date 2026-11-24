@@ -165,3 +165,19 @@ describe("KB manifest rules (FR-41, FR-42)", () => {
     expect(KbManifest.safeParse({ items: [{ ...base, dateChecked: "24/11/2026", tier: "link_catalogue", licence: "x", summary: "s" }] }).success).toBe(false);
   });
 });
+
+describe("New England sources (Armidale and Uralla)", async () => {
+  const { lookupCosts } = await import("../../src/core/cost.js");
+  const { STATIC_DATA } = await import("../../src/data.js");
+  const { search } = await import("../../src/rag/bm25.js");
+  it("has dated Armidale Tree Group seedling prices", () => {
+    const [m] = lookupCosts(["Native hiko seedling"], "NSW New England (Armidale)", STATIC_DATA.costTable);
+    expect(m).toMatchObject({ found: true, lowAud: 1.8, highAud: 3, asOf: "2026-11-25", region: "NSW New England (Armidale)" });
+  });
+  it("finds the New England KB items by search", () => {
+    const ids = search(STATIC_DATA.kbIndex, "Armidale local natives seed collection New England").map((h) => h.chunk.itemId);
+    expect(ids).toContain("atg-plants-of-the-new-england");
+    expect(search(STATIC_DATA.kbIndex, "Uralla weeds landholders").map((h) => h.chunk.itemId)).toContain("uralla-biosecurity-pests-weeds");
+  });
+});
+
