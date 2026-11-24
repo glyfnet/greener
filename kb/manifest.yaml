@@ -266,3 +266,128 @@ items:
     region: NSW
     dateChecked: "2026-11-24"
     tags: [chemical-free, rewilding, weed control, hand weeding, pests, local natives, no pesticides]
+
+  - id: atg-plants-of-the-new-england
+    title: Armidale Tree Group — Plants of the New England
+    tier: link_catalogue
+    sourceUrl: https://armidaletreegroup.org.au/plants-database/
+    publisher: Armidale Tree Group
+    licence: "Link and summary only. Licence not stated on the site."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [Armidale, Uralla, New England, Northern Tablelands, local natives, plant identification, seed collection, propagation, direct seeding, farm planting]
+    summary: >-
+      An online plant database from the Armidale Tree Group, a not-for-profit
+      native nursery in Armidale, for people who manage land on the New
+      England Tablelands. The page introduces the region's vegetation (eucalypt
+      forests and woodlands, natural and derived grasslands, rainforests,
+      heaths and wetlands) and, citing PlantNET, counts about 2,725 plant
+      species in the region, most of them natives, with 188 threatened species
+      and several hundred exotics. The database started with about 220 common
+      species and is still growing. For each species it offers a printable
+      field guide (description, where it grows, preferred soils and site, and
+      uses) and a seed guide (when and how to collect seed, how to store it,
+      germination temperature and time, propagation method, and whether it
+      suits direct seeding or farm planting). The fields include Aboriginal
+      names where known. Use it to identify local natives, to choose species
+      that suit a site's soil and position, and to plan seed collection for
+      local-provenance planting around Armidale and Uralla.
+
+  - id: atg-wholesale-species-lists
+    title: Armidale Tree Group — wholesale species lists and order forms (2026)
+    tier: link_catalogue
+    sourceUrl: https://armidaletreegroup.org.au/products/wholesale/
+    publisher: Armidale Tree Group
+    licence: "Link and summary only. Prices copied into data/cost-reference.csv as dated facts with a link."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [Armidale, Uralla, New England, nursery, hiko seedlings, tubestock, prices, local natives, soil type, revegetation, screening, habitat packs]
+    summary: >-
+      The Armidale Tree Group's wholesale page links its 2026 species lists
+      and order forms for revegetation, shelterbelts and screening, grouped
+      as clay and basalt soils, general species, creek and riparian, and koala
+      habitat, plus ready-made packs of forty hiko seedlings (Neighbour-Hider
+      screening shrubs, a bee pack, and Saumarez and Invergowrie packs). Each
+      list gives the species, common name, mature height, the soils it suits
+      (trap, basalt or granite) and its slope position (upper, mid or lower).
+      Two marks matter for rewilding: one flags species grown only in small
+      numbers, and another flags species that are not local to the New
+      England Tablelands, so planners can keep to local natives. The 2026
+      hiko seedling prices fall with order size, from $3.00 each for fewer
+      than 40 plants to $1.80 each for 1,000 or more. A refundable deposit
+      applies to each tray. Orders go through the nursery coordinator.
+
+  - id: weedwise-northern-tablelands
+    title: NSW WeedWise — Priority weeds for the Northern Tablelands
+    tier: link_catalogue
+    sourceUrl: https://weeds.dpi.nsw.gov.au/Region?Id=8
+    publisher: NSW Department of Primary Industries and Regional Development
+    licence: "Species names and duties copied into data/declared-weeds.csv as facts with links; page footer links the NSW Government CC BY 4.0 copyright notice. Link and summary only here."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [weeds, priority weeds, Armidale, Uralla, Walcha, Glen Innes, Inverell, Tenterfield, Northern Tablelands, biosecurity duty, blackberry, serrated tussock, sweet briar]
+    summary: >-
+      The NSW WeedWise list of priority weeds for the Northern Tablelands
+      region, which covers the Armidale Regional, Glen Innes Severn,
+      Inverell, Tenterfield, Uralla and Walcha council areas. It starts with
+      the general biosecurity duty that applies to every pest plant: anyone
+      who deals with a plant and knows, or ought to know, its risk must
+      prevent or minimise that risk as far as is reasonably practicable. It
+      then lists about a hundred weeds with their legal measures: prohibited
+      matter that must be reported at once, plants that must not be sold or
+      traded, biosecurity zones, control orders, and regional recommended
+      measures. The list includes blackberry, serrated tussock, Chilean
+      needle grass, gorse, broom, sweet briar, honey locust, willows and many
+      prickly pears and cacti. Each entry links
+      to a profile with identification and control advice. Greener blocks
+      every listed species from planting and uses only the non-chemical
+      control advice.
+
+  - id: uralla-biosecurity-pests-weeds
+    title: Uralla Shire Council — Pest, weeds and biosecurity
+    tier: link_catalogue
+    sourceUrl: https://www.uralla.nsw.gov.au/Council-Services/Environment/Biosecurity-Pests-and-Weeds
+    publisher: Uralla Shire Council
+    licence: "Link and summary only. Licence not stated (footer: © 2026 Uralla Shire Council)."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [Uralla, weeds, biosecurity duty, landholders, priority weeds, hand removal, grazing, slashing, council, Local Land Services]
+    summary: >-
+      Uralla Shire Council's page on pests, weeds and biosecurity for
+      residents and landholders. It explains that the NSW Biosecurity Act
+      2015 puts a general biosecurity duty on everyone, and that landholders
+      must manage biosecurity risks on their land, including priority weeds.
+      The council manages weeds on roadsides, public reserves and parks. The
+      page points landholders to Northern Tablelands Local Land Services for
+      advice on their duties, and to NSW WeedWise for identification and the
+      regional priority weed list. Its non-chemical control options are
+      digging or grubbing out small infestations, slashing, cultivation,
+      grazing management and biological control, with the aim of stopping
+      weeds from setting seed, controlling regrowth and keeping pasture or
+      ground cover healthy so weeds cannot take hold. The page also links
+      the council's biosecurity strategy and the national farm biosecurity
+      planner.
+
+  - id: armidale-know-your-weeds
+    title: Armidale Regional Council — Know your weeds and how they are managed
+    tier: link_catalogue
+    sourceUrl: https://www.armidale.nsw.gov.au/Services/Biosecurity-and-weeds-management/Know-your-weeds-and-how-they-are-managed
+    publisher: Armidale Regional Council
+    licence: "Link and summary only. Licence not confirmed (footer: © 2026 Armidale Regional Council, with a Disclaimer & Copyright link)."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [Armidale, weeds, biosecurity, landholders, reporting weeds, hand pulling, digging, ground cover, native planting, council]
+    summary: >-
+      Armidale Regional Council's guide to weeds and how they are managed in
+      the Armidale region. The landing page links sections on priority weeds
+      in the region, the NSW Biosecurity Act 2015, and how weeds are
+      controlled. The control section describes manual removal, biological
+      control, cultural practices and herbicides; Greener uses only the
+      non-chemical parts. For small or sensitive infestations it recommends
+      hand pulling and digging out plants. To stop weeds coming back it
+      advises disturbing the soil as little as possible, planting competitive
+      native species and keeping the ground covered. It asks landholders to
+      learn to identify the weeds on their land, manage them, choose
+      non-invasive plants for gardens, and report infestations to the council
+      by phone. Use it with the NSW WeedWise Northern Tablelands list and the
+      Greener chemical-free rewilding guide.
