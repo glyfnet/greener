@@ -3,8 +3,8 @@
 | File | Holds | Status |
 | --- | --- | --- |
 | `question-bank.yaml` | The simple-mode question bank (spec Section 7.3). Compiled to JSON by `npm run build:index`. | Draft ranges (Q-15) |
-| `cost-reference.csv` | Dated price ranges for materials (Section 7.7, FR-68). | **Empty.** TODO(Q-12): who collects the first prices, and from which nurseries and suppliers? |
-| `declared-weeds.csv` | Declared weeds per state, used by `check_species` and `save_plan` to block planting (FR-24). | **Empty.** TODO: Section 8 lists "State declared weed lists (for example NSW WeedWise)" as *To check*. Add rows only from a verified source, with its URL and date, after the licence check in Q-20. |
+| `cost-reference.csv` | Dated price ranges for materials (Section 7.7, FR-68). | **Started.** 2 rows from the Yass Area Network nurseries, checked 24 Nov 2026. TODO(Q-12): add Sydney and coast prices (see "Price sources to add"). |
+| `declared-weeds.csv` | Declared weeds, used by `check_species` and `save_plan` to block planting (FR-24). | **Started.** 126 NSW WeedWise priority weeds for Greater Sydney, read on 24 Nov 2026 from https://weeds.dpi.nsw.gov.au/Region?Id=81. TODO: add the other NSW regions. |
 
 ## Rules
 
@@ -12,6 +12,23 @@
 - `cost-reference.csv` columns: `item,unit,low_aud,high_aud,region,source,as_of`. Ranges only, never a single value.
 - `declared-weeds.csv` columns: `scientific_name,state,category,source_url,as_of`. Use the accepted ALA name.
 
-While `declared-weeds.csv` is empty, the weed check still blocks species that ALA
-records as introduced or invasive (`stateInvasive`) near the site. See
-`docs/architecture.md`, "Species checks".
+As well as this list, the weed check blocks species that ALA records as introduced
+or invasive (`stateInvasive`) near the site. See `docs/architecture.md`,
+"Species checks".
+
+## Declared weed list notes
+
+- Source: NSW WeedWise, Department of Primary Industries and Regional Development. The WeedWise footer links the NSW Government copyright notice: "licensed under the Creative Commons Attribution 4.0 licence", with attribution "© State of New South Wales". Species names and legal duties are recorded as facts, with a link to each profile (Q-20).
+- Two names are normalised: "Rubus fruticosus species aggregate" is stored as `Rubus fruticosus`, and "Hymenachne amplexicaulis and hybrids" as `Hymenachne amplexicaulis`.
+- Rows named `<Genus> species` (for example `Cortaderia species`) block every species in that genus.
+- Subspecies are matched exactly, so `Olea europaea subsp. cuspidata` (African olive) blocks African olive but not the edible olive. A plant whose subspecies is listed gets a warning instead.
+- The list is for the Greater Sydney region. The checks apply it across NSW, which is stricter than the law requires but safe for planting. TODO: load each region's list and match it to the site's council area.
+
+## Price sources to add (TODO, Q-12)
+
+Web searches on 24 Nov 2026 found these council nursery price pages, but each refused automated reads (HTTP 403 or 404), so their prices are **not** in the table yet. Check them by hand before adding rows:
+
+- Sutherland Shire Community Nursery: https://www.sutherlandshire.nsw.gov.au/your-environment/community-nursery
+- Hawkesbury City Council nursery: https://www.hawkesbury.nsw.gov.au/your-spaces/nursery
+- Randwick Community Nursery: https://www.randwick.nsw.gov.au/environment-and-sustainability/randwick-community-nursery/plants-we-stock
+- Ku-ring-gai Wildflower Garden nursery stock list
