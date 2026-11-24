@@ -48,11 +48,17 @@ Logs hold `{ tool, ms, result }` only. Coordinates are rounded to 2 decimal plac
 | ALA `stateInvasive` record near the site | `biosecurity_pest` | blocked |
 | Introduced records nearby, no native records | `introduced` | blocked |
 | Native and introduced records nearby | `mixed_records` | warning |
-| A subspecies of it is on the declared list (e.g. *Olea europaea* vs African olive) | `related_declared` | warning |
+| A subspecies of it is on the declared list (e.g. *Olea europaea* vs African olive) | `related_declared` | warning if it has local native records, otherwise blocked |
 | Native records nearby | `local_native` | allowed |
-| No records nearby | `not_recorded_locally` | warning |
+| No native records nearby (after a live ALA check) | `not_recorded_locally` | **blocked** (D-17) |
+
+Species that the research report's short lists don't cover are checked live: `check_species` (given the site `location`) and `save_plan` ask ALA for native-tagged records of that species within the research radius (`nativeRecordsNear`, at most 40 a call). A species with records counts as local native and gets an `ala:native:<species>` citation.
 
 `save_plan` runs the same checks on every planting, and checks that citation IDs resolve (FR-25). Either failure refuses the plan.
+
+## Rewilding policy (D-17)
+
+Local natives only (above), and no chemicals. `checkChemicals` (`chemicalUses` in `core/checks.ts`) scans each action's title and steps for chemical methods such as herbicide, pesticide, poison, bait, spray, cut-and-paint and synthetic fertiliser, as whole words. A mention after a negation ("do not spray", "without chemicals") is allowed. A match refuses the plan with `uses_chemicals`. Every site gets the `chemical_free` strategy, and sites where the user sprays now also get `phase_out_sprays`.
 
 ## Constrained sites (FR-23)
 

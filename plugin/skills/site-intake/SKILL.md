@@ -17,6 +17,8 @@ Implements FR-01–FR-09, FR-10a, FR-10b. The server keeps nothing (D-09): pass 
 8. Save the returned profile as `profile.json` in the user's Project. Tell the user what is still missing.
 9. To change one answer later, read `profile.json`, call `save_answer` for that question only, then `save_profile` again (FR-06).
 
+Question 11 (sprays) records what the user does now. Greener plans are chemical-free (D-17). If the user sprays, the plan will include steps to phase it out, so say this kindly and without judgement.
+
 Detailed mode (FR-10a): if the user wants exact values, set `profile.mode` to `"detailed"` and fill `profile.detailed` (hours for each season, exact budgets, area in m²).
 
 See `docs/specification.md` Sections 4.1 and 7.3.

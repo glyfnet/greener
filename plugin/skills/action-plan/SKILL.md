@@ -5,13 +5,15 @@ description: Use when the user wants an action plan written or updated, wants to
 
 # Action plan
 
-Implements FR-20–FR-27 and FR-60–FR-71. The tools enforce the rules; do not work around a refusal.
+Implements FR-20–FR-27, FR-60–FR-71 and D-17. The tools enforce the rules; do not work around a refusal.
+
+**Greener is for rewilding: local natives only, and no chemicals (D-17).** Never suggest herbicides, pesticides, poison baits, sprays or synthetic fertiliser. Weeds are removed by hand and the gap is replanted with local natives.
 
 1. Read `profile.json` and `research.json`. If either is missing, run `site-intake` or `site-research` first.
 2. Call `get_site_strategies` with the profile. Apartments, courtyards, rented or strata sites and bushfire-prone land are all fine: follow each strategy's guidance and `planRules`, use its `cautionTag` on the matching actions, and copy its `citations` into the plan's citations.
 3. Call `search_knowledge` for guidance that fits the site's goals, type and region. For link-catalogue results, read the live page and cite it (FR-46).
 4. Draft the actions (FR-21, FR-61, FR-62). Each needs: category, priority, effort, season, steps, target species, rationale, citation IDs (at least 1, FR-25), labour hours (low–high), materials cost (low–high AUD, or `null`), work window (calendar months), dependencies, monthly upkeep hours, and structured cautions. Use the caution tag `bushfire` for planting on bushfire-prone land, and `renter` for permanent works on rented or strata sites (FR-23).
-5. Call `check_species` with every species you want to plant. Drop any species marked `blocking`. Show the user every warning (FR-22, FR-24).
+5. Call `check_species` with every species you want to plant, the research and the site `location`. Plant only the `allowed` species; drop every `blocked` one. Copy the returned `citations` into the plan, and show the user every warning (FR-22, FR-24, D-17).
 6. Call `get_cost_reference` for materials, with the user's `localPrices` (FR-69). Use the item names in `availableItems`. When an item has no data, set its cost to `null` and say so. Never invent a price (FR-70).
 7. Call `schedule_plan` with the actions, the profile and the start month. Do not do the phasing yourself (Section 7.7).
 8. Call `save_plan` with the plan, research, profile and start month. If it refuses the plan (a weed or a broken citation), fix the listed items and call it again. If it returns warnings, fix them with the strategy each one names, or explain them to the user. Save the result as `plans/v<version>.json`.

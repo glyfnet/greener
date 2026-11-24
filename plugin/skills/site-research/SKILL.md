@@ -10,7 +10,7 @@ Implements FR-10–FR-16 and NFR-07.
 1. Read `profile.json` from the user's Project and call `get_site`. If there is no location, run `site-intake` first.
 2. Call `ala_species_near` with the profile's `location` (default radius 10 km).
 3. Call `ala_species_profile` for up to 10 key species: the most recorded native plants, and threatened species that fit the user's goals.
-4. Call `weed_status` with the introduced and invasive species names.
+4. Call `weed_status` with the introduced and invasive species names. These are removal targets for hand weeding, never for spraying (D-17).
 5. Call `climate_normals`, `soil_properties` and `vegetation_community`. These sources are still being checked, so they return data gaps. Record each gap and do not estimate the values (FR-32).
 6. Call `search_knowledge` with the site type, goals and region (`NSW`). Also search the user's own Project documents (FR-44).
 7. If any call fails, record a data gap and continue. One failed service must not stop the run (NFR-07).

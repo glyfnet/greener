@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- D-17 rewilding policy: local natives only and no chemicals. `save_plan` refuses non-local species and chemical methods; `check_species` and `save_plan` confirm natives live with ALA; new `chemical_free` and `phase_out_sprays` strategies; KB guides on chemical-free weed control (WeedWise lantana and ground asparagus).
+
 - `get_site_strategies` tool: strategies for apartments and courtyards, rented or strata sites, and bushfire-prone land, citing NSW RFS and NSW Government guidance (FR-23).
 - Declared weed list: 126 NSW WeedWise priority weeds for Greater Sydney, with genus-wide and subspecies matching (FR-24).
 - First cost reference rows from the Yass Area Network nurseries (FR-68).

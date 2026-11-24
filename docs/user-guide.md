@@ -26,7 +26,7 @@ Claude writes a plan with quick wins, actions, a planting list and a way to trac
 - Each action shows its hours, its cost range and when in the year to do it.
 - Actions go into phases, from quick wins in month 1 to months 19–36.
 - Actions that don't fit are listed with the reason, and with what 2 more hours a week would add.
-- Plants that are weeds or are introduced in your area are never allowed. Plants with no local records come with a warning.
+- Greener is for rewilding: it plants **local natives only** and uses **no chemicals**. Plants without native records near your site, and weeds, are never allowed. Weeds are removed by hand and the gap is replanted.
 - Costs are estimates with a date. Where Greener has no price, it says so.
 
 When you finish an action, tell Claude: "I finished the weeding. It took 6 hours and cost $20." The rest of the plan moves to fit.

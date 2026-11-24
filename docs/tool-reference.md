@@ -1629,7 +1629,7 @@ Input schema:
 
 ## check_species
 
-Check candidate planting species before they go in a plan (FR-22, FR-24, NFR-01). Resolves each name to the ALA taxonomy, then checks it against the site research and the declared weed list. Blocked species must not be planted; warnings must be shown to the user.
+Check candidate planting species before they go in a plan (FR-22, FR-24, NFR-01, D-17). Resolves each name to the ALA taxonomy, checks it against the site research and the declared weed list, and asks ALA for native records near the site for species the research does not cover. Only local natives may be planted: blocked species must not go in the plan. Copy the returned citations into the plan.
 
 Input schema:
 
@@ -1941,6 +1941,47 @@ Input schema:
         "invasiveSpecies",
         "dataGaps",
         "citations"
+      ]
+    },
+    "location": {
+      "description": "Site location; needed to check species that are not in the research report",
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": "number",
+          "minimum": -44,
+          "maximum": -10,
+          "description": "Latitude, Australia only (D-02)"
+        },
+        "lon": {
+          "type": "number",
+          "minimum": 112,
+          "maximum": 154,
+          "description": "Longitude, Australia only (D-02)"
+        },
+        "label": {
+          "description": "Suburb or place name the user gave",
+          "type": "string",
+          "maxLength": 200
+        },
+        "precision": {
+          "default": "approximate",
+          "type": "string",
+          "enum": [
+            "exact",
+            "approximate"
+          ]
+        },
+        "state": {
+          "default": "NSW",
+          "description": "MVP covers NSW only (D-02)",
+          "type": "string",
+          "const": "NSW"
+        }
+      },
+      "required": [
+        "lat",
+        "lon"
       ]
     }
   },

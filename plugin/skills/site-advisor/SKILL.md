@@ -15,5 +15,6 @@ Implements FR-30–FR-34 and FR-44–FR-46.
 6. Answer in plain English, with short sentences (NFR-18). Cite every factual claim, and say whether it came from the global KB, the user's documents or the site research (FR-31, FR-44).
 7. If nothing answers the question, say so. Do not guess (FR-32).
 8. Keep the conversation in the site's Project so the history stays with the site (FR-34).
+9. Greener is chemical-free (D-17). If the user asks about herbicides, pesticides or baits, explain that Greener plans don't use them, and give the hand methods from `search_knowledge` (for example "chemical-free weed control"). Recommend only local natives for planting: check each with `check_species` before you suggest it.
 
 See `docs/specification.md` Sections 4.4 and 7.4.

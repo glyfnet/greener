@@ -19,7 +19,7 @@ Out of scope for release 1 (MVP): Indigenous ecological knowledge, user accounts
 
 ## 2. Decision log
 
-Sixteen decisions are closed. Each new decision gets a new row.
+Seventeen decisions are closed. Each new decision gets a new row.
 
 | ID | Decision | Result | Effect on design |
 | --- | --- | --- | --- |
@@ -39,8 +39,9 @@ Sixteen decisions are closed. Each new decision gets a new row.
 | D-14 | Licences | Apache-2.0 for code. CC BY 4.0 for KB text that the maintainer writes. | `LICENSE` at the root; `kb/LICENSE` for KB text. |
 | D-15 | Global KB content | Two tiers: **open content** (full text, only with an open licence or permission) and a **link catalogue** (URL, metadata and a thorough summary in our own words). No private KB. | The repository stays fully public. Claude reads link-catalogue sources live when web access is on (Section 7.4). |
 | D-16 | Funding | Voluntary donations through Buy Me a Coffee, linked from the GitHub page | `.github/FUNDING.yml` shows a Sponsor button. The README links it. The tool stays free; no feature needs a donation. |
+| D-17 | Planting and chemical policy | Rewilding with local natives only, and no chemicals. Every planted species must have native records near the site. No herbicides, pesticides, poison baits, fungicides or chemical fertilisers in any action. | `check_species` and `save_plan` block any species without local native records (stricter than FR-22's warning option). `save_plan` refuses actions that use chemicals. Weeds and pests are managed by hand removal, smothering, exclusion and revegetation. |
 
-D-05 and D-06 changed on 24 Nov 2026 so that non-technical users need no install and no local setup.
+D-05 and D-06 changed on 24 Nov 2026 so that non-technical users need no install and no local setup. D-17 was added on 24 Nov 2026 by the maintainer.
 
 ## 3. Users and use cases
 

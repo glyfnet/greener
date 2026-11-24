@@ -206,3 +206,63 @@ items:
     region: NSW
     dateChecked: "2026-11-24"
     tags: [bushfire, asset protection zone, apz, habitat, garden design, maintenance]
+
+  - id: weedwise-lantana
+    title: NSW WeedWise — Lantana (Lantana camara)
+    tier: link_catalogue
+    sourceUrl: https://weeds.dpi.nsw.gov.au/Weed/Lantana
+    publisher: NSW Department of Primary Industries and Regional Development
+    licence: "Link and summary only. Page footer links the NSW Government CC BY 4.0 notice."
+    region: NSW
+    dateChecked: "2026-11-24"
+    tags: [lantana, weed control, hand pulling, physical removal, chemical-free, follow-up, revegetation]
+    summary: >-
+      The WeedWise profile for lantana, a priority weed that must not be sold
+      in NSW. Lantana is poisonous to people and livestock, crowds out native
+      plants, reduces habitat and adds bushfire fuel. Greener uses only its
+      non-chemical advice. Work on big patches a section at a time, starting
+      from the edges, and do only as much as you can follow up. Hand pull
+      small or isolated plants after rain while the soil is moist, wearing
+      gloves, and grub out the roots with a mattock or hoe; roll and remove
+      the stems and roots, or the plant regrows. Slashing knocks back large
+      thickets but does not kill them. Avoid clearing large areas at once,
+      because bare ground erodes; revegetate cleared areas. Control seedlings
+      and regrowth before they reach 1 m or fruit: look for seedlings one to
+      three months after clearing and after summer rain, and recheck three to
+      six months later. The profile also lists herbicide methods, which
+      Greener plans do not use (D-17).
+
+  - id: weedwise-ground-asparagus
+    title: NSW WeedWise — Ground asparagus (Asparagus aethiopicus)
+    tier: link_catalogue
+    sourceUrl: https://weeds.dpi.nsw.gov.au/Weed/GroundAsparagus
+    publisher: NSW Department of Primary Industries and Regional Development
+    licence: "Link and summary only. Page footer links the NSW Government CC BY 4.0 notice."
+    region: NSW
+    dateChecked: "2026-11-24"
+    tags: [asparagus fern, ground asparagus, crowning, weed control, physical removal, chemical-free, disposal]
+    summary: >-
+      The WeedWise profile for ground asparagus, a priority weed that must not
+      be sold in NSW. It forms dense mats above ground and thick mats of roots
+      and tubers below, smothering small native herbs and shrubs and changing
+      the soil and leaf litter. Greener uses only its non-chemical advice.
+      Very small plants can be hand pulled if the whole crown comes out. For
+      larger plants use crowning: clear the stems and foliage to reach the
+      crown just below the soil surface, cut all the roots around it with a
+      sharp knife or trowel, and lever it out; the roots and tubers can stay
+      in the ground, which limits soil disturbance in sensitive places such as
+      dunes, but any piece of crown left behind regrows. Bag the crowns and
+      any fruiting stems, including green fruit, and ask the council about
+      disposal. Come back to remove regrowth and seedlings. The profile also
+      lists herbicide methods, which Greener plans do not use (D-17).
+
+  - id: greener-chemical-free-rewilding
+    title: Rewilding without chemicals
+    tier: open_content
+    file: greener-chemical-free-rewilding.md
+    sourceUrl: kb/sources/greener-chemical-free-rewilding.md
+    publisher: Greener maintainers
+    licence: maintainer
+    region: NSW
+    dateChecked: "2026-11-24"
+    tags: [chemical-free, rewilding, weed control, hand weeding, pests, local natives, no pesticides]
