@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `vegetation_community` returns the pre-clearing Plant Community Type at the site from the NSW State Vegetation Type Map, with a citation. It is not cached (FR-14, D-20).
 - `geocode` looks up NSW street addresses in the NSW Address Location Service and returns the suburb, the council and a citation. Lookups are never cached, and the street address stays out of the plan (FR-02, D-19).
 - `bushfire_status` looks up the NSW RFS Bush Fire Prone Land map within about 100 m of the site, and suggests an answer for the bushfire question with a citation (FR-03, D-18). The result is never cached.
 - Data source decisions D-18 to D-22 (bushfire, geocoding, vegetation, climate, soil), with recorded fixtures. Q-06 is closed.

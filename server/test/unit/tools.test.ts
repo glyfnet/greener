@@ -184,9 +184,18 @@ describe("research tools", () => {
   });
 
   it("returns data gaps for sources still being checked", async () => {
-    for (const name of ["climate_normals", "soil_properties", "vegetation_community"]) {
+    for (const name of ["climate_normals", "soil_properties"]) {
       expect((await call(name, { location })).data).toMatchObject({ available: false, dataGap: expect.objectContaining({ reason: expect.stringContaining("still being checked") }) });
     }
+  });
+
+  it("returns the pre-clearing vegetation community with a citation (FR-14, D-20)", async () => {
+    const r = await call("vegetation_community", { location: { ...location, ...TEST_POINT, precision: "exact" } });
+    expect(r.data).toMatchObject({ available: true, community: { pctId: 3262, name: "Sydney Turpentine Ironbark Forest" }, citation: { id: "nsw:svtm-pre-clearing" } });
+    expect((r.data.notes as string[]).join(" ")).toContain("not a site survey");
+    expect((await call("vegetation_community", { location })).data).toMatchObject({ available: false, dataGap: { topic: "pre-clearing vegetation community" } });
+    const empty = await call("vegetation_community", { location }, testContext({ fetch: async () => new Response('{"results":[]}') }));
+    expect(empty.data).toMatchObject({ available: false, dataGap: { reason: expect.stringContaining("no community") } });
   });
 
   it("checks names against the declared weed list", async () => {

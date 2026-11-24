@@ -188,3 +188,27 @@ describe("NSW address lookup (FR-02, D-19)", async () => {
     expect(r.ok && r.candidates[0]).toEqual({ lat: -33, lon: 150, suburb: "Place 0" });
   });
 });
+
+describe("NSW pre-clearing vegetation community (FR-14, D-20)", async () => {
+  const { vegetationCommunity, vegetationUrl } = await import("../../src/connectors/vegetation.js");
+  const { FIRE_POINT } = await import("../helpers.js");
+
+  it("builds the recorded URL", () => {
+    expect(vegetationUrl(TEST_POINT.lat, TEST_POINT.lon)).toBe(fixture("sydney", "vegetation").url);
+    expect(vegetationUrl(-33.87304, 151.21096)).toBe(fixture("sydney", "vegetation").url);
+  });
+
+  it("returns the Plant Community Type at each test point, never cached", async () => {
+    const cache = memoryCache();
+    const syd = await vegetationCommunity(TEST_POINT.lat, TEST_POINT.lon, deps(fixtureFetch().fn, { cache }), "2026-11-25");
+    expect(syd).toMatchObject({ ok: true, community: { pctId: 3262, name: "Sydney Turpentine Ironbark Forest", vegetationClass: "Northern Hinterland Wet Sclerophyll Forests" }, citation: { id: "nsw:svtm-pre-clearing" } });
+    expect(cache.store.size).toBe(0);
+    expect(await vegetationCommunity(FIRE_POINT.lat, FIRE_POINT.lon, deps(fixtureFetch().fn), "d")).toMatchObject({ ok: true, community: { pctId: 3692, name: "Upper Blue Mountains Moist Forest" } });
+  });
+
+  it("returns no community off the map, and a gap on failure (NFR-07)", async () => {
+    expect(await vegetationCommunity(-33.8, 151.3, deps(async () => new Response('{"results":[]}')), "d")).toMatchObject({ ok: true, community: null });
+    expect(await vegetationCommunity(-33.8, 151.3, deps(fixtureFetch().fn), "d")).toMatchObject({ ok: false, dataGap: { topic: "pre-clearing vegetation community" } });
+    expect(await vegetationCommunity(-33.8, 151.3, deps(async () => new Response('{"error":{"message":"bad"}}')), "d")).toMatchObject({ ok: false, dataGap: { reason: expect.stringContaining("bad") } });
+  });
+});

@@ -18,6 +18,8 @@ export const ALLOWED_HOSTS = new Set([
   "portal.spatial.nsw.gov.au",
   // D-19: NSW Address Location Service.
   "maps.six.nsw.gov.au",
+  // D-20: NSW State Vegetation Type Map.
+  "mapprod3.environment.nsw.gov.au",
 ]);
 
 /** FR-16 default cache time to live. */

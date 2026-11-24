@@ -1300,7 +1300,7 @@ Input schema:
 
 ## vegetation_community
 
-Get the pre-clearing vegetation community for the site (FR-14). The data source is not confirmed yet (Section 8), so this returns a data gap.
+Get the likely original (pre-clearing) Plant Community Type for the site from the NSW State Vegetation Type Map (FR-14, D-20). Use it to choose local natives that belong in that community, and to explain the plan. It is a statewide model, not a site survey.
 
 Input schema:
 
