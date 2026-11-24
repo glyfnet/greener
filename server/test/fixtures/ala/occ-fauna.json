@@ -1,0 +1,166 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&lat=-33.87&lon=151.21&radius=10&pageSize=0&facets=species&fsort=count&flimit=20&fq=kingdom%3AAnimalia",
+  "recordedAt": "2026-11-24T09:11:33.907Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 1843790,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [
+      {
+        "fieldName": "species",
+        "fieldResult": [
+          {
+            "label": "Trichoglossus moluccanus",
+            "i18nCode": "species.Trichoglossus moluccanus",
+            "count": 83111,
+            "fq": "species:\"Trichoglossus moluccanus\""
+          },
+          {
+            "label": "Manorina melanocephala",
+            "i18nCode": "species.Manorina melanocephala",
+            "count": 72671,
+            "fq": "species:\"Manorina melanocephala\""
+          },
+          {
+            "label": "Threskiornis moluccus",
+            "i18nCode": "species.Threskiornis moluccus",
+            "count": 53904,
+            "fq": "species:\"Threskiornis moluccus\""
+          },
+          {
+            "label": "Gymnorhina tibicen",
+            "i18nCode": "species.Gymnorhina tibicen",
+            "count": 49421,
+            "fq": "species:\"Gymnorhina tibicen\""
+          },
+          {
+            "label": "Strepera graculina",
+            "i18nCode": "species.Strepera graculina",
+            "count": 46896,
+            "fq": "species:\"Strepera graculina\""
+          },
+          {
+            "label": "Hirundo neoxena",
+            "i18nCode": "species.Hirundo neoxena",
+            "count": 44215,
+            "fq": "species:\"Hirundo neoxena\""
+          },
+          {
+            "label": "Chroicocephalus novaehollandiae",
+            "i18nCode": "species.Chroicocephalus novaehollandiae",
+            "count": 40430,
+            "fq": "species:\"Chroicocephalus novaehollandiae\""
+          },
+          {
+            "label": "Corvus coronoides",
+            "i18nCode": "species.Corvus coronoides",
+            "count": 39884,
+            "fq": "species:\"Corvus coronoides\""
+          },
+          {
+            "label": "Columba livia",
+            "i18nCode": "species.Columba livia",
+            "count": 39226,
+            "fq": "species:\"Columba livia\""
+          },
+          {
+            "label": "Carcharhinus leucas",
+            "i18nCode": "species.Carcharhinus leucas",
+            "count": 36555,
+            "fq": "species:\"Carcharhinus leucas\""
+          },
+          {
+            "label": "Cacatua galerita",
+            "i18nCode": "species.Cacatua galerita",
+            "count": 33470,
+            "fq": "species:\"Cacatua galerita\""
+          },
+          {
+            "label": "Acridotheres tristis",
+            "i18nCode": "species.Acridotheres tristis",
+            "count": 32859,
+            "fq": "species:\"Acridotheres tristis\""
+          },
+          {
+            "label": "Dacelo novaeguineae",
+            "i18nCode": "species.Dacelo novaeguineae",
+            "count": 31486,
+            "fq": "species:\"Dacelo novaeguineae\""
+          },
+          {
+            "label": "Grallina cyanoleuca",
+            "i18nCode": "species.Grallina cyanoleuca",
+            "count": 28625,
+            "fq": "species:\"Grallina cyanoleuca\""
+          },
+          {
+            "label": "Cracticus torquatus",
+            "i18nCode": "species.Cracticus torquatus",
+            "count": 26570,
+            "fq": "species:\"Cracticus torquatus\""
+          },
+          {
+            "label": "Pseudocheirus peregrinus",
+            "i18nCode": "species.Pseudocheirus peregrinus",
+            "count": 26522,
+            "fq": "species:\"Pseudocheirus peregrinus\""
+          },
+          {
+            "label": "Gallinula tenebrosa",
+            "i18nCode": "species.Gallinula tenebrosa",
+            "count": 25781,
+            "fq": "species:\"Gallinula tenebrosa\""
+          },
+          {
+            "label": "Achoerodus viridis",
+            "i18nCode": "species.Achoerodus viridis",
+            "count": 24739,
+            "fq": "species:\"Achoerodus viridis\""
+          },
+          {
+            "label": "Vanellus miles",
+            "i18nCode": "species.Vanellus miles",
+            "count": 24140,
+            "fq": "species:\"Vanellus miles\""
+          },
+          {
+            "label": "Anas superciliosa",
+            "i18nCode": "species.Anas superciliosa",
+            "count": 24044,
+            "fq": "species:\"Anas superciliosa\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "species.novalue",
+            "count": 106207,
+            "fq": "-species:*"
+          }
+        ]
+      }
+    ],
+    "query": "?q=*%3A*&fq=kingdom%3AAnimalia&lat=-33.87&lon=151.21&radius=10.0",
+    "urlParameters": "?q=*%3A*&fq=kingdom%3AAnimalia&lat=-33.87&lon=151.21&radius=10.0",
+    "queryTitle": "[all records] - within 10 km of point(-33.87, 151.21)",
+    "activeFacetMap": {
+      "kingdom": {
+        "name": "kingdom",
+        "displayName": "Kingdom:Animalia - within 10 km of point(-33.87, 151.21)",
+        "value": "Animalia"
+      }
+    },
+    "activeFacetObj": {
+      "kingdom": [
+        {
+          "name": "kingdom",
+          "displayName": "Kingdom:Animalia - within 10 km of point(-33.87, 151.21)",
+          "value": "kingdom:Animalia"
+        }
+      ]
+    }
+  }
+}

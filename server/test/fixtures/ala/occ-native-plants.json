@@ -1,0 +1,238 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&lat=-33.87&lon=151.21&radius=10&pageSize=0&facets=species&fsort=count&flimit=30&fq=kingdom%3APlantae&fq=%28establishmentMeans%3Anative+OR+degreeOfEstablishment%3Anative%29",
+  "recordedAt": "2026-11-24T09:11:33.131Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 8990,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [
+      {
+        "fieldName": "species",
+        "fieldResult": [
+          {
+            "label": "Acacia terminalis",
+            "i18nCode": "species.Acacia terminalis",
+            "count": 119,
+            "fq": "species:\"Acacia terminalis\""
+          },
+          {
+            "label": "Grateloupia australis",
+            "i18nCode": "species.Grateloupia australis",
+            "count": 82,
+            "fq": "species:\"Grateloupia australis\""
+          },
+          {
+            "label": "Tortula muralis",
+            "i18nCode": "species.Tortula muralis",
+            "count": 56,
+            "fq": "species:\"Tortula muralis\""
+          },
+          {
+            "label": "Allocasuarina distyla",
+            "i18nCode": "species.Allocasuarina distyla",
+            "count": 51,
+            "fq": "species:\"Allocasuarina distyla\""
+          },
+          {
+            "label": "Dillwynia retorta",
+            "i18nCode": "species.Dillwynia retorta",
+            "count": 42,
+            "fq": "species:\"Dillwynia retorta\""
+          },
+          {
+            "label": "Acacia linifolia",
+            "i18nCode": "species.Acacia linifolia",
+            "count": 38,
+            "fq": "species:\"Acacia linifolia\""
+          },
+          {
+            "label": "Callistemon linearis",
+            "i18nCode": "species.Callistemon linearis",
+            "count": 37,
+            "fq": "species:\"Callistemon linearis\""
+          },
+          {
+            "label": "Cephalocystis leucobotrys",
+            "i18nCode": "species.Cephalocystis leucobotrys",
+            "count": 34,
+            "fq": "species:\"Cephalocystis leucobotrys\""
+          },
+          {
+            "label": "Epacris longiflora",
+            "i18nCode": "species.Epacris longiflora",
+            "count": 34,
+            "fq": "species:\"Epacris longiflora\""
+          },
+          {
+            "label": "Grevillea linearifolia",
+            "i18nCode": "species.Grevillea linearifolia",
+            "count": 34,
+            "fq": "species:\"Grevillea linearifolia\""
+          },
+          {
+            "label": "Acacia suaveolens",
+            "i18nCode": "species.Acacia suaveolens",
+            "count": 33,
+            "fq": "species:\"Acacia suaveolens\""
+          },
+          {
+            "label": "Crowea saligna",
+            "i18nCode": "species.Crowea saligna",
+            "count": 31,
+            "fq": "species:\"Crowea saligna\""
+          },
+          {
+            "label": "Fissidens curvatus",
+            "i18nCode": "species.Fissidens curvatus",
+            "count": 31,
+            "fq": "species:\"Fissidens curvatus\""
+          },
+          {
+            "label": "Leptospermum squarrosum",
+            "i18nCode": "species.Leptospermum squarrosum",
+            "count": 31,
+            "fq": "species:\"Leptospermum squarrosum\""
+          },
+          {
+            "label": "Acacia longifolia",
+            "i18nCode": "species.Acacia longifolia",
+            "count": 30,
+            "fq": "species:\"Acacia longifolia\""
+          },
+          {
+            "label": "Platysace lanceolata",
+            "i18nCode": "species.Platysace lanceolata",
+            "count": 30,
+            "fq": "species:\"Platysace lanceolata\""
+          },
+          {
+            "label": "Angophora costata",
+            "i18nCode": "species.Angophora costata",
+            "count": 29,
+            "fq": "species:\"Angophora costata\""
+          },
+          {
+            "label": "Fabronia scottiae",
+            "i18nCode": "species.Fabronia scottiae",
+            "count": 29,
+            "fq": "species:\"Fabronia scottiae\""
+          },
+          {
+            "label": "Gemmabryum dichotomum",
+            "i18nCode": "species.Gemmabryum dichotomum",
+            "count": 29,
+            "fq": "species:\"Gemmabryum dichotomum\""
+          },
+          {
+            "label": "Sematophyllum subhumile",
+            "i18nCode": "species.Sematophyllum subhumile",
+            "count": 29,
+            "fq": "species:\"Sematophyllum subhumile\""
+          },
+          {
+            "label": "Grevillea speciosa",
+            "i18nCode": "species.Grevillea speciosa",
+            "count": 28,
+            "fq": "species:\"Grevillea speciosa\""
+          },
+          {
+            "label": "Isopterygium albescens",
+            "i18nCode": "species.Isopterygium albescens",
+            "count": 27,
+            "fq": "species:\"Isopterygium albescens\""
+          },
+          {
+            "label": "Racopilum cuspidigerum",
+            "i18nCode": "species.Racopilum cuspidigerum",
+            "count": 27,
+            "fq": "species:\"Racopilum cuspidigerum\""
+          },
+          {
+            "label": "Chonecolea doellingeri",
+            "i18nCode": "species.Chonecolea doellingeri",
+            "count": 26,
+            "fq": "species:\"Chonecolea doellingeri\""
+          },
+          {
+            "label": "Elaeocarpus reticulatus",
+            "i18nCode": "species.Elaeocarpus reticulatus",
+            "count": 26,
+            "fq": "species:\"Elaeocarpus reticulatus\""
+          },
+          {
+            "label": "Muellerina celastroides",
+            "i18nCode": "species.Muellerina celastroides",
+            "count": 26,
+            "fq": "species:\"Muellerina celastroides\""
+          },
+          {
+            "label": "Callophyllis nana",
+            "i18nCode": "species.Callophyllis nana",
+            "count": 25,
+            "fq": "species:\"Callophyllis nana\""
+          },
+          {
+            "label": "Dendrophthoe vitellina",
+            "i18nCode": "species.Dendrophthoe vitellina",
+            "count": 25,
+            "fq": "species:\"Dendrophthoe vitellina\""
+          },
+          {
+            "label": "Epacris microphylla",
+            "i18nCode": "species.Epacris microphylla",
+            "count": 25,
+            "fq": "species:\"Epacris microphylla\""
+          },
+          {
+            "label": "Eucalyptus obstans",
+            "i18nCode": "species.Eucalyptus obstans",
+            "count": 25,
+            "fq": "species:\"Eucalyptus obstans\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "species.novalue",
+            "count": 647,
+            "fq": "-species:*"
+          }
+        ]
+      }
+    ],
+    "query": "?q=*%3A*&fq=kingdom%3APlantae&fq=(establishmentMeans%3Anative%20OR%20degreeOfEstablishment%3Anative)&lat=-33.87&lon=151.21&radius=10.0",
+    "urlParameters": "?q=*%3A*&fq=kingdom%3APlantae&fq=(establishmentMeans%3Anative%20OR%20degreeOfEstablishment%3Anative)&lat=-33.87&lon=151.21&radius=10.0",
+    "queryTitle": "[all records] - within 10 km of point(-33.87, 151.21)",
+    "activeFacetMap": {
+      "(establishmentMeans": {
+        "name": "(establishmentMeans",
+        "displayName": "(Establishment means:native OR degreeOfEstablishment:native) - within 10 km of point(-33.87, 151.21)",
+        "value": "native OR degreeOfEstablishment:native)"
+      },
+      "kingdom": {
+        "name": "kingdom",
+        "displayName": "Kingdom:Plantae - within 10 km of point(-33.87, 151.21)",
+        "value": "Plantae"
+      }
+    },
+    "activeFacetObj": {
+      "establishmentMeans": [
+        {
+          "name": "establishmentMeans",
+          "displayName": "(Establishment means:native OR degreeOfEstablishment:native) - within 10 km of point(-33.87, 151.21)",
+          "value": "(establishmentMeans:native OR degreeOfEstablishment:native)"
+        }
+      ],
+      "kingdom": [
+        {
+          "name": "kingdom",
+          "displayName": "Kingdom:Plantae - within 10 km of point(-33.87, 151.21)",
+          "value": "kingdom:Plantae"
+        }
+      ]
+    }
+  }
+}

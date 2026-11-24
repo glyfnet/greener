@@ -1,0 +1,43 @@
+{
+  "url": "https://api.ala.org.au/namematching/api/search?q=Lantana+camara",
+  "recordedAt": "2026-11-24T09:11:35.204Z",
+  "status": 200,
+  "body": {
+    "success": true,
+    "scientificName": "Lantana camara",
+    "scientificNameAuthorship": "L.",
+    "taxonConceptID": "https://id.biodiversity.org.au/taxon/apni/51448660",
+    "rank": "species",
+    "rankID": 7000,
+    "lft": 493358,
+    "rgt": 493358,
+    "matchType": "exactMatch",
+    "nameType": "SCIENTIFIC",
+    "kingdom": "Plantae",
+    "kingdomID": "https://id.biodiversity.org.au/taxon/apni/51795632",
+    "phylum": "Charophyta",
+    "phylumID": "https://id.biodiversity.org.au/taxon/apni/51795631",
+    "classs": "Equisetopsida",
+    "classID": "https://id.biodiversity.org.au/taxon/apni/51795630",
+    "order": "Lamiales",
+    "orderID": "https://id.biodiversity.org.au/taxon/apni/51786442",
+    "family": "Verbenaceae",
+    "familyID": "https://id.biodiversity.org.au/taxon/apni/51448662",
+    "genus": "Lantana",
+    "genusID": "https://id.biodiversity.org.au/taxon/apni/51448661",
+    "species": "Lantana camara",
+    "speciesID": "https://id.biodiversity.org.au/taxon/apni/51448660",
+    "vernacularName": "Lantana",
+    "speciesGroup": [
+      "Plants",
+      "Flowering plants",
+      "Dicots"
+    ],
+    "speciesSubgroup": [
+      "Dicots"
+    ],
+    "issues": [
+      "noIssue"
+    ]
+  }
+}

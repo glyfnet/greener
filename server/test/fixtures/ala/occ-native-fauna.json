@@ -1,0 +1,328 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&lat=-33.87&lon=151.21&radius=10&pageSize=0&facets=species&fsort=count&flimit=50&fq=kingdom%3AAnimalia&fq=%28establishmentMeans%3Anative+OR+degreeOfEstablishment%3Anative%29",
+  "recordedAt": "2026-11-24T09:11:34.146Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 71,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [
+      {
+        "fieldName": "species",
+        "fieldResult": [
+          {
+            "label": "Perameles nasuta",
+            "i18nCode": "species.Perameles nasuta",
+            "count": 3,
+            "fq": "species:\"Perameles nasuta\""
+          },
+          {
+            "label": "Brachaelurus waddi",
+            "i18nCode": "species.Brachaelurus waddi",
+            "count": 2,
+            "fq": "species:\"Brachaelurus waddi\""
+          },
+          {
+            "label": "Chrysophrys auratus",
+            "i18nCode": "species.Chrysophrys auratus",
+            "count": 2,
+            "fq": "species:\"Chrysophrys auratus\""
+          },
+          {
+            "label": "Cnidoglanis macrocephalus",
+            "i18nCode": "species.Cnidoglanis macrocephalus",
+            "count": 2,
+            "fq": "species:\"Cnidoglanis macrocephalus\""
+          },
+          {
+            "label": "Gymnothorax prasinus",
+            "i18nCode": "species.Gymnothorax prasinus",
+            "count": 2,
+            "fq": "species:\"Gymnothorax prasinus\""
+          },
+          {
+            "label": "Heteroclinus heptaeolus",
+            "i18nCode": "species.Heteroclinus heptaeolus",
+            "count": 2,
+            "fq": "species:\"Heteroclinus heptaeolus\""
+          },
+          {
+            "label": "Orectolobus ornatus",
+            "i18nCode": "species.Orectolobus ornatus",
+            "count": 2,
+            "fq": "species:\"Orectolobus ornatus\""
+          },
+          {
+            "label": "Pachyptila desolata",
+            "i18nCode": "species.Pachyptila desolata",
+            "count": 2,
+            "fq": "species:\"Pachyptila desolata\""
+          },
+          {
+            "label": "Pachyptila salvini",
+            "i18nCode": "species.Pachyptila salvini",
+            "count": 2,
+            "fq": "species:\"Pachyptila salvini\""
+          },
+          {
+            "label": "Pachyptila turtur",
+            "i18nCode": "species.Pachyptila turtur",
+            "count": 2,
+            "fq": "species:\"Pachyptila turtur\""
+          },
+          {
+            "label": "Acanthistius serratus",
+            "i18nCode": "species.Acanthistius serratus",
+            "count": 1,
+            "fq": "species:\"Acanthistius serratus\""
+          },
+          {
+            "label": "Acanthopagrus australis",
+            "i18nCode": "species.Acanthopagrus australis",
+            "count": 1,
+            "fq": "species:\"Acanthopagrus australis\""
+          },
+          {
+            "label": "Ambassis jacksoniensis",
+            "i18nCode": "species.Ambassis jacksoniensis",
+            "count": 1,
+            "fq": "species:\"Ambassis jacksoniensis\""
+          },
+          {
+            "label": "Anoplocapros amygdaloides",
+            "i18nCode": "species.Anoplocapros amygdaloides",
+            "count": 1,
+            "fq": "species:\"Anoplocapros amygdaloides\""
+          },
+          {
+            "label": "Anoplocapros inermis",
+            "i18nCode": "species.Anoplocapros inermis",
+            "count": 1,
+            "fq": "species:\"Anoplocapros inermis\""
+          },
+          {
+            "label": "Aquila audax",
+            "i18nCode": "species.Aquila audax",
+            "count": 1,
+            "fq": "species:\"Aquila audax\""
+          },
+          {
+            "label": "Atypichthys strigatus",
+            "i18nCode": "species.Atypichthys strigatus",
+            "count": 1,
+            "fq": "species:\"Atypichthys strigatus\""
+          },
+          {
+            "label": "Bathygobius krefftii",
+            "i18nCode": "species.Bathygobius krefftii",
+            "count": 1,
+            "fq": "species:\"Bathygobius krefftii\""
+          },
+          {
+            "label": "Centropogon australis",
+            "i18nCode": "species.Centropogon australis",
+            "count": 1,
+            "fq": "species:\"Centropogon australis\""
+          },
+          {
+            "label": "Chironemus marmoratus",
+            "i18nCode": "species.Chironemus marmoratus",
+            "count": 1,
+            "fq": "species:\"Chironemus marmoratus\""
+          },
+          {
+            "label": "Dermatopsis macrodon",
+            "i18nCode": "species.Dermatopsis macrodon",
+            "count": 1,
+            "fq": "species:\"Dermatopsis macrodon\""
+          },
+          {
+            "label": "Dipulus multiradiatus",
+            "i18nCode": "species.Dipulus multiradiatus",
+            "count": 1,
+            "fq": "species:\"Dipulus multiradiatus\""
+          },
+          {
+            "label": "Enneapterygius atrogulare",
+            "i18nCode": "species.Enneapterygius atrogulare",
+            "count": 1,
+            "fq": "species:\"Enneapterygius atrogulare\""
+          },
+          {
+            "label": "Eopsaltria australis",
+            "i18nCode": "species.Eopsaltria australis",
+            "count": 1,
+            "fq": "species:\"Eopsaltria australis\""
+          },
+          {
+            "label": "Favonigobius lateralis",
+            "i18nCode": "species.Favonigobius lateralis",
+            "count": 1,
+            "fq": "species:\"Favonigobius lateralis\""
+          },
+          {
+            "label": "Helicolenus percoides",
+            "i18nCode": "species.Helicolenus percoides",
+            "count": 1,
+            "fq": "species:\"Helicolenus percoides\""
+          },
+          {
+            "label": "Heteroclinus nasutus",
+            "i18nCode": "species.Heteroclinus nasutus",
+            "count": 1,
+            "fq": "species:\"Heteroclinus nasutus\""
+          },
+          {
+            "label": "Heterodontus portusjacksoni",
+            "i18nCode": "species.Heterodontus portusjacksoni",
+            "count": 1,
+            "fq": "species:\"Heterodontus portusjacksoni\""
+          },
+          {
+            "label": "Limnichthys fasciatus",
+            "i18nCode": "species.Limnichthys fasciatus",
+            "count": 1,
+            "fq": "species:\"Limnichthys fasciatus\""
+          },
+          {
+            "label": "Meuschenia freycineti",
+            "i18nCode": "species.Meuschenia freycineti",
+            "count": 1,
+            "fq": "species:\"Meuschenia freycineti\""
+          },
+          {
+            "label": "Meuschenia trachylepis",
+            "i18nCode": "species.Meuschenia trachylepis",
+            "count": 1,
+            "fq": "species:\"Meuschenia trachylepis\""
+          },
+          {
+            "label": "Microcanthus strigatus",
+            "i18nCode": "species.Microcanthus strigatus",
+            "count": 1,
+            "fq": "species:\"Microcanthus strigatus\""
+          },
+          {
+            "label": "Micronomus norfolkensis",
+            "i18nCode": "species.Micronomus norfolkensis",
+            "count": 1,
+            "fq": "species:\"Micronomus norfolkensis\""
+          },
+          {
+            "label": "Miniopterus orianae",
+            "i18nCode": "species.Miniopterus orianae",
+            "count": 1,
+            "fq": "species:\"Miniopterus orianae\""
+          },
+          {
+            "label": "Notesthes robusta",
+            "i18nCode": "species.Notesthes robusta",
+            "count": 1,
+            "fq": "species:\"Notesthes robusta\""
+          },
+          {
+            "label": "Olisthops cyanomelas",
+            "i18nCode": "species.Olisthops cyanomelas",
+            "count": 1,
+            "fq": "species:\"Olisthops cyanomelas\""
+          },
+          {
+            "label": "Origma solitaria",
+            "i18nCode": "species.Origma solitaria",
+            "count": 1,
+            "fq": "species:\"Origma solitaria\""
+          },
+          {
+            "label": "Oriolus sagittatus",
+            "i18nCode": "species.Oriolus sagittatus",
+            "count": 1,
+            "fq": "species:\"Oriolus sagittatus\""
+          },
+          {
+            "label": "Phascolarctos cinereus",
+            "i18nCode": "species.Phascolarctos cinereus",
+            "count": 1,
+            "fq": "species:\"Phascolarctos cinereus\""
+          },
+          {
+            "label": "Pomatomus saltatrix",
+            "i18nCode": "species.Pomatomus saltatrix",
+            "count": 1,
+            "fq": "species:\"Pomatomus saltatrix\""
+          },
+          {
+            "label": "Priacanthus macracanthus",
+            "i18nCode": "species.Priacanthus macracanthus",
+            "count": 1,
+            "fq": "species:\"Priacanthus macracanthus\""
+          },
+          {
+            "label": "Sillago maculata",
+            "i18nCode": "species.Sillago maculata",
+            "count": 1,
+            "fq": "species:\"Sillago maculata\""
+          },
+          {
+            "label": "Trachinops taeniatus",
+            "i18nCode": "species.Trachinops taeniatus",
+            "count": 1,
+            "fq": "species:\"Trachinops taeniatus\""
+          },
+          {
+            "label": "Trianectes bucephalus",
+            "i18nCode": "species.Trianectes bucephalus",
+            "count": 1,
+            "fq": "species:\"Trianectes bucephalus\""
+          },
+          {
+            "label": "Trygonorrhina fasciata",
+            "i18nCode": "species.Trygonorrhina fasciata",
+            "count": 1,
+            "fq": "species:\"Trygonorrhina fasciata\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "species.novalue",
+            "count": 15,
+            "fq": "-species:*"
+          }
+        ]
+      }
+    ],
+    "query": "?q=*%3A*&fq=kingdom%3AAnimalia&fq=(establishmentMeans%3Anative%20OR%20degreeOfEstablishment%3Anative)&lat=-33.87&lon=151.21&radius=10.0",
+    "urlParameters": "?q=*%3A*&fq=kingdom%3AAnimalia&fq=(establishmentMeans%3Anative%20OR%20degreeOfEstablishment%3Anative)&lat=-33.87&lon=151.21&radius=10.0",
+    "queryTitle": "[all records] - within 10 km of point(-33.87, 151.21)",
+    "activeFacetMap": {
+      "(establishmentMeans": {
+        "name": "(establishmentMeans",
+        "displayName": "(Establishment means:native OR degreeOfEstablishment:native) - within 10 km of point(-33.87, 151.21)",
+        "value": "native OR degreeOfEstablishment:native)"
+      },
+      "kingdom": {
+        "name": "kingdom",
+        "displayName": "Kingdom:Animalia - within 10 km of point(-33.87, 151.21)",
+        "value": "Animalia"
+      }
+    },
+    "activeFacetObj": {
+      "establishmentMeans": [
+        {
+          "name": "establishmentMeans",
+          "displayName": "(Establishment means:native OR degreeOfEstablishment:native) - within 10 km of point(-33.87, 151.21)",
+          "value": "(establishmentMeans:native OR degreeOfEstablishment:native)"
+        }
+      ],
+      "kingdom": [
+        {
+          "name": "kingdom",
+          "displayName": "Kingdom:Animalia - within 10 km of point(-33.87, 151.21)",
+          "value": "kingdom:Animalia"
+        }
+      ]
+    }
+  }
+}

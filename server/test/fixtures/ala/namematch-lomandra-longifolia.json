@@ -1,0 +1,44 @@
+{
+  "url": "https://api.ala.org.au/namematching/api/search?q=Lomandra+longifolia",
+  "recordedAt": "2026-11-24T09:11:35.116Z",
+  "status": 200,
+  "body": {
+    "success": true,
+    "scientificName": "Lomandra longifolia",
+    "scientificNameAuthorship": "Labill.",
+    "taxonConceptID": "https://id.biodiversity.org.au/node/apni/2895205",
+    "rank": "species",
+    "rankID": 7000,
+    "lft": 553186,
+    "rgt": 553186,
+    "matchType": "exactMatch",
+    "nameType": "SCIENTIFIC",
+    "kingdom": "Plantae",
+    "kingdomID": "https://id.biodiversity.org.au/taxon/apni/51795632",
+    "phylum": "Charophyta",
+    "phylumID": "https://id.biodiversity.org.au/taxon/apni/51795631",
+    "classs": "Equisetopsida",
+    "classID": "https://id.biodiversity.org.au/taxon/apni/51795630",
+    "order": "Asparagales",
+    "orderID": "https://id.biodiversity.org.au/taxon/apni/51794774",
+    "family": "Asparagaceae",
+    "familyID": "https://id.biodiversity.org.au/taxon/apni/51737651",
+    "genus": "Lomandra",
+    "genusID": "https://id.biodiversity.org.au/taxon/apni/51737739",
+    "species": "Lomandra longifolia",
+    "speciesID": "https://id.biodiversity.org.au/node/apni/2895205",
+    "vernacularName": "Spiny-headed Mat-rush",
+    "speciesGroup": [
+      "Plants",
+      "Flowering plants",
+      "Monocots"
+    ],
+    "speciesSubgroup": [
+      "Monocots",
+      "Dicots"
+    ],
+    "issues": [
+      "noIssue"
+    ]
+  }
+}

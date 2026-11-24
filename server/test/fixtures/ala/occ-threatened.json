@@ -1,0 +1,160 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&lat=-33.87&lon=151.21&radius=10&pageSize=0&facets=species&fsort=count&flimit=20&fq=%28stateConservation%3A*+OR+countryConservation%3A*%29",
+  "recordedAt": "2026-11-24T09:11:34.429Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 43282,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [
+      {
+        "fieldName": "species",
+        "fieldResult": [
+          {
+            "label": "Pteropus poliocephalus",
+            "i18nCode": "species.Pteropus poliocephalus",
+            "count": 10344,
+            "fq": "species:\"Pteropus poliocephalus\""
+          },
+          {
+            "label": "Ninox strenua",
+            "i18nCode": "species.Ninox strenua",
+            "count": 4568,
+            "fq": "species:\"Ninox strenua\""
+          },
+          {
+            "label": "Acacia terminalis",
+            "i18nCode": "species.Acacia terminalis",
+            "count": 2951,
+            "fq": "species:\"Acacia terminalis\""
+          },
+          {
+            "label": "Haliaeetus leucogaster",
+            "i18nCode": "species.Haliaeetus leucogaster",
+            "count": 2742,
+            "fq": "species:\"Haliaeetus leucogaster\""
+          },
+          {
+            "label": "Litoria aurea",
+            "i18nCode": "species.Litoria aurea",
+            "count": 1749,
+            "fq": "species:\"Litoria aurea\""
+          },
+          {
+            "label": "Thalassarche melanophris",
+            "i18nCode": "species.Thalassarche melanophris",
+            "count": 1722,
+            "fq": "species:\"Thalassarche melanophris\""
+          },
+          {
+            "label": "Gallinago hardwickii",
+            "i18nCode": "species.Gallinago hardwickii",
+            "count": 1300,
+            "fq": "species:\"Gallinago hardwickii\""
+          },
+          {
+            "label": "Hippocampus whitei",
+            "i18nCode": "species.Hippocampus whitei",
+            "count": 1208,
+            "fq": "species:\"Hippocampus whitei\""
+          },
+          {
+            "label": "Calidris acuminata",
+            "i18nCode": "species.Calidris acuminata",
+            "count": 1072,
+            "fq": "species:\"Calidris acuminata\""
+          },
+          {
+            "label": "Sternula albifrons",
+            "i18nCode": "species.Sternula albifrons",
+            "count": 977,
+            "fq": "species:\"Sternula albifrons\""
+          },
+          {
+            "label": "Hirundapus caudacutus",
+            "i18nCode": "species.Hirundapus caudacutus",
+            "count": 904,
+            "fq": "species:\"Hirundapus caudacutus\""
+          },
+          {
+            "label": "Miniopterus orianae",
+            "i18nCode": "species.Miniopterus orianae",
+            "count": 774,
+            "fq": "species:\"Miniopterus orianae\""
+          },
+          {
+            "label": "Calidris ferruginea",
+            "i18nCode": "species.Calidris ferruginea",
+            "count": 690,
+            "fq": "species:\"Calidris ferruginea\""
+          },
+          {
+            "label": "Thalassarche cauta",
+            "i18nCode": "species.Thalassarche cauta",
+            "count": 681,
+            "fq": "species:\"Thalassarche cauta\""
+          },
+          {
+            "label": "Myotis macropus",
+            "i18nCode": "species.Myotis macropus",
+            "count": 583,
+            "fq": "species:\"Myotis macropus\""
+          },
+          {
+            "label": "Cercartetus nanus",
+            "i18nCode": "species.Cercartetus nanus",
+            "count": 553,
+            "fq": "species:\"Cercartetus nanus\""
+          },
+          {
+            "label": "Haematopus longirostris",
+            "i18nCode": "species.Haematopus longirostris",
+            "count": 515,
+            "fq": "species:\"Haematopus longirostris\""
+          },
+          {
+            "label": "Stictonetta naevosa",
+            "i18nCode": "species.Stictonetta naevosa",
+            "count": 436,
+            "fq": "species:\"Stictonetta naevosa\""
+          },
+          {
+            "label": "Diomedea exulans",
+            "i18nCode": "species.Diomedea exulans",
+            "count": 418,
+            "fq": "species:\"Diomedea exulans\""
+          },
+          {
+            "label": "Ardenna carneipes",
+            "i18nCode": "species.Ardenna carneipes",
+            "count": 416,
+            "fq": "species:\"Ardenna carneipes\""
+          }
+        ]
+      }
+    ],
+    "query": "?q=*%3A*&fq=(stateConservation%3A*%20OR%20countryConservation%3A*)&lat=-33.87&lon=151.21&radius=10.0",
+    "urlParameters": "?q=*%3A*&fq=(stateConservation%3A*%20OR%20countryConservation%3A*)&lat=-33.87&lon=151.21&radius=10.0",
+    "queryTitle": "[all records] - within 10 km of point(-33.87, 151.21)",
+    "activeFacetMap": {
+      "(stateConservation": {
+        "name": "(stateConservation",
+        "displayName": "(State conservation:* OR countryConservation:*) - within 10 km of point(-33.87, 151.21)",
+        "value": "* OR countryConservation:*)"
+      }
+    },
+    "activeFacetObj": {
+      "stateConservation": [
+        {
+          "name": "stateConservation",
+          "displayName": "(State conservation:* OR countryConservation:*) - within 10 km of point(-33.87, 151.21)",
+          "value": "(stateConservation:* OR countryConservation:*)"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&lat=-33.87&lon=151.21&radius=10&pageSize=0&facets=species&fsort=count&flimit=20&fq=stateInvasive%3A*",
+  "recordedAt": "2026-11-24T09:11:34.503Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 119,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [
+      {
+        "fieldName": "species",
+        "fieldResult": [
+          {
+            "label": "Ceratitis capitata",
+            "i18nCode": "species.Ceratitis capitata",
+            "count": 41,
+            "fq": "species:\"Ceratitis capitata\""
+          },
+          {
+            "label": "Fusarium oxysporum",
+            "i18nCode": "species.Fusarium oxysporum",
+            "count": 18,
+            "fq": "species:\"Fusarium oxysporum\""
+          },
+          {
+            "label": "Cryptotermes brevis",
+            "i18nCode": "species.Cryptotermes brevis",
+            "count": 10,
+            "fq": "species:\"Cryptotermes brevis\""
+          },
+          {
+            "label": "Aethina tumida",
+            "i18nCode": "species.Aethina tumida",
+            "count": 8,
+            "fq": "species:\"Aethina tumida\""
+          },
+          {
+            "label": "Ralstonia solanacearum",
+            "i18nCode": "species.Ralstonia solanacearum",
+            "count": 5,
+            "fq": "species:\"Ralstonia solanacearum\""
+          },
+          {
+            "label": "Bactrocera dorsalis",
+            "i18nCode": "species.Bactrocera dorsalis",
+            "count": 3,
+            "fq": "species:\"Bactrocera dorsalis\""
+          },
+          {
+            "label": "Hylotrupes bajulus",
+            "i18nCode": "species.Hylotrupes bajulus",
+            "count": 3,
+            "fq": "species:\"Hylotrupes bajulus\""
+          },
+          {
+            "label": "Trogoderma granarium",
+            "i18nCode": "species.Trogoderma granarium",
+            "count": 3,
+            "fq": "species:\"Trogoderma granarium\""
+          },
+          {
+            "label": "Daktulosphaira vitifoliae",
+            "i18nCode": "species.Daktulosphaira vitifoliae",
+            "count": 2,
+            "fq": "species:\"Daktulosphaira vitifoliae\""
+          },
+          {
+            "label": "Verticillium dahliae",
+            "i18nCode": "species.Verticillium dahliae",
+            "count": 2,
+            "fq": "species:\"Verticillium dahliae\""
+          },
+          {
+            "label": "Coptotermes formosanus",
+            "i18nCode": "species.Coptotermes formosanus",
+            "count": 1,
+            "fq": "species:\"Coptotermes formosanus\""
+          },
+          {
+            "label": "Coptotermes gestroi",
+            "i18nCode": "species.Coptotermes gestroi",
+            "count": 1,
+            "fq": "species:\"Coptotermes gestroi\""
+          },
+          {
+            "label": "Phyllosticta ampelicida",
+            "i18nCode": "species.Phyllosticta ampelicida",
+            "count": 1,
+            "fq": "species:\"Phyllosticta ampelicida\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "species.novalue",
+            "count": 21,
+            "fq": "-species:*"
+          }
+        ]
+      }
+    ],
+    "query": "?q=*%3A*&fq=stateInvasive%3A*&lat=-33.87&lon=151.21&radius=10.0",
+    "urlParameters": "?q=*%3A*&fq=stateInvasive%3A*&lat=-33.87&lon=151.21&radius=10.0",
+    "queryTitle": "[all records] - within 10 km of point(-33.87, 151.21)",
+    "activeFacetMap": {
+      "stateInvasive": {
+        "name": "stateInvasive",
+        "displayName": "stateInvasive:* - within 10 km of point(-33.87, 151.21)",
+        "value": "*"
+      }
+    },
+    "activeFacetObj": {
+      "stateInvasive": [
+        {
+          "name": "stateInvasive",
+          "displayName": "stateInvasive:* - within 10 km of point(-33.87, 151.21)",
+          "value": "stateInvasive:*"
+        }
+      ]
+    }
+  }
+}

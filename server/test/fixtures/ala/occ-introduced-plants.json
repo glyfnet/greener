@@ -1,0 +1,238 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&lat=-33.87&lon=151.21&radius=10&pageSize=0&facets=species&fsort=count&flimit=30&fq=kingdom%3APlantae&fq=%28establishmentMeans%3Aintroduced+OR+degreeOfEstablishment%3Aestablished%29",
+  "recordedAt": "2026-11-24T09:11:33.328Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 20346,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [
+      {
+        "fieldName": "species",
+        "fieldResult": [
+          {
+            "label": "Ehrharta erecta",
+            "i18nCode": "species.Ehrharta erecta",
+            "count": 451,
+            "fq": "species:\"Ehrharta erecta\""
+          },
+          {
+            "label": "Lantana camara",
+            "i18nCode": "species.Lantana camara",
+            "count": 408,
+            "fq": "species:\"Lantana camara\""
+          },
+          {
+            "label": "Asparagus aethiopicus",
+            "i18nCode": "species.Asparagus aethiopicus",
+            "count": 353,
+            "fq": "species:\"Asparagus aethiopicus\""
+          },
+          {
+            "label": "Bidens pilosa",
+            "i18nCode": "species.Bidens pilosa",
+            "count": 308,
+            "fq": "species:\"Bidens pilosa\""
+          },
+          {
+            "label": "Ochna serrulata",
+            "i18nCode": "species.Ochna serrulata",
+            "count": 283,
+            "fq": "species:\"Ochna serrulata\""
+          },
+          {
+            "label": "Tradescantia fluminensis",
+            "i18nCode": "species.Tradescantia fluminensis",
+            "count": 276,
+            "fq": "species:\"Tradescantia fluminensis\""
+          },
+          {
+            "label": "Cinnamomum camphora",
+            "i18nCode": "species.Cinnamomum camphora",
+            "count": 247,
+            "fq": "species:\"Cinnamomum camphora\""
+          },
+          {
+            "label": "Ligustrum sinense",
+            "i18nCode": "species.Ligustrum sinense",
+            "count": 236,
+            "fq": "species:\"Ligustrum sinense\""
+          },
+          {
+            "label": "Ligustrum lucidum",
+            "i18nCode": "species.Ligustrum lucidum",
+            "count": 231,
+            "fq": "species:\"Ligustrum lucidum\""
+          },
+          {
+            "label": "Eragrostis curvula",
+            "i18nCode": "species.Eragrostis curvula",
+            "count": 223,
+            "fq": "species:\"Eragrostis curvula\""
+          },
+          {
+            "label": "Solanum nigrum",
+            "i18nCode": "species.Solanum nigrum",
+            "count": 209,
+            "fq": "species:\"Solanum nigrum\""
+          },
+          {
+            "label": "Cycas circinalis",
+            "i18nCode": "species.Cycas circinalis",
+            "count": 207,
+            "fq": "species:\"Cycas circinalis\""
+          },
+          {
+            "label": "Parietaria judaica",
+            "i18nCode": "species.Parietaria judaica",
+            "count": 196,
+            "fq": "species:\"Parietaria judaica\""
+          },
+          {
+            "label": "Sonchus oleraceus",
+            "i18nCode": "species.Sonchus oleraceus",
+            "count": 193,
+            "fq": "species:\"Sonchus oleraceus\""
+          },
+          {
+            "label": "Ageratina adenophora",
+            "i18nCode": "species.Ageratina adenophora",
+            "count": 188,
+            "fq": "species:\"Ageratina adenophora\""
+          },
+          {
+            "label": "Senna pendula",
+            "i18nCode": "species.Senna pendula",
+            "count": 184,
+            "fq": "species:\"Senna pendula\""
+          },
+          {
+            "label": "Olea europaea",
+            "i18nCode": "species.Olea europaea",
+            "count": 179,
+            "fq": "species:\"Olea europaea\""
+          },
+          {
+            "label": "Cenchrus clandestinus",
+            "i18nCode": "species.Cenchrus clandestinus",
+            "count": 177,
+            "fq": "species:\"Cenchrus clandestinus\""
+          },
+          {
+            "label": "Rumex sagittatus",
+            "i18nCode": "species.Rumex sagittatus",
+            "count": 174,
+            "fq": "species:\"Rumex sagittatus\""
+          },
+          {
+            "label": "Sida rhombifolia",
+            "i18nCode": "species.Sida rhombifolia",
+            "count": 174,
+            "fq": "species:\"Sida rhombifolia\""
+          },
+          {
+            "label": "Hypochaeris radicata",
+            "i18nCode": "species.Hypochaeris radicata",
+            "count": 158,
+            "fq": "species:\"Hypochaeris radicata\""
+          },
+          {
+            "label": "Erigeron bonariensis",
+            "i18nCode": "species.Erigeron bonariensis",
+            "count": 157,
+            "fq": "species:\"Erigeron bonariensis\""
+          },
+          {
+            "label": "Cestrum parqui",
+            "i18nCode": "species.Cestrum parqui",
+            "count": 145,
+            "fq": "species:\"Cestrum parqui\""
+          },
+          {
+            "label": "Stenotaphrum secundatum",
+            "i18nCode": "species.Stenotaphrum secundatum",
+            "count": 144,
+            "fq": "species:\"Stenotaphrum secundatum\""
+          },
+          {
+            "label": "Plantago lanceolata",
+            "i18nCode": "species.Plantago lanceolata",
+            "count": 143,
+            "fq": "species:\"Plantago lanceolata\""
+          },
+          {
+            "label": "Ipomoea indica",
+            "i18nCode": "species.Ipomoea indica",
+            "count": 137,
+            "fq": "species:\"Ipomoea indica\""
+          },
+          {
+            "label": "Phoenix canariensis",
+            "i18nCode": "species.Phoenix canariensis",
+            "count": 135,
+            "fq": "species:\"Phoenix canariensis\""
+          },
+          {
+            "label": "Anredera cordifolia",
+            "i18nCode": "species.Anredera cordifolia",
+            "count": 134,
+            "fq": "species:\"Anredera cordifolia\""
+          },
+          {
+            "label": "Paspalum dilatatum",
+            "i18nCode": "species.Paspalum dilatatum",
+            "count": 128,
+            "fq": "species:\"Paspalum dilatatum\""
+          },
+          {
+            "label": "Jacaranda mimosifolia",
+            "i18nCode": "species.Jacaranda mimosifolia",
+            "count": 114,
+            "fq": "species:\"Jacaranda mimosifolia\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "species.novalue",
+            "count": 2583,
+            "fq": "-species:*"
+          }
+        ]
+      }
+    ],
+    "query": "?q=*%3A*&fq=kingdom%3APlantae&fq=(establishmentMeans%3Aintroduced%20OR%20degreeOfEstablishment%3Aestablished)&lat=-33.87&lon=151.21&radius=10.0",
+    "urlParameters": "?q=*%3A*&fq=kingdom%3APlantae&fq=(establishmentMeans%3Aintroduced%20OR%20degreeOfEstablishment%3Aestablished)&lat=-33.87&lon=151.21&radius=10.0",
+    "queryTitle": "[all records] - within 10 km of point(-33.87, 151.21)",
+    "activeFacetMap": {
+      "(establishmentMeans": {
+        "name": "(establishmentMeans",
+        "displayName": "(Establishment means:introduced OR degreeOfEstablishment:established) - within 10 km of point(-33.87, 151.21)",
+        "value": "introduced OR degreeOfEstablishment:established)"
+      },
+      "kingdom": {
+        "name": "kingdom",
+        "displayName": "Kingdom:Plantae - within 10 km of point(-33.87, 151.21)",
+        "value": "Plantae"
+      }
+    },
+    "activeFacetObj": {
+      "establishmentMeans": [
+        {
+          "name": "establishmentMeans",
+          "displayName": "(Establishment means:introduced OR degreeOfEstablishment:established) - within 10 km of point(-33.87, 151.21)",
+          "value": "(establishmentMeans:introduced OR degreeOfEstablishment:established)"
+        }
+      ],
+      "kingdom": [
+        {
+          "name": "kingdom",
+          "displayName": "Kingdom:Plantae - within 10 km of point(-33.87, 151.21)",
+          "value": "kingdom:Plantae"
+        }
+      ]
+    }
+  }
+}
