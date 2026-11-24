@@ -34,4 +34,4 @@ The weed check is only as good as ALA's establishment tags until a verified decl
 - `data/declared-weeds.csv` now holds the 126 NSW WeedWise priority weeds for Greater Sydney. The source page footer links the NSW Government CC BY 4.0 notice. `<Genus> species` rows block a whole genus, and a listed subspecies gives the species a `related_declared` warning.
 - Site-constraint findings (renter, apartment, bushfire) are now **warnings** with a site strategy, not refusals, so constrained sites get a plan that is shaped to fit them. Weeds and broken citations still refuse the plan.
 
-- [D-17](d-17-planting-and-chemical-policy.md) makes `not_recorded_locally` blocking, adds live ALA native checks, and refuses chemical methods.
+- [D-17](d-17-planting-and-chemical-policy.md) blocks species not native to Australia (`not_native`) and invasives, adds live ALA checks near the site and across Australia, and refuses chemical methods.

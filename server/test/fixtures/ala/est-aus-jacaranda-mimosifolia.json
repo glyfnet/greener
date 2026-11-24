@@ -1,0 +1,81 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&pageSize=0&fq=species%3A%22Jacaranda+mimosifolia%22&facets=establishmentMeans&facets=degreeOfEstablishment&flimit=10",
+  "recordedAt": "2026-11-24T11:18:48.321Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 10547,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [
+      {
+        "fieldName": "establishmentMeans",
+        "fieldResult": [
+          {
+            "label": "introduced",
+            "i18nCode": "establishmentMeans.introduced",
+            "count": 1669,
+            "fq": "establishmentMeans:\"introduced\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "establishmentMeans.novalue",
+            "count": 8878,
+            "fq": "-establishmentMeans:*"
+          }
+        ]
+      },
+      {
+        "fieldName": "degreeOfEstablishment",
+        "fieldResult": [
+          {
+            "label": "cultivated",
+            "i18nCode": "degreeOfEstablishment.cultivated",
+            "count": 8,
+            "fq": "degreeOfEstablishment:\"cultivated\""
+          },
+          {
+            "label": "established",
+            "i18nCode": "degreeOfEstablishment.established",
+            "count": 1,
+            "fq": "degreeOfEstablishment:\"established\""
+          },
+          {
+            "label": "native",
+            "i18nCode": "degreeOfEstablishment.native",
+            "count": 1,
+            "fq": "degreeOfEstablishment:\"native\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "degreeOfEstablishment.novalue",
+            "count": 10537,
+            "fq": "-degreeOfEstablishment:*"
+          }
+        ]
+      }
+    ],
+    "query": "?q=*%3A*&fq=species%3A%22Jacaranda%20mimosifolia%22",
+    "urlParameters": "?q=*%3A*&fq=species%3A%22Jacaranda%20mimosifolia%22",
+    "queryTitle": "[all records]",
+    "activeFacetMap": {
+      "species": {
+        "name": "species",
+        "displayName": "Species:\"Jacaranda mimosifolia\"",
+        "value": "\"Jacaranda mimosifolia\""
+      }
+    },
+    "activeFacetObj": {
+      "species": [
+        {
+          "name": "species",
+          "displayName": "Species:\"Jacaranda mimosifolia\"",
+          "value": "species:\"Jacaranda mimosifolia\""
+        }
+      ]
+    }
+  }
+}

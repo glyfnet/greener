@@ -125,27 +125,57 @@ export async function speciesNear(lat: number, lon: number, radiusKm: number, de
   };
 }
 
-/** Native-establishment filter shared by the near-site queries. */
-export const NATIVE_FQ = "(establishmentMeans:native OR degreeOfEstablishment:native)";
+export interface Scope {
+  lat: number;
+  lon: number;
+  radiusKm: number;
+}
 
-export function nativeRecordsUrl(name: string, lat: number, lon: number, radiusKm: number): string {
-  const p = new URLSearchParams({ q: "*:*", lat: String(roundCoord(lat)), lon: String(roundCoord(lon)), radius: String(radiusKm), pageSize: "0" });
+/** One species' records, with establishment facets, near a point or (no scope) across Australia. */
+export function establishmentUrl(name: string, scope?: Scope): string {
+  const p = new URLSearchParams({ q: "*:*", pageSize: "0" });
+  if (scope) {
+    p.set("lat", String(roundCoord(scope.lat)));
+    p.set("lon", String(roundCoord(scope.lon)));
+    p.set("radius", String(scope.radiusKm));
+  }
   // Quotes inside the name would break the filter, so they are removed.
   p.append("fq", `species:"${name.replace(/"/g, "").trim()}"`);
-  p.append("fq", NATIVE_FQ);
+  p.append("facets", "establishmentMeans");
+  p.append("facets", "degreeOfEstablishment");
+  p.append("flimit", "10");
   return `${OCC}?${p.toString()}`;
 }
 
+export interface Establishment {
+  total: number;
+  /** Records tagged native (establishmentMeans or degreeOfEstablishment). */
+  native: number;
+  /** Records tagged introduced, or established (naturalised). Cultivated is not counted. */
+  introduced: number;
+  citation: Citation;
+}
+
 /**
- * Count native-tagged ALA records of one species within the radius (D-17).
- * Used for species that are not in the research report's short lists.
+ * Native and introduced record counts for one species (D-17). The two tags
+ * overlap, so each count is the larger of the two fields, which is enough
+ * to compare native against introduced.
  */
-export async function nativeRecordsNear(name: string, lat: number, lon: number, radiusKm: number, deps: HttpDeps, today: string): Promise<{ ok: true; count: number; citation: Citation } | { ok: false; error: string }> {
-  const url = nativeRecordsUrl(name, lat, lon, radiusKm);
+export async function speciesEstablishment(name: string, deps: HttpDeps, today: string, scope?: Scope): Promise<{ ok: true; value: Establishment } | { ok: false; error: string }> {
+  const url = establishmentUrl(name, scope);
   const r = await fetchJson<FacetResponse>(url, deps);
   if (!r.ok) return { ok: false, error: r.error };
+  const facet = (field: string, label: string) => r.data.facetResults?.find((f) => f.fieldName === field)?.fieldResult.find((x) => x.label === label)?.count ?? 0;
   const slug = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
-  return { ok: true, count: r.data.totalRecords ?? 0, citation: { id: `ala:native:${slug}`, source: "research", title: `ALA native records of ${name.trim()} within ${radiusKm} km`, url, publisher: ALA_PUBLISHER, licence: ALA_LICENCE, accessed: today } };
+  return {
+    ok: true,
+    value: {
+      total: r.data.totalRecords ?? 0,
+      native: Math.max(facet("establishmentMeans", "native"), facet("degreeOfEstablishment", "native")),
+      introduced: Math.max(facet("establishmentMeans", "introduced"), facet("degreeOfEstablishment", "established")),
+      citation: { id: `ala:${scope ? "near" : "aus"}:${slug}`, source: "research", title: `ALA records of ${name.trim()} ${scope ? `within ${scope.radiusKm} km of the site` : "across Australia"}`, url, publisher: ALA_PUBLISHER, licence: ALA_LICENCE, accessed: today },
+    },
+  };
 }
 
 interface SpeciesSearchResponse {

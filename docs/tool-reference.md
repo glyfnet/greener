@@ -1629,7 +1629,7 @@ Input schema:
 
 ## check_species
 
-Check candidate planting species before they go in a plan (FR-22, FR-24, NFR-01, D-17). Resolves each name to the ALA taxonomy, checks it against the site research and the declared weed list, and asks ALA for native records near the site for species the research does not cover. Only local natives may be planted: blocked species must not go in the plan. Copy the returned citations into the plan.
+Check candidate planting species before they go in a plan (FR-22, FR-24, NFR-01, D-17). Resolves each name to the ALA taxonomy, checks it against the site research and the declared weed list, and asks ALA about species the research does not cover. Australian natives are allowed (local natives are best); invasives are blocked: priority weeds, state-flagged pests, and anything recorded as introduced near the site. Copy the returned citations into the plan.
 
 Input schema:
 

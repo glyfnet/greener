@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildSpeciesIndex, chemicalUses, checkPlan, checkSpecies, normaliseName, type DeclaredWeed } from "../../src/core/checks.js";
+import { buildSpeciesIndex, chemicalUses, checkPlan, checkSpecies, nativeToAustralia, normaliseName, type DeclaredWeed } from "../../src/core/checks.js";
 import { action, plan, profile, research } from "../helpers.js";
 
 const weeds: DeclaredWeed[] = [{ scientificName: "Senecio madagascariensis", state: "NSW", category: "Test category", sourceUrl: "https://example.invalid/weeds", asOf: "2026-01-01" }];
@@ -26,21 +26,30 @@ describe("checkSpecies (FR-22, FR-24, NFR-03)", () => {
     expect(checkSpecies("Lantana camara", idx())).toMatchObject({ verdict: "introduced", blocking: true });
   });
 
-  it("warns on mixed records, and blocks species with no local native records (D-17)", () => {
+  it("warns on mixed records, and blocks species not confirmed native to Australia (D-17)", () => {
     expect(checkSpecies("Callistemon linearis", idx())).toMatchObject({ verdict: "mixed_records", blocking: false });
     const far = checkSpecies("Eucalyptus unknownii", idx());
-    expect(far).toMatchObject({ verdict: "not_recorded_locally", blocking: true });
-    expect(far.message).toContain("local natives only");
+    expect(far).toMatchObject({ verdict: "not_native", blocking: true });
+    expect(far.message).toContain("not confirmed as native to Australia");
   });
 
-  it("accepts a species confirmed native by a live check", () => {
-    const i = buildSpeciesIndex(research(), weeds, "NSW", [{ scientificName: "Banksia serrata", tags: ["native"], citationIds: ["ala:native:banksia-serrata"] }]);
-    expect(checkSpecies("Banksia serrata", i)).toMatchObject({ verdict: "local_native", blocking: false, citationIds: ["ala:native:banksia-serrata"] });
+  it("allows Australian natives and blocks species mostly introduced in Australia (D-17)", () => {
+    const i = buildSpeciesIndex(research(), weeds, "NSW", {
+      near: [{ scientificName: "Banksia serrata", tags: ["native"], citationIds: ["ala:near:banksia-serrata"] }, { scientificName: "Grevillea robusta", tags: ["introduced"], citationIds: ["ala:near:grevillea-robusta"] }],
+      australia: { "Eucalyptus marginata": { native: 646, introduced: 9, citationIds: ["ala:aus:eucalyptus-marginata"] }, "Jacaranda mimosifolia": { native: 1, introduced: 1669, citationIds: ["ala:aus:jacaranda-mimosifolia"] }, "Grevillea robusta": { native: 21, introduced: 369, citationIds: ["x"] } },
+    });
+    expect(checkSpecies("Banksia serrata", i)).toMatchObject({ verdict: "local_native", blocking: false });
+    expect(checkSpecies("Eucalyptus marginata", i)).toMatchObject({ verdict: "australian_native", blocking: false, citationIds: ["ala:aus:eucalyptus-marginata"] });
+    expect(checkSpecies("Jacaranda mimosifolia", i)).toMatchObject({ verdict: "not_native", blocking: true });
+    // Native to Australia, but introduced (invasive) near this site.
+    expect(checkSpecies("Grevillea robusta", i)).toMatchObject({ verdict: "introduced", blocking: true });
+    expect(nativeToAustralia(undefined)).toBe(false);
+    expect(nativeToAustralia({ native: 0, introduced: 0, citationIds: [] })).toBe(false);
   });
 
   it("ignores declared weeds from other states", () => {
     const i = buildSpeciesIndex(research(), [{ ...weeds[0]!, state: "VIC" }]);
-    expect(checkSpecies("Senecio madagascariensis", i).verdict).toBe("not_recorded_locally");
+    expect(checkSpecies("Senecio madagascariensis", i).verdict).toBe("not_native");
   });
 });
 
@@ -61,11 +70,15 @@ describe("checkPlan (FR-22–FR-25)", () => {
     expect(r2.errors).toEqual([expect.objectContaining({ code: "introduced", actionId: "a1" })]);
   });
 
-  it("refuses a species with no local native records (D-17)", () => {
+  it("refuses a species not confirmed native to Australia, and warns on a non-local Australian native (D-17)", () => {
     const p = plan({ plantingList: [{ scientificName: "Eucalyptus unknownii", citationIds: ["ala:occ:native-plants"] }] });
     const r = checkPlan(p, research(), profile(), weeds);
     expect(r.ok).toBe(false);
-    expect(r.errors.map((e) => e.code)).toContain("not_recorded_locally");
+    expect(r.errors.map((e) => e.code)).toContain("not_native");
+    const jarrah = plan({ plantingList: [{ scientificName: "Eucalyptus marginata", citationIds: ["ala:occ:native-plants"] }] });
+    const r2 = checkPlan(jarrah, research(), profile(), weeds, { australia: { "Eucalyptus marginata": { native: 646, introduced: 9, citationIds: [] } } });
+    expect(r2.ok).toBe(true);
+    expect(r2.warnings.map((w) => w.code)).toContain("australian_native");
   });
 
   it("refuses actions that use chemicals, and allows text that rules them out (D-17)", () => {

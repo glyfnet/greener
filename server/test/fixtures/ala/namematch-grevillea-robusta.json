@@ -1,0 +1,43 @@
+{
+  "url": "https://api.ala.org.au/namematching/api/search?q=Grevillea+robusta",
+  "recordedAt": "2026-11-24T11:18:54.662Z",
+  "status": 200,
+  "body": {
+    "success": true,
+    "scientificName": "Grevillea robusta",
+    "scientificNameAuthorship": "A.Cunn. ex R.Br.",
+    "taxonConceptID": "https://id.biodiversity.org.au/node/apni/2918082",
+    "rank": "species",
+    "rankID": 7000,
+    "lft": 506168,
+    "rgt": 506168,
+    "matchType": "exactMatch",
+    "nameType": "SCIENTIFIC",
+    "kingdom": "Plantae",
+    "kingdomID": "https://id.biodiversity.org.au/taxon/apni/51795632",
+    "phylum": "Charophyta",
+    "phylumID": "https://id.biodiversity.org.au/taxon/apni/51795631",
+    "classs": "Equisetopsida",
+    "classID": "https://id.biodiversity.org.au/taxon/apni/51795630",
+    "order": "Proteales",
+    "orderID": "https://id.biodiversity.org.au/taxon/apni/51788544",
+    "family": "Proteaceae",
+    "familyID": "https://id.biodiversity.org.au/taxon/apni/51788543",
+    "genus": "Grevillea",
+    "genusID": "https://id.biodiversity.org.au/taxon/apni/51726302",
+    "species": "Grevillea robusta",
+    "speciesID": "https://id.biodiversity.org.au/node/apni/2918082",
+    "vernacularName": "Silky Oak",
+    "speciesGroup": [
+      "Plants",
+      "Flowering plants",
+      "Dicots"
+    ],
+    "speciesSubgroup": [
+      "Dicots"
+    ],
+    "issues": [
+      "noIssue"
+    ]
+  }
+}

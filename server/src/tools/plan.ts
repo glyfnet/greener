@@ -2,7 +2,7 @@
  * Planning tools (Section 7.2 `action-plan`, Section 7.7, FR-20–FR-27, FR-60–FR-71).
  */
 import { z } from "zod";
-import { buildSpeciesIndex, checkPlan, checkSpecies } from "../core/checks.js";
+import { buildSpeciesIndex, checkPlan, checkSpecies, type AustraliaRecord } from "../core/checks.js";
 import { lookupCosts } from "../core/cost.js";
 import { Action, ActionPlan, LocalPrice, ResearchReport, SiteProfile } from "../core/models.js";
 import { capacityFromProfile } from "../core/questionnaire.js";
@@ -10,7 +10,7 @@ import { PLAN_SECTIONS, planSection, planToMarkdown, searchSite } from "../core/
 import { markDone as markDoneCore, ScheduleCapacity, schedulePlan as scheduleCore, type ScheduleResult } from "../core/schedule.js";
 import { siteStrategies } from "../core/strategies.js";
 import type { Citation } from "../core/models.js";
-import { matchName, nativeRecordsNear } from "../connectors/ala.js";
+import { matchName, speciesEstablishment } from "../connectors/ala.js";
 import { limited } from "../connectors/http.js";
 import type { SpeciesRecord, Location as LocationT } from "../core/models.js";
 import { Location } from "../core/models.js";
@@ -39,37 +39,47 @@ function compact(s: ScheduleResult, includeMonthly: boolean) {
   return includeMonthly ? s : { ...rest, monthlySummary: { months: monthly.length, peakWorkHours: Math.max(...monthly.map((m) => m.workHours)), maintenanceHoursMonth36: monthly.at(-1)?.maintenanceHours ?? 0 } };
 }
 
-/** Most species checked live per call, to stay polite to ALA (NFR-08). */
-const MAX_LIVE_CHECKS = 40;
+/** Most species checked live per call, to stay polite to ALA (NFR-08). Each species costs 2 requests. */
+const MAX_LIVE_CHECKS = 25;
 
 /**
- * Ask ALA for native records of species that the research lists do not
- * cover, so local natives are not blocked by D-17 just because they were
- * outside the research report's top lists.
+ * Ask ALA about species that the research lists do not cover (D-17): their
+ * native and introduced records near the site, and across Australia.
  */
-async function liveNatives(ctx: ToolContext, names: string[], location: LocationT, radiusKm: number) {
-  const natives: SpeciesRecord[] = [];
+async function liveEvidence(ctx: ToolContext, names: string[], location: LocationT, radiusKm: number) {
+  const near: SpeciesRecord[] = [];
+  const australia: Record<string, AustraliaRecord> = {};
   const citations: Citation[] = [];
   const gaps: string[] = [];
   const unique = [...new Set(names.map((n) => n.trim()))].slice(0, MAX_LIVE_CHECKS);
-  const results = await limited(unique.map((n) => () => nativeRecordsNear(n, location.lat, location.lon, radiusKm, ctx.http, ctx.today)));
+  const scope = { lat: location.lat, lon: location.lon, radiusKm };
+  const tasks = unique.flatMap((n) => [() => speciesEstablishment(n, ctx.http, ctx.today, scope), () => speciesEstablishment(n, ctx.http, ctx.today)]);
+  const results = await limited(tasks);
   unique.forEach((n, i) => {
-    const r = results[i];
-    if (!r) return;
-    if (!r.ok) gaps.push(`${n}: ${r.error}`);
-    else if (r.count > 0) {
-      natives.push({ scientificName: n, tags: ["native"], recordCount: r.count, citationIds: [r.citation.id] });
-      citations.push(r.citation);
-    }
+    const local = results[2 * i];
+    const all = results[2 * i + 1];
+    if (local?.ok) {
+      const tags: SpeciesRecord["tags"] = [];
+      if (local.value.native > 0) tags.push("native");
+      if (local.value.introduced > 0) tags.push("introduced");
+      if (tags.length) {
+        near.push({ scientificName: n, tags, recordCount: local.value.total, citationIds: [local.value.citation.id] });
+        citations.push(local.value.citation);
+      }
+    } else if (local) gaps.push(`${n} near the site: ${local.error}`);
+    if (all?.ok) {
+      australia[n] = { native: all.value.native, introduced: all.value.introduced, citationIds: [all.value.citation.id] };
+      citations.push(all.value.citation);
+    } else if (all) gaps.push(`${n} across Australia: ${all.error}`);
   });
-  return { natives, citations, gaps };
+  return { near, australia, citations, gaps };
 }
 
-/** Names that the research index alone would block only for lack of native records. */
+/** Names that the research index alone cannot settle. */
 function needsLiveCheck(names: string[], idx: ReturnType<typeof buildSpeciesIndex>): string[] {
   return names.filter((n) => {
     const v = checkSpecies(n, idx).verdict;
-    return v === "not_recorded_locally" || v === "related_declared";
+    return v === "not_native" || v === "related_declared";
   });
 }
 
@@ -102,7 +112,7 @@ export const getSiteStrategies = defineTool({
 export const checkSpeciesTool = defineTool({
   name: "check_species",
   title: "Check species for planting",
-  description: "Check candidate planting species before they go in a plan (FR-22, FR-24, NFR-01, D-17). Resolves each name to the ALA taxonomy, checks it against the site research and the declared weed list, and asks ALA for native records near the site for species the research does not cover. Only local natives may be planted: blocked species must not go in the plan. Copy the returned citations into the plan.",
+  description: "Check candidate planting species before they go in a plan (FR-22, FR-24, NFR-01, D-17). Resolves each name to the ALA taxonomy, checks it against the site research and the declared weed list, and asks ALA about species the research does not cover. Australian natives are allowed (local natives are best); invasives are blocked: priority weeds, state-flagged pests, and anything recorded as introduced near the site. Copy the returned citations into the plan.",
   input: z.object({ names: z.array(z.string().min(2)).min(1).max(40), research: ResearchReport, location: Location.optional().describe("Site location; needed to check species that are not in the research report") }),
   handler: async ({ names, research, location }, ctx) => {
     const matches = await limited(names.map((n) => () => matchName(n, ctx.http)));
@@ -111,10 +121,10 @@ export const checkSpeciesTool = defineTool({
       return m?.ok && m.match.matched && m.match.scientificName ? m.match.scientificName : n;
     });
     let idx = buildSpeciesIndex(research, ctx.data.declaredWeeds);
-    let live: Awaited<ReturnType<typeof liveNatives>> | undefined;
+    let live: Awaited<ReturnType<typeof liveEvidence>> | undefined;
     if (location) {
-      live = await liveNatives(ctx, needsLiveCheck(accepted, idx), location, research.radiusKm);
-      idx = buildSpeciesIndex(research, ctx.data.declaredWeeds, "NSW", live.natives);
+      live = await liveEvidence(ctx, needsLiveCheck(accepted, idx), location, research.radiusKm);
+      idx = buildSpeciesIndex(research, ctx.data.declaredWeeds, "NSW", live);
     }
     const results = [];
     for (const [i, name] of names.entries()) {
@@ -199,12 +209,8 @@ export const savePlan = defineTool({
     const p = parsed.data;
     // D-17: confirm natives that the research lists do not cover.
     const planted = [...p.plantingList, ...p.actions.flatMap((a) => a.plantings)].map((x) => x.scientificName);
-    let extra: SpeciesRecord[] = [];
-    if (profile.location) {
-      const live = await liveNatives(ctx, needsLiveCheck(planted, buildSpeciesIndex(research, ctx.data.declaredWeeds)), profile.location, research.radiusKm);
-      extra = live.natives;
-    }
-    const check = checkPlan(p, research, profile, ctx.data.declaredWeeds, extra);
+    const live = profile.location ? await liveEvidence(ctx, needsLiveCheck(planted, buildSpeciesIndex(research, ctx.data.declaredWeeds)), profile.location, research.radiusKm) : {};
+    const check = checkPlan(p, research, profile, ctx.data.declaredWeeds, live);
     if (!check.ok) return fail("The plan was refused. Fix these items and call save_plan again.", check.errors.map((e) => `${e.actionId ? `${e.actionId}: ` : ""}${e.message}`));
     let schedule;
     if (startMonth) {

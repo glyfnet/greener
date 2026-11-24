@@ -1,0 +1,34 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&pageSize=0&lat=-33.87&lon=151.21&radius=10&fq=species%3A%22Eucalyptus+marginata%22&facets=establishmentMeans&facets=degreeOfEstablishment&flimit=10",
+  "recordedAt": "2026-11-24T11:18:47.429Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 0,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [],
+    "query": "?q=*%3A*&fq=species%3A%22Eucalyptus%20marginata%22&lat=-33.87&lon=151.21&radius=10.0",
+    "urlParameters": "?q=*%3A*&fq=species%3A%22Eucalyptus%20marginata%22&lat=-33.87&lon=151.21&radius=10.0",
+    "queryTitle": "[all records] - within 10 km of point(-33.87, 151.21)",
+    "activeFacetMap": {
+      "species": {
+        "name": "species",
+        "displayName": "Species:\"Eucalyptus marginata\" - within 10 km of point(-33.87, 151.21)",
+        "value": "\"Eucalyptus marginata\""
+      }
+    },
+    "activeFacetObj": {
+      "species": [
+        {
+          "name": "species",
+          "displayName": "Species:\"Eucalyptus marginata\" - within 10 km of point(-33.87, 151.21)",
+          "value": "species:\"Eucalyptus marginata\""
+        }
+      ]
+    }
+  }
+}

@@ -6,12 +6,15 @@
  * Each fixture file is `{ url, recordedAt, status, body }`.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
-import { NEAR_QUERIES, nativeRecordsUrl, occurrenceUrl } from "../server/src/connectors/ala.js";
+import { establishmentUrl, NEAR_QUERIES, occurrenceUrl } from "../server/src/connectors/ala.js";
 import { path } from "./lib.js";
 
 /** Public test point: Hyde Park, Sydney. Not a user site. */
 export const TEST_POINT = { lat: -33.873, lon: 151.211, radiusKm: 10 };
 const OUT = path("server/test/fixtures/ala");
+
+/** Species for the live native/invasive checks: a local native, an Australian native from WA, an exotic, and an Australian native that is introduced around Sydney. */
+const LIVE_SPECIES = ["Banksia serrata", "Eucalyptus marginata", "Jacaranda mimosifolia", "Grevillea robusta"];
 
 const targets: { name: string; url: string }[] = [
   ...NEAR_QUERIES.map((q) => ({ name: `occ-${q.key}`, url: occurrenceUrl(TEST_POINT.lat, TEST_POINT.lon, TEST_POINT.radiusKm, q) })),
@@ -19,9 +22,14 @@ const targets: { name: string; url: string }[] = [
   { name: "namematch-lomandra-longifolia", url: `https://api.ala.org.au/namematching/api/search?${new URLSearchParams({ q: "Lomandra longifolia" })}` },
   { name: "namematch-lantana-camara", url: `https://api.ala.org.au/namematching/api/search?${new URLSearchParams({ q: "Lantana camara" })}` },
   { name: "namematch-acacia-terminalis", url: `https://api.ala.org.au/namematching/api/search?${new URLSearchParams({ q: "Acacia terminalis" })}` },
-  ...["Lomandra longifolia", "Banksia serrata", "Eucalyptus marginata", "Jacaranda mimosifolia"].map((n) => ({ name: `native-${n.toLowerCase().replace(/\s+/g, "-")}`, url: nativeRecordsUrl(n, TEST_POINT.lat, TEST_POINT.lon, TEST_POINT.radiusKm) })),
-  { name: "namematch-banksia-serrata", url: `https://api.ala.org.au/namematching/api/search?${new URLSearchParams({ q: "Banksia serrata" })}` },
-  { name: "namematch-eucalyptus-marginata", url: `https://api.ala.org.au/namematching/api/search?${new URLSearchParams({ q: "Eucalyptus marginata" })}` },
+  ...LIVE_SPECIES.flatMap((n) => {
+    const slug = n.toLowerCase().replace(/\s+/g, "-");
+    return [
+      { name: `est-near-${slug}`, url: establishmentUrl(n, TEST_POINT) },
+      { name: `est-aus-${slug}`, url: establishmentUrl(n) },
+      { name: `namematch-${slug}`, url: `https://api.ala.org.au/namematching/api/search?${new URLSearchParams({ q: n })}` },
+    ];
+  }),
   { name: "namematch-not-a-plant", url: `https://api.ala.org.au/namematching/api/search?${new URLSearchParams({ q: "Notaplant fakeus" })}` },
 ];
 

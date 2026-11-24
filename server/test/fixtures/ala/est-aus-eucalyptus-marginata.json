@@ -1,0 +1,81 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&pageSize=0&fq=species%3A%22Eucalyptus+marginata%22&facets=establishmentMeans&facets=degreeOfEstablishment&flimit=10",
+  "recordedAt": "2026-11-24T11:18:47.603Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 3606,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [
+      {
+        "fieldName": "establishmentMeans",
+        "fieldResult": [
+          {
+            "label": "native",
+            "i18nCode": "establishmentMeans.native",
+            "count": 377,
+            "fq": "establishmentMeans:\"native\""
+          },
+          {
+            "label": "introduced",
+            "i18nCode": "establishmentMeans.introduced",
+            "count": 9,
+            "fq": "establishmentMeans:\"introduced\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "establishmentMeans.novalue",
+            "count": 3220,
+            "fq": "-establishmentMeans:*"
+          }
+        ]
+      },
+      {
+        "fieldName": "degreeOfEstablishment",
+        "fieldResult": [
+          {
+            "label": "native",
+            "i18nCode": "degreeOfEstablishment.native",
+            "count": 646,
+            "fq": "degreeOfEstablishment:\"native\""
+          },
+          {
+            "label": "cultivated",
+            "i18nCode": "degreeOfEstablishment.cultivated",
+            "count": 16,
+            "fq": "degreeOfEstablishment:\"cultivated\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "degreeOfEstablishment.novalue",
+            "count": 2944,
+            "fq": "-degreeOfEstablishment:*"
+          }
+        ]
+      }
+    ],
+    "query": "?q=*%3A*&fq=species%3A%22Eucalyptus%20marginata%22",
+    "urlParameters": "?q=*%3A*&fq=species%3A%22Eucalyptus%20marginata%22",
+    "queryTitle": "[all records]",
+    "activeFacetMap": {
+      "species": {
+        "name": "species",
+        "displayName": "Species:\"Eucalyptus marginata\"",
+        "value": "\"Eucalyptus marginata\""
+      }
+    },
+    "activeFacetObj": {
+      "species": [
+        {
+          "name": "species",
+          "displayName": "Species:\"Eucalyptus marginata\"",
+          "value": "species:\"Eucalyptus marginata\""
+        }
+      ]
+    }
+  }
+}

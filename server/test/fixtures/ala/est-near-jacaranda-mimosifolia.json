@@ -1,0 +1,69 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&pageSize=0&lat=-33.87&lon=151.21&radius=10&fq=species%3A%22Jacaranda+mimosifolia%22&facets=establishmentMeans&facets=degreeOfEstablishment&flimit=10",
+  "recordedAt": "2026-11-24T11:18:48.208Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 2139,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [
+      {
+        "fieldName": "establishmentMeans",
+        "fieldResult": [
+          {
+            "label": "introduced",
+            "i18nCode": "establishmentMeans.introduced",
+            "count": 114,
+            "fq": "establishmentMeans:\"introduced\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "establishmentMeans.novalue",
+            "count": 2025,
+            "fq": "-establishmentMeans:*"
+          }
+        ]
+      },
+      {
+        "fieldName": "degreeOfEstablishment",
+        "fieldResult": [
+          {
+            "label": "cultivated",
+            "i18nCode": "degreeOfEstablishment.cultivated",
+            "count": 1,
+            "fq": "degreeOfEstablishment:\"cultivated\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "degreeOfEstablishment.novalue",
+            "count": 2138,
+            "fq": "-degreeOfEstablishment:*"
+          }
+        ]
+      }
+    ],
+    "query": "?q=*%3A*&fq=species%3A%22Jacaranda%20mimosifolia%22&lat=-33.87&lon=151.21&radius=10.0",
+    "urlParameters": "?q=*%3A*&fq=species%3A%22Jacaranda%20mimosifolia%22&lat=-33.87&lon=151.21&radius=10.0",
+    "queryTitle": "[all records] - within 10 km of point(-33.87, 151.21)",
+    "activeFacetMap": {
+      "species": {
+        "name": "species",
+        "displayName": "Species:\"Jacaranda mimosifolia\" - within 10 km of point(-33.87, 151.21)",
+        "value": "\"Jacaranda mimosifolia\""
+      }
+    },
+    "activeFacetObj": {
+      "species": [
+        {
+          "name": "species",
+          "displayName": "Species:\"Jacaranda mimosifolia\" - within 10 km of point(-33.87, 151.21)",
+          "value": "species:\"Jacaranda mimosifolia\""
+        }
+      ]
+    }
+  }
+}

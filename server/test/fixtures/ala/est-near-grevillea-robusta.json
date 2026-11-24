@@ -1,0 +1,69 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&pageSize=0&lat=-33.87&lon=151.21&radius=10&fq=species%3A%22Grevillea+robusta%22&facets=establishmentMeans&facets=degreeOfEstablishment&flimit=10",
+  "recordedAt": "2026-11-24T11:18:54.258Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 245,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [
+      {
+        "fieldName": "establishmentMeans",
+        "fieldResult": [
+          {
+            "label": "introduced",
+            "i18nCode": "establishmentMeans.introduced",
+            "count": 3,
+            "fq": "establishmentMeans:\"introduced\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "establishmentMeans.novalue",
+            "count": 242,
+            "fq": "-establishmentMeans:*"
+          }
+        ]
+      },
+      {
+        "fieldName": "degreeOfEstablishment",
+        "fieldResult": [
+          {
+            "label": "cultivated",
+            "i18nCode": "degreeOfEstablishment.cultivated",
+            "count": 3,
+            "fq": "degreeOfEstablishment:\"cultivated\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "degreeOfEstablishment.novalue",
+            "count": 242,
+            "fq": "-degreeOfEstablishment:*"
+          }
+        ]
+      }
+    ],
+    "query": "?q=*%3A*&fq=species%3A%22Grevillea%20robusta%22&lat=-33.87&lon=151.21&radius=10.0",
+    "urlParameters": "?q=*%3A*&fq=species%3A%22Grevillea%20robusta%22&lat=-33.87&lon=151.21&radius=10.0",
+    "queryTitle": "[all records] - within 10 km of point(-33.87, 151.21)",
+    "activeFacetMap": {
+      "species": {
+        "name": "species",
+        "displayName": "Species:\"Grevillea robusta\" - within 10 km of point(-33.87, 151.21)",
+        "value": "\"Grevillea robusta\""
+      }
+    },
+    "activeFacetObj": {
+      "species": [
+        {
+          "name": "species",
+          "displayName": "Species:\"Grevillea robusta\" - within 10 km of point(-33.87, 151.21)",
+          "value": "species:\"Grevillea robusta\""
+        }
+      ]
+    }
+  }
+}

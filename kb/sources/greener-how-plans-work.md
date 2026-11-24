@@ -12,9 +12,10 @@ Before a plant goes into your plan, Greener checks it against the research for y
 
 - A plant that ALA records as introduced near your site is not allowed in the plan.
 - A plant that the state flags as invasive, or that is on the declared weed list, is not allowed in the plan.
-- A plant with native records near your site is allowed. Greener checks the Atlas for each plant you choose, not just the ones in the report.
+- A plant with native records near your site is allowed. This is the best choice. Greener checks the Atlas for each plant you choose, not just the ones in the report.
 - A plant with both native and introduced records nearby is allowed with a warning. Ask your nursery for local stock.
-- A plant with no native records near your site is not allowed. Greener plants local natives only.
+- A plant that is native to Australia but not recorded near your site is allowed with a note. A local native usually does more for local wildlife.
+- A plant that is not native to Australia is not allowed. Nor is an Australian native that ALA records as introduced near your site: it is invasive there.
 
 Greener plans never use chemicals: no herbicides, pesticides, poison baits or synthetic fertilisers. Weeds are removed by hand and replaced with local natives.
 

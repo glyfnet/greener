@@ -199,27 +199,33 @@ describe("knowledge and plan tools", () => {
     const results = r.data.results as { query: string; verdict: string; blocking: boolean; alaName: string | null; nameWarning?: string }[];
     expect(results[0]).toMatchObject({ alaName: "Lomandra longifolia", verdict: "local_native", blocking: false });
     expect(results[1]).toMatchObject({ verdict: "declared_weed", blocking: true });
-    expect(results[2]).toMatchObject({ alaName: null, verdict: "not_recorded_locally" });
+    expect(results[2]).toMatchObject({ alaName: null, verdict: "not_native", blocking: true });
     expect(results[2]?.nameWarning).toContain("could not match");
   });
 
-  it("confirms local natives live and blocks non-local species (D-17)", async () => {
-    const r = await call("check_species", { names: ["Banksia serrata", "Eucalyptus marginata", "Jacaranda mimosifolia"], research: research(), location });
-    expect(r.data.allowed).toEqual(["Banksia serrata"]);
-    expect(r.data.blocked).toEqual(["Eucalyptus marginata", "Jacaranda mimosifolia"]);
-    expect((r.data.citations as { id: string }[]).map((c) => c.id)).toEqual(["ala:native:banksia-serrata"]);
+  it("allows Australian natives and blocks invasives, checked live (D-17)", async () => {
+    const names = ["Banksia serrata", "Eucalyptus marginata", "Jacaranda mimosifolia", "Grevillea robusta"];
+    const r = await call("check_species", { names, research: research(), location });
+    const byName = Object.fromEntries((r.data.results as { query: string; verdict: string }[]).map((x) => [x.query, x.verdict]));
+    expect(byName).toEqual({ "Banksia serrata": "local_native", "Eucalyptus marginata": "australian_native", "Jacaranda mimosifolia": "introduced", "Grevillea robusta": "introduced" });
+    expect(r.data.allowed).toEqual(["Banksia serrata", "Eucalyptus marginata"]);
+    expect(r.data.blocked).toEqual(["Jacaranda mimosifolia", "Grevillea robusta"]);
+    expect((r.data.citations as { id: string }[]).map((c) => c.id)).toContain("ala:aus:eucalyptus-marginata");
+    expect(r.data.dataGaps).toBeUndefined();
     const noLoc = await call("check_species", { names: ["Banksia serrata"], research: research() });
     expect(noLoc.data.blocked).toEqual(["Banksia serrata"]);
     expect(noLoc.data.note).toContain("Pass the site location");
   });
 
-  it("saves a plan with a live-confirmed native, and refuses chemicals and non-natives (D-17)", async () => {
-    const banksia = plan({ plantingList: [{ scientificName: "Banksia serrata", citationIds: ["ala:native:banksia-serrata"] }], citations: [{ id: "ala:native:banksia-serrata", source: "research", title: "ALA native records" }] });
-    expect((await call("save_plan", { plan: banksia, research: research(), profile: profile() })).isError).toBeUndefined();
-    const jarrah = plan({ plantingList: [{ scientificName: "Eucalyptus marginata", citationIds: ["ala:occ:native-plants"] }] });
-    const r = await call("save_plan", { plan: jarrah, research: research(), profile: profile() });
+  it("saves Australian natives, and refuses invasives and chemicals (D-17)", async () => {
+    const ok1 = plan({ plantingList: [{ scientificName: "Banksia serrata", citationIds: ["ala:near:banksia-serrata"] }, { scientificName: "Eucalyptus marginata", citationIds: ["ala:aus:eucalyptus-marginata"] }], citations: [{ id: "ala:near:banksia-serrata", source: "research", title: "ALA" }, { id: "ala:aus:eucalyptus-marginata", source: "research", title: "ALA" }] });
+    const saved = await call("save_plan", { plan: ok1, research: research(), profile: profile() });
+    expect(saved.isError).toBeUndefined();
+    expect((saved.data.warnings as { code: string }[]).map((w) => w.code)).toContain("australian_native");
+    const invasive = plan({ plantingList: [{ scientificName: "Grevillea robusta", citationIds: ["ala:occ:native-plants"] }] });
+    const r = await call("save_plan", { plan: invasive, research: research(), profile: profile() });
     expect(r.isError).toBe(true);
-    expect((r.data.fixHints as string[])[0]).toContain("local natives only");
+    expect((r.data.fixHints as string[])[0]).toContain("invasive here");
     const sprayed = plan({ actions: [action("a1", { title: "Spray weeds", category: "weed_control" })] });
     expect((await call("save_plan", { plan: sprayed, research: research(), profile: profile() })).isError).toBe(true);
   });

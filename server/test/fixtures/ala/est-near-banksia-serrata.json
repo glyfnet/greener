@@ -1,0 +1,69 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&pageSize=0&lat=-33.87&lon=151.21&radius=10&fq=species%3A%22Banksia+serrata%22&facets=establishmentMeans&facets=degreeOfEstablishment&flimit=10",
+  "recordedAt": "2026-11-24T11:18:46.917Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 507,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [
+      {
+        "fieldName": "establishmentMeans",
+        "fieldResult": [
+          {
+            "label": "native",
+            "i18nCode": "establishmentMeans.native",
+            "count": 10,
+            "fq": "establishmentMeans:\"native\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "establishmentMeans.novalue",
+            "count": 497,
+            "fq": "-establishmentMeans:*"
+          }
+        ]
+      },
+      {
+        "fieldName": "degreeOfEstablishment",
+        "fieldResult": [
+          {
+            "label": "native",
+            "i18nCode": "degreeOfEstablishment.native",
+            "count": 10,
+            "fq": "degreeOfEstablishment:\"native\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "degreeOfEstablishment.novalue",
+            "count": 497,
+            "fq": "-degreeOfEstablishment:*"
+          }
+        ]
+      }
+    ],
+    "query": "?q=*%3A*&fq=species%3A%22Banksia%20serrata%22&lat=-33.87&lon=151.21&radius=10.0",
+    "urlParameters": "?q=*%3A*&fq=species%3A%22Banksia%20serrata%22&lat=-33.87&lon=151.21&radius=10.0",
+    "queryTitle": "[all records] - within 10 km of point(-33.87, 151.21)",
+    "activeFacetMap": {
+      "species": {
+        "name": "species",
+        "displayName": "Species:\"Banksia serrata\" - within 10 km of point(-33.87, 151.21)",
+        "value": "\"Banksia serrata\""
+      }
+    },
+    "activeFacetObj": {
+      "species": [
+        {
+          "name": "species",
+          "displayName": "Species:\"Banksia serrata\" - within 10 km of point(-33.87, 151.21)",
+          "value": "species:\"Banksia serrata\""
+        }
+      ]
+    }
+  }
+}

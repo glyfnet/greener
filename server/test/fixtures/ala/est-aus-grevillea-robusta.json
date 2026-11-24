@@ -1,0 +1,93 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&pageSize=0&fq=species%3A%22Grevillea+robusta%22&facets=establishmentMeans&facets=degreeOfEstablishment&flimit=10",
+  "recordedAt": "2026-11-24T11:18:54.497Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 7089,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [
+      {
+        "fieldName": "establishmentMeans",
+        "fieldResult": [
+          {
+            "label": "introduced",
+            "i18nCode": "establishmentMeans.introduced",
+            "count": 369,
+            "fq": "establishmentMeans:\"introduced\""
+          },
+          {
+            "label": "native",
+            "i18nCode": "establishmentMeans.native",
+            "count": 13,
+            "fq": "establishmentMeans:\"native\""
+          },
+          {
+            "label": "vagrant",
+            "i18nCode": "establishmentMeans.vagrant",
+            "count": 1,
+            "fq": "establishmentMeans:\"vagrant\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "establishmentMeans.novalue",
+            "count": 6706,
+            "fq": "-establishmentMeans:*"
+          }
+        ]
+      },
+      {
+        "fieldName": "degreeOfEstablishment",
+        "fieldResult": [
+          {
+            "label": "cultivated",
+            "i18nCode": "degreeOfEstablishment.cultivated",
+            "count": 40,
+            "fq": "degreeOfEstablishment:\"cultivated\""
+          },
+          {
+            "label": "native",
+            "i18nCode": "degreeOfEstablishment.native",
+            "count": 21,
+            "fq": "degreeOfEstablishment:\"native\""
+          },
+          {
+            "label": "established",
+            "i18nCode": "degreeOfEstablishment.established",
+            "count": 1,
+            "fq": "degreeOfEstablishment:\"established\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "degreeOfEstablishment.novalue",
+            "count": 7027,
+            "fq": "-degreeOfEstablishment:*"
+          }
+        ]
+      }
+    ],
+    "query": "?q=*%3A*&fq=species%3A%22Grevillea%20robusta%22",
+    "urlParameters": "?q=*%3A*&fq=species%3A%22Grevillea%20robusta%22",
+    "queryTitle": "[all records]",
+    "activeFacetMap": {
+      "species": {
+        "name": "species",
+        "displayName": "Species:\"Grevillea robusta\"",
+        "value": "\"Grevillea robusta\""
+      }
+    },
+    "activeFacetObj": {
+      "species": [
+        {
+          "name": "species",
+          "displayName": "Species:\"Grevillea robusta\"",
+          "value": "species:\"Grevillea robusta\""
+        }
+      ]
+    }
+  }
+}

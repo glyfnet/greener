@@ -1,6 +1,6 @@
 {
   "url": "https://api.ala.org.au/namematching/api/search?q=Lomandra+longifolia",
-  "recordedAt": "2026-11-24T10:23:00.140Z",
+  "recordedAt": "2026-11-24T11:18:44.003Z",
   "status": 200,
   "body": {
     "success": true,

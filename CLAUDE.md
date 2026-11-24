@@ -73,7 +73,7 @@ check there before assuming an unconfirmed candidate (e.g. a data source
 under "To check" in Section 8) is final.
 Proposed decisions from the first build are ADRs P-01…P-04 in `docs/adr/`.
 
-**D-17 (rewilding policy):** local natives only and no chemicals. Enforced in
+**D-17 (rewilding policy):** Australian natives only (local preferred), never invasives, and no chemicals. Enforced in
 `core/checks.ts` (`checkSpecies`, `checkChemicals`) — never relax it in a skill.
 
 ## Design standards (specification Section 12.2, abbreviated)

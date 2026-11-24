@@ -1,0 +1,81 @@
+{
+  "url": "https://biocache-ws.ala.org.au/ws/occurrences/search?q=*%3A*&pageSize=0&fq=species%3A%22Banksia+serrata%22&facets=establishmentMeans&facets=degreeOfEstablishment&flimit=10",
+  "recordedAt": "2026-11-24T11:18:47.029Z",
+  "status": 200,
+  "body": {
+    "pageSize": 0,
+    "startIndex": 0,
+    "totalRecords": 17112,
+    "sort": "score",
+    "dir": "asc",
+    "status": "OK",
+    "occurrences": [],
+    "facetResults": [
+      {
+        "fieldName": "establishmentMeans",
+        "fieldResult": [
+          {
+            "label": "native",
+            "i18nCode": "establishmentMeans.native",
+            "count": 128,
+            "fq": "establishmentMeans:\"native\""
+          },
+          {
+            "label": "introduced",
+            "i18nCode": "establishmentMeans.introduced",
+            "count": 12,
+            "fq": "establishmentMeans:\"introduced\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "establishmentMeans.novalue",
+            "count": 16972,
+            "fq": "-establishmentMeans:*"
+          }
+        ]
+      },
+      {
+        "fieldName": "degreeOfEstablishment",
+        "fieldResult": [
+          {
+            "label": "native",
+            "i18nCode": "degreeOfEstablishment.native",
+            "count": 171,
+            "fq": "degreeOfEstablishment:\"native\""
+          },
+          {
+            "label": "cultivated",
+            "i18nCode": "degreeOfEstablishment.cultivated",
+            "count": 16,
+            "fq": "degreeOfEstablishment:\"cultivated\""
+          },
+          {
+            "label": "Not supplied",
+            "i18nCode": "degreeOfEstablishment.novalue",
+            "count": 16925,
+            "fq": "-degreeOfEstablishment:*"
+          }
+        ]
+      }
+    ],
+    "query": "?q=*%3A*&fq=species%3A%22Banksia%20serrata%22",
+    "urlParameters": "?q=*%3A*&fq=species%3A%22Banksia%20serrata%22",
+    "queryTitle": "[all records]",
+    "activeFacetMap": {
+      "species": {
+        "name": "species",
+        "displayName": "Species:\"Banksia serrata\"",
+        "value": "\"Banksia serrata\""
+      }
+    },
+    "activeFacetObj": {
+      "species": [
+        {
+          "name": "species",
+          "displayName": "Species:\"Banksia serrata\"",
+          "value": "species:\"Banksia serrata\""
+        }
+      ]
+    }
+  }
+}

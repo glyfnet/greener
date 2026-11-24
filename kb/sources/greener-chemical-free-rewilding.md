@@ -1,6 +1,6 @@
 # Rewilding without chemicals
 
-Greener plans use local native plants only, and no chemicals: no herbicides, pesticides, insecticides, fungicides, poison baits or synthetic fertilisers. This page explains how a plan works without them.
+Greener plans use Australian native plants only (local natives first), never invasive plants, and no chemicals: no herbicides, pesticides, insecticides, fungicides, poison baits or synthetic fertilisers. This page explains how a plan works without them.
 
 ## Why
 
@@ -13,7 +13,7 @@ Poisons harm people and kill the insects that small birds, lizards and frogs fee
 - Dig out roots and crowns. For shrubs like lantana, grub out the roots with a mattock or hoe. [kb:weedwise-lantana] For asparagus ferns, cut around the crown just below the surface and lever it out. [kb:weedwise-ground-asparagus]
 - Bag seeds, fruit and crowns, and ask your council how to dispose of them. [kb:weedwise-ground-asparagus]
 - Come back. Look for seedlings and regrowth 1 to 3 months after clearing and again 3 to 6 months later, and pull them while they are small. [kb:weedwise-lantana]
-- Don't leave bare ground. Plant local natives or cover cleared soil, so weeds don't come straight back and the soil doesn't wash away. [kb:weedwise-lantana]
+- Don't leave bare ground. Plant natives or cover cleared soil, so weeds don't come straight back and the soil doesn't wash away. [kb:weedwise-lantana]
 - Check whether a weed is a priority weed in your area, and what your legal duty is. [kb:nsw-weedwise-greater-sydney]
 
 ## Pests: exclude, don't poison
@@ -25,7 +25,7 @@ Poisons harm people and kill the insects that small birds, lizards and frogs fee
 
 ## Plants and soil
 
-- Plant only species with native records near your site. Greener checks every plant against the Atlas of Living Australia records for your area. [kb:greener-how-plans-work]
+- Plant Australian natives, local ones first, and never invasives. Greener checks every plant against the Atlas of Living Australia records for your area and for Australia. [kb:greener-how-plans-work]
 - Use compost, leaf mulch and local natives that suit your soil, not synthetic fertiliser. On bushfire-prone land, keep mulch low near buildings. [kb:rfs-habitat-in-apz-gardens]
 
 ## If you use sprays now

@@ -7,7 +7,7 @@ description: Use when the user wants an action plan written or updated, wants to
 
 Implements FR-20–FR-27, FR-60–FR-71 and D-17. The tools enforce the rules; do not work around a refusal.
 
-**Greener is for rewilding: local natives only, and no chemicals (D-17).** Never suggest herbicides, pesticides, poison baits, sprays or synthetic fertiliser. Weeds are removed by hand and the gap is replanted with local natives.
+**Greener is for rewilding: Australian natives only (local natives first), never invasives, and no chemicals (D-17).** Never suggest herbicides, pesticides, poison baits, sprays or synthetic fertiliser. Weeds are removed by hand and the gap is replanted with local natives.
 
 1. Read `profile.json` and `research.json`. If either is missing, run `site-intake` or `site-research` first.
 2. Call `get_site_strategies` with the profile. Apartments, courtyards, rented or strata sites and bushfire-prone land are all fine: follow each strategy's guidance and `planRules`, use its `cautionTag` on the matching actions, and copy its `citations` into the plan's citations.

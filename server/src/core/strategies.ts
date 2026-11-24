@@ -44,14 +44,14 @@ const C = STRATEGY_CITATIONS;
 
 /** Strategies that apply to this site, from its answers. Pure and deterministic. */
 export function siteStrategies(profile: SiteProfile): SiteStrategy[] {
-  // D-17 applies to every site: local natives only, no chemicals.
+  // D-17 applies to every site: Australian natives, no invasives, no chemicals.
   const out: SiteStrategy[] = [
     {
       id: "chemical_free",
       situation: "Every Greener plan (D-17)",
-      summary: "Rewild with local natives only and no chemicals. Remove weeds by hand, keep coming back, and fill every gap with local natives.",
+      summary: "Rewild with Australian natives (local natives first), never invasives, and no chemicals. Remove weeds by hand, keep coming back, and fill every gap with natives.",
       guidance: [
-        "Plant only species with native records near the site. check_species and save_plan block anything else.",
+        "Plant Australian natives only, local ones first. check_species and save_plan block weeds, pests, species introduced near the site, and non-natives.",
         "Clear weeds a small section at a time, starting at the edge, and only as much as you can follow up.",
         "Hand pull after rain, dig out roots and crowns, and bag seeds, fruit and crowns.",
         "Recheck 1–3 months after clearing and again at 3–6 months. Pull seedlings while they are small.",

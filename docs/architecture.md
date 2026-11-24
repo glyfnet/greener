@@ -46,19 +46,20 @@ Logs hold `{ tool, ms, result }` only. Coordinates are rounded to 2 decimal plac
 | --- | --- | --- |
 | On `data/declared-weeds.csv` for the state, or in a genus listed as `<Genus> species` | `declared_weed` | blocked |
 | ALA `stateInvasive` record near the site | `biosecurity_pest` | blocked |
-| Introduced records nearby, no native records | `introduced` | blocked |
+| Introduced records nearby, no native records (invasive here, even if native elsewhere in Australia) | `introduced` | blocked |
 | Native and introduced records nearby | `mixed_records` | warning |
 | A subspecies of it is on the declared list (e.g. *Olea europaea* vs African olive) | `related_declared` | warning if it has local native records, otherwise blocked |
 | Native records nearby | `local_native` | allowed |
-| No native records nearby (after a live ALA check) | `not_recorded_locally` | **blocked** (D-17) |
+| No records nearby; more native than introduced records across Australia | `australian_native` | warning: local natives are better |
+| Not native to Australia, or not confirmed | `not_native` | **blocked** (D-17) |
 
-Species that the research report's short lists don't cover are checked live: `check_species` (given the site `location`) and `save_plan` ask ALA for native-tagged records of that species within the research radius (`nativeRecordsNear`, at most 40 a call). A species with records counts as local native and gets an `ala:native:<species>` citation.
+Species that the research report's short lists don't cover are checked live. `check_species` (given the site `location`) and `save_plan` run `speciesEstablishment` twice per species, at most 25 species a call: once for native and introduced counts within the research radius (`ala:near:<species>`), and once across Australia (`ala:aus:<species>`). "Native to Australia" means more native than introduced records nationally (`nativeToAustralia`).
 
 `save_plan` runs the same checks on every planting, and checks that citation IDs resolve (FR-25). Either failure refuses the plan.
 
 ## Rewilding policy (D-17)
 
-Local natives only (above), and no chemicals. `checkChemicals` (`chemicalUses` in `core/checks.ts`) scans each action's title and steps for chemical methods such as herbicide, pesticide, poison, bait, spray, cut-and-paint and synthetic fertiliser, as whole words. A mention after a negation ("do not spray", "without chemicals") is allowed. A match refuses the plan with `uses_chemicals`. Every site gets the `chemical_free` strategy, and sites where the user sprays now also get `phase_out_sprays`.
+Australian natives only, local first, never invasives (above), and no chemicals. `checkChemicals` (`chemicalUses` in `core/checks.ts`) scans each action's title and steps for chemical methods such as herbicide, pesticide, poison, bait, spray, cut-and-paint and synthetic fertiliser, as whole words. A mention after a negation ("do not spray", "without chemicals") is allowed. A match refuses the plan with `uses_chemicals`. Every site gets the `chemical_free` strategy, and sites where the user sprays now also get `phase_out_sprays`.
 
 ## Constrained sites (FR-23)
 

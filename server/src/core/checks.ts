@@ -7,7 +7,7 @@
  */
 import type { ActionPlan, ResearchReport, SiteProfile, SpeciesRecord } from "./models.js";
 
-export type SpeciesVerdict = "local_native" | "mixed_records" | "related_declared" | "not_recorded_locally" | "introduced" | "declared_weed" | "biosecurity_pest";
+export type SpeciesVerdict = "local_native" | "australian_native" | "mixed_records" | "related_declared" | "not_native" | "introduced" | "declared_weed" | "biosecurity_pest";
 
 export interface SpeciesCheck {
   name: string;
@@ -36,6 +36,25 @@ export interface SpeciesIndex {
   declaredGenera: Map<string, DeclaredWeed>;
   /** Binomials of declared infraspecific taxa (e.g. Olea europaea for African olive). */
   declaredRelated: Map<string, DeclaredWeed>;
+  /** Australia-wide native and introduced record counts from live ALA checks (D-17). */
+  australia: Map<string, AustraliaRecord>;
+}
+
+/** Australia-wide establishment counts for one species. */
+export interface AustraliaRecord {
+  native: number;
+  introduced: number;
+  citationIds: string[];
+}
+
+/**
+ * D-17: a species counts as native to Australia when ALA has more
+ * native-tagged than introduced-tagged records of it nationally. Tested on
+ * live data: Jacaranda 1 native / 1,669 introduced; Lantana 91 / 19,656;
+ * Persoonia hirsuta 219 / 2; Wollemia nobilis 51 / 2.
+ */
+export function nativeToAustralia(r: AustraliaRecord | undefined): boolean {
+  return !!r && r.native > 0 && r.native > r.introduced;
 }
 
 /** KB item that documents the declared weed list (see data/README.md). */
@@ -55,10 +74,16 @@ function lookup<T>(map: Map<string, T>, name: string): T | undefined {
   return map.get(normaliseName(name)) ?? map.get(binomial(name));
 }
 
-export function buildSpeciesIndex(research: Pick<ResearchReport, "keyNativePlants" | "keyFauna" | "threatenedSpecies" | "invasiveSpecies">, declaredWeeds: DeclaredWeed[], state = "NSW", extraNatives: SpeciesRecord[] = []): SpeciesIndex {
-  const idx: SpeciesIndex = { native: new Map(), introduced: new Map(), biosecurity: new Map(), declared: new Map(), declaredGenera: new Map(), declaredRelated: new Map() };
-  // extraNatives: species confirmed native near the site by a live ALA query (D-17).
-  const all = [...research.keyNativePlants, ...research.keyFauna, ...research.threatenedSpecies, ...research.invasiveSpecies, ...extraNatives];
+export function buildSpeciesIndex(
+  research: Pick<ResearchReport, "keyNativePlants" | "keyFauna" | "threatenedSpecies" | "invasiveSpecies">,
+  declaredWeeds: DeclaredWeed[],
+  state = "NSW",
+  live: { near?: SpeciesRecord[]; australia?: Record<string, AustraliaRecord> } = {},
+): SpeciesIndex {
+  const idx: SpeciesIndex = { native: new Map(), introduced: new Map(), biosecurity: new Map(), declared: new Map(), declaredGenera: new Map(), declaredRelated: new Map(), australia: new Map() };
+  // live.near: near-site records from live ALA queries, tagged native and/or introduced (D-17).
+  const all = [...research.keyNativePlants, ...research.keyFauna, ...research.threatenedSpecies, ...research.invasiveSpecies, ...(live.near ?? [])];
+  for (const [name, r] of Object.entries(live.australia ?? {})) idx.australia.set(normaliseName(name), r);
   for (const r of all) {
     const key = normaliseName(r.scientificName);
     if (r.tags.includes("native")) idx.native.set(key, r);
@@ -97,11 +122,11 @@ export function checkSpecies(name: string, idx: SpeciesIndex): SpeciesCheck {
     return { name, verdict: "mixed_records", blocking: false, message: `Warning: ALA has both native and introduced records of ${name} near this site. Check that the plants you buy are local stock (FR-22).`, citationIds: [...new Set([...native.citationIds, ...intro.citationIds])] };
   }
   if (intro) {
-    return { name, verdict: "introduced", blocking: true, message: `ALA records show ${name} as introduced near this site. Choose a local native instead.`, citationIds: intro.citationIds };
+    return { name, verdict: "introduced", blocking: true, message: `ALA records show ${name} as introduced near this site, so it is invasive here, even if it is native elsewhere in Australia. Do not plant it (D-17).`, citationIds: intro.citationIds };
   }
   const related = idx.declaredRelated.get(normaliseName(name));
   if (related && !native) {
-    return { name, verdict: "related_declared", blocking: true, message: `${related.scientificName} is a priority weed (${related.sourceUrl}), and there are no native records of ${name} near this site. Do not plant it (D-17).`, citationIds: [DECLARED_WEEDS_CITATION] };
+    return { name, verdict: "related_declared", blocking: true, message: `${related.scientificName} is a priority weed (${related.sourceUrl}), and there are no native records of ${name} near this site. Do not plant it.`, citationIds: [DECLARED_WEEDS_CITATION] };
   }
   if (related) {
     return { name, verdict: "related_declared", blocking: false, message: `Warning: ${related.scientificName} is a priority weed (${related.sourceUrl}). Make sure ${name} is not that form before you plant it.`, citationIds: [DECLARED_WEEDS_CITATION, ...(native?.citationIds ?? [])] };
@@ -109,13 +134,19 @@ export function checkSpecies(name: string, idx: SpeciesIndex): SpeciesCheck {
   if (native) {
     return { name, verdict: "local_native", blocking: false, message: `${name} has native records within the research radius.`, citationIds: native.citationIds };
   }
-  // D-17: local natives only. No native record near the site means no planting.
+  // D-17: natives to Australia are allowed; local natives are best.
+  const aus = lookup(idx.australia, name);
+  if (nativeToAustralia(aus)) {
+    return { name, verdict: "australian_native", blocking: false, message: `${name} is native to Australia but has no native records near this site. A local native is usually better for local wildlife.`, citationIds: aus?.citationIds ?? [] };
+  }
   return {
     name,
-    verdict: "not_recorded_locally",
+    verdict: "not_native",
     blocking: true,
-    message: `No native records of ${name} near this site. Greener plants local natives only (D-17). Choose a species from the research report, or check this one with check_species.`,
-    citationIds: [],
+    message: aus
+      ? `ALA records ${name} as introduced more often than native in Australia. Greener plants Australian natives only, never invasives (D-17).`
+      : `${name} is not confirmed as native to Australia. Run check_species with the site location, or choose a species from the research report (D-17).`,
+    citationIds: aus?.citationIds ?? [],
   };
 }
 
@@ -169,9 +200,15 @@ function answerOf(profile: SiteProfile, id: string): string | undefined {
 }
 
 /** Check a plan against species data, citations and site constraints (FR-22–FR-25). */
-export function checkPlan(plan: ActionPlan, research: ResearchReport, profile: SiteProfile, declaredWeeds: DeclaredWeed[], extraNatives: SpeciesRecord[] = []): PlanCheckResult {
+export function checkPlan(
+  plan: ActionPlan,
+  research: ResearchReport,
+  profile: SiteProfile,
+  declaredWeeds: DeclaredWeed[],
+  live: { near?: SpeciesRecord[]; australia?: Record<string, AustraliaRecord> } = {},
+): PlanCheckResult {
   const issues: PlanIssue[] = [];
-  const idx = buildSpeciesIndex(research, declaredWeeds, profile.location?.state ?? "NSW", extraNatives);
+  const idx = buildSpeciesIndex(research, declaredWeeds, profile.location?.state ?? "NSW", live);
 
   // D-17: no chemicals in any action's title or steps.
   for (const a of plan.actions) {
@@ -190,7 +227,7 @@ export function checkPlan(plan: ActionPlan, research: ResearchReport, profile: S
     const c = checkSpecies(original.get(key) ?? key, idx);
     species.push(c);
     if (c.blocking) issues.push({ severity: "error", code: c.verdict, message: c.message, ...(actionId ? { actionId } : {}) });
-    else if (c.verdict === "not_recorded_locally" || c.verdict === "mixed_records" || c.verdict === "related_declared") issues.push({ severity: "warning", code: c.verdict, message: c.message, ...(actionId ? { actionId } : {}) });
+    else if (c.verdict === "australian_native" || c.verdict === "mixed_records" || c.verdict === "related_declared") issues.push({ severity: "warning", code: c.verdict, message: c.message, ...(actionId ? { actionId } : {}) });
   }
 
   // FR-25: every citation ID must resolve.
