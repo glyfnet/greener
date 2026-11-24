@@ -19,7 +19,7 @@ Out of scope for release 1 (MVP): Indigenous ecological knowledge, user accounts
 
 ## 2. Decision log
 
-Seventeen decisions are closed. Each new decision gets a new row.
+Twenty-two decisions are closed. Each new decision gets a new row.
 
 | ID | Decision | Result | Effect on design |
 | --- | --- | --- | --- |
@@ -40,8 +40,13 @@ Seventeen decisions are closed. Each new decision gets a new row.
 | D-15 | Global KB content | Two tiers: **open content** (full text, only with an open licence or permission) and a **link catalogue** (URL, metadata and a thorough summary in our own words). No private KB. | The repository stays fully public. Claude reads link-catalogue sources live when web access is on (Section 7.4). |
 | D-16 | Funding | Voluntary donations through Buy Me a Coffee, linked from the GitHub page | `.github/FUNDING.yml` shows a Sponsor button. The README links it. The tool stays free; no feature needs a donation. |
 | D-17 | Planting and chemical policy | Rewilding with Australian native plants only (local natives preferred), never invasives, and no chemicals. No herbicides, pesticides, poison baits, fungicides or chemical fertilisers in any action. | `check_species` and `save_plan` block priority weeds, state-flagged pests, species recorded as introduced near the site, and species not native to Australia. A non-local Australian native is allowed with a warning (FR-22). `save_plan` refuses actions that use chemicals. Weeds and pests are managed by hand removal, smothering, exclusion and revegetation. |
+| D-18 | Bushfire-prone land source | NSW RFS Bush Fire Prone Land map (CC BY), queried on `portal.spatial.nsw.gov.au` | `bushfire_status` checks about 100 m around the site (3 decimal places), not cached. The council's certified map stays authoritative (FR-03). |
+| D-19 | Geocoding source | NSW Address Location Service (CC BY) for street addresses | `geocode` sends a structured street address, not cached and not logged. Suburb-only lookup waits for a confirmed licence (FR-02). |
+| D-20 | Vegetation community source | NSW State Vegetation Type Map, pre-clearing (CC BY) | `vegetation_community` returns the likely original Plant Community Type at 3 decimal places, not cached (FR-14). |
+| D-21 | Climate source (closes Q-06) | Open-Meteo Historical Weather API, ERA5 1991–2020 (CC BY 4.0, free non-commercial tier; donations permitted) | `climate_normals` computes monthly temperature and rainfall and cold-night counts at 1 decimal place, cached 30 days (FR-12). |
+| D-22 | Soil source | Soil and Landscape Grid of Australia map services on `soils.csiro.au` (CC BY 4.0) | `soil_properties` returns modelled pH, clay, sand and organic carbon at 0–5 and 5–15 cm, 3 decimal places, not cached (FR-13). |
 
-D-05 and D-06 changed on 24 Nov 2026 so that non-technical users need no install and no local setup. D-17 was added on 24 Nov 2026 by the maintainer.
+D-05 and D-06 changed on 24 Nov 2026 so that non-technical users need no install and no local setup. D-17 was added on 24 Nov 2026 by the maintainer. D-18 to D-22 were added on 25 Nov 2026, when each data source was checked; the ADRs in `docs/adr/` record what was checked.
 
 ## 3. Users and use cases
 
@@ -445,7 +450,7 @@ The table ships as a CSV file in the plugin. The user can replace any row for th
 
 ## 8. Data sources and external APIs
 
-ALA is the primary species source. Only the ALA endpoint is confirmed in this draft. The other rows are candidates. We must check each one before we build its connector.
+ALA is the primary species source. Rows marked *Confirmed* have a decision row and recorded fixtures. The other rows are candidates. We must check each one before we build its connector.
 
 | Need | Candidate source | Access | Status |
 | --- | --- | --- | --- |
@@ -454,11 +459,11 @@ ALA is the primary species source. Only the ALA endpoint is confirmed in this dr
 | iNaturalist records | ALA already holds iNaturalist Australia records | Through ALA | To check for duplicates |
 | Threatened species | EPBC Act list, state threatened species lists | Public | To check API form |
 | Declared weeds | State declared weed lists (for example NSW WeedWise) | Public web, maybe no API | To check |
-| Pre-clearing vegetation | NVIS and state vegetation maps | Spatial services | To check |
-| Climate | Bureau of Meteorology climate data, or Open-Meteo | Public | To check licence |
-| Soil | Soil and Landscape Grid of Australia (TERN) | Public | To check |
-| Bushfire-prone land | State planning spatial services | Public, varies by state | To check |
-| Geocoding | Nominatim (OpenStreetMap) or a state address service | Public, rate limited | To check |
+| Pre-clearing vegetation | [NSW State Vegetation Type Map, pre-clearing](https://data.nsw.gov.au/data/dataset/nsw-state-vegetation-type-map-pre-clearing) `VIS/SVTM_NSW_1750_PCT` identify | Public, CC BY | Confirmed (D-20) |
+| Climate | [Open-Meteo Historical Weather API](https://open-meteo.com/en/docs/historical-weather-api) (ERA5) | Free non-commercial tier, CC BY 4.0 | Confirmed (D-21) |
+| Soil | Soil and Landscape Grid of Australia map services, `soils.csiro.au/arcgis/rest/services/TERN` | Public, CC BY 4.0 | Confirmed (D-22) |
+| Bushfire-prone land | [NSW RFS Bush Fire Prone Land](https://data.nsw.gov.au/data/dataset/bush-fire-prone-land) FeatureServer on `portal.spatial.nsw.gov.au` | Public, CC BY | Confirmed (D-18) |
+| Geocoding | [NSW Address Location Service](https://data.nsw.gov.au/data/dataset/1602c6c4-d396-4890-a031-388d83635b5a) on `maps.six.nsw.gov.au` | Public, CC BY | Confirmed for street addresses (D-19). Suburb centroids: licence to check |
 | Council planting lists | Council websites, as documents for RAG | Public documents | Manual collection |
 
 ALA notes:
@@ -669,7 +674,7 @@ The first three questions block the build. The others can close during developme
 - [ ] **Q-03 Distribution.** Submit to Anthropic's directory, or share from our own GitHub marketplace first?
 - [ ] **Q-04 IEK pilot (Phase 3).** Which community, if any, will pilot the IEK index? Who is the custodian contact? Release 1 can ship with an empty IEK index. With a remote server, only IEK that the custodian approves as public can go in the shared index. Community-level IEK needs user sign-in, so it moves to phase 2.
 - [ ] **Q-05 Usage fit.** Does a full research and plan run fit inside a Claude Pro usage window? We must measure this with test sites.
-- [ ] **Q-06 Climate source.** BOM data or Open-Meteo? Check licence and attribution terms for each.
+- [ ] **Q-06 Climate source.** Closed 25 Nov 2026 by D-21: Open-Meteo (CC BY 4.0, free non-commercial tier).
 - [ ] **Q-07 Embedding model.** Closed 24 Nov 2026 by D-06: MVP uses keyword (BM25) search. No embedding model.
 - [ ] **Q-08 Evaluation set.** Which 10–20 sample sites do we use to test grounding, weed safety and plan quality (NFR-02, NFR-03)?
 - [ ] **Q-09 Threatened species precision.** What location precision is safe in exports and answers (NFR-10)?

@@ -1,0 +1,27 @@
+{
+  "url": "https://soils.csiro.au/arcgis/rest/services/TERN/SOC_ACLEP_AU_TRN_N/MapServer/identify?geometry=151.211%2C-33.873&geometryType=esriGeometryPoint&sr=4326&layers=all%3A1%2C5&tolerance=0&mapExtent=151.2010%2C-33.8830%2C151.2210%2C-33.8630&imageDisplay=100%2C100%2C96&returnGeometry=false&f=json",
+  "recordedAt": "2026-11-24T21:36:16.265Z",
+  "status": 200,
+  "body": {
+    "results": [
+      {
+        "layerId": 1,
+        "layerName": "SOC_000_005_EV_N_P_AU_TRN_N",
+        "displayFieldName": "",
+        "attributes": {
+          "Classify.Pixel Value": "3.430000",
+          "Classify.Class value": "6"
+        }
+      },
+      {
+        "layerId": 5,
+        "layerName": "SOC_005_015_EV_N_P_AU_TRN_N",
+        "displayFieldName": "",
+        "attributes": {
+          "Classify.Pixel Value": "2.960000",
+          "Classify.Class value": "5"
+        }
+      }
+    ]
+  }
+}

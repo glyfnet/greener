@@ -1,0 +1,60 @@
+{
+  "url": "https://portal.spatial.nsw.gov.au/server/rest/services/Hosted/NSW_BushFire_Prone_Land/FeatureServer/0/query?geometry=150.3120%2C-33.7340%2C150.3140%2C-33.7320&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=category%2Cd_category%2Cd_guidelin%2Clastupdate&returnGeometry=false&f=json",
+  "recordedAt": "2026-11-24T21:36:01.375Z",
+  "status": 200,
+  "body": {
+    "features": [
+      {
+        "attributes": {
+          "d_category": "Vegetation Category 1",
+          "d_guidelin": "v5b",
+          "lastupdate": 1747180800000,
+          "category": 1
+        }
+      },
+      {
+        "attributes": {
+          "d_category": "Vegetation Buffer",
+          "d_guidelin": "v5b",
+          "lastupdate": 1747180800000,
+          "category": 0
+        }
+      }
+    ],
+    "exceededTransferLimit": false,
+    "objectIdFieldName": "fid",
+    "fields": [
+      {
+        "modelName": "category",
+        "defaultValue": null,
+        "name": "category",
+        "alias": "Category",
+        "type": "esriFieldTypeInteger"
+      },
+      {
+        "modelName": "d_category",
+        "defaultValue": null,
+        "name": "d_category",
+        "length": 254,
+        "alias": "d_Category",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "modelName": "d_guidelin",
+        "defaultValue": null,
+        "name": "d_guidelin",
+        "length": 254,
+        "alias": "d_Guidelin",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "modelName": "lastupdate",
+        "defaultValue": null,
+        "name": "lastupdate",
+        "length": 29,
+        "alias": "LastUpdate",
+        "type": "esriFieldTypeDate"
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "url": "https://maps.six.nsw.gov.au/services/public/Address_Location?houseNumber=1&roadName=Notarealname&roadType=St&suburb=Bathurst&projection=EPSG%3A4326",
+  "recordedAt": "2026-11-24T21:36:02.319Z",
+  "status": 200,
+  "body": {
+    "addressResult": {
+      "errMsg": "No matching records found",
+      "numRecs": 0
+    }
+  }
+}
