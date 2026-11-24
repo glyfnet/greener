@@ -13,11 +13,10 @@ Decision log).
 
 ## For users
 
-1. Open Claude (web, desktop or mobile) and go to **Settings → Customize**.
-2. Add the Greener connector (directory listing pending — see `docs/specification.md` Q-18; until then, add it from this repository's `.claude-plugin/marketplace.json`).
-3. Run `/greener-new` to start a plan for your site.
-
-No API key, no download, no local setup.
+Follow the [install guide](docs/install.md): upload the plugin in
+**Customize → Plugins** (paid plans), or add the connector in
+**Customize → Connectors** (any plan). Then run `/greener-new` in a
+Project for your site. No API key and no local setup.
 
 ## For developers
 
@@ -27,8 +26,10 @@ npm run dev        # run the MCP server locally (wrangler dev)
 npm run check       # lint, typecheck, unit tests, KB check, index build
 ```
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full developer setup,
-branch and commit conventions, and how to add knowledge-base items.
+See the [developer setup guide](docs/developer-setup.md) for tools,
+local testing, the Cloudflare account and the first deploy, and
+[`CONTRIBUTING.md`](CONTRIBUTING.md) for
+branch and commit conventions and how to add knowledge-base items.
 
 Needs Node 22 (`nvm use`). All docs are indexed in [`docs/`](docs/README.md):
 the [specification](docs/specification.md), the

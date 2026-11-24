@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Install guide for users (`docs/install.md`: plugin upload, connector-only on the Free plan, Team and Enterprise, Claude Code, Project setup) and a developer setup guide (`docs/developer-setup.md`: local testing, Cloudflare account, first deploy, free plan limits, monitoring).
 - New England sources: 5 KB items (Armidale Tree Group's Plants of the New England database and wholesale species lists, WeedWise Northern Tablelands, and the Uralla and Armidale council weed pages), and Armidale Tree Group hiko seedling prices in the cost table (FR-68).
 - `find_native_nurseries` lists native plant nurseries and plant stalls near the site, with what they offer, how to visit and a citation, for the plan's local resources (FR-20). The first entries are in Armidale and Uralla: Armidale Tree Group, Cool Natives Nursery, and the Australian Plants Society stalls at the Armidale and Uralla markets.
 - Northern Tablelands priority weeds (Armidale Regional, Uralla and four other councils) from NSW WeedWise: 9 new species, for example sweet briar and honey locust, and the regional duties for 95 species already on the list (FR-24).
