@@ -21,7 +21,7 @@ Manual, with no GitHub Actions (D-12, specification Section 11.3).
 - `CONTACT_URL` in `server/wrangler.toml`
 - the server URL in `plugin/.claude-plugin/plugin.json`
 
-Also set the server address in `docs/install.md`, the smoke URLs (`SMOKE_STAGING_URL`, `SMOKE_PROD_URL`) and `.github/FUNDING.yml`.
+Also set the server address in `docs/install.md` and the smoke URLs (`SMOKE_STAGING_URL`, `SMOKE_PROD_URL`).
 
 Cloudflare access comes from `wrangler login` ([developer-setup.md](developer-setup.md)). No tokens go in the repo. A change to a tool name or schema is a major version.
 

@@ -115,7 +115,6 @@ To try staging in claude.ai, add it as a custom connector (**Customize → Conne
 | `plugin/.claude-plugin/plugin.json` | `mcpServers.greener.url`: `https://greener-production.<your-subdomain>.workers.dev/mcp` |
 | `scripts/smoke.ts` | `DEFAULTS` for staging and production, or set `SMOKE_STAGING_URL` and `SMOKE_PROD_URL` in your shell |
 | `docs/install.md` | The server address in Option B |
-| `.github/FUNDING.yml` | The Buy Me a Coffee username (D-16) |
 
 The repository also has to be public, so that users can download the release zip and add the marketplace.
 
