@@ -55,3 +55,154 @@ items:
       are generalised by ALA before release. Data in ALA carries the licence
       of each data resource, most often Creative Commons Attribution, so
       exports must credit ALA and its data providers.
+
+  - id: rfs-habitat-in-apz-gardens
+    title: Habitat in your garden in a bush fire prone area (Asset Protection Habitat Areas, illustrated)
+    tier: link_catalogue
+    sourceUrl: https://www.rfs.nsw.gov.au/__data/assets/pdf_file/0004/254254/Asset-Protection-Habitat-Areas-illustrated.pdf
+    publisher: NSW Rural Fire Service, with the Habitat Network
+    licence: "CC BY 4.0 per the NSW RFS copyright page, but the RFS disclaimer limits redistribution: link and summary only."
+    region: NSW
+    dateChecked: "2026-11-24"
+    tags: [bushfire, asset protection zone, apz, habitat, garden design, plant selection, flammability]
+    summary: >-
+      A short illustrated guide for home owners in bushfire-prone parts of
+      urban Sydney who want native habitat inside the fuel-reduced zone
+      around their house. It explains that an asset protection zone keeps
+      fuel low so fire cannot run along the ground or through the canopy to
+      the building, and that habitat does not mean a dense forest. Instead it
+      suggests a few small habitat havens set well away from the house, joined
+      by open breaks such as paths, gravel, lawn or native groundcover. It
+      advises taller plants furthest from the house, grading down to low
+      plants near it, with nothing touching the walls; clearing beneath tree
+      canopies; keeping leaf litter and mulch low and using rocks for lizard
+      and insect shelter instead; and dense or spiky shrubs as refuges for
+      small birds. It lists genera reported anecdotally to burn more slowly,
+      such as Dianella, Lomandra, Hardenbergia, Kennedia, Banksia,
+      Callistemon, Grevillea, Hakea and Scaevola, and warns that oily
+      Myrtaceae such as eucalypts, melaleucas and tea-trees belong well away
+      from houses, as isolated trees with cleared ground below. All plants
+      burn, so maintenance and a bush fire survival plan still matter.
+
+  - id: rfs-standards-asset-protection-zones
+    title: Standards for Asset Protection Zones
+    tier: link_catalogue
+    sourceUrl: https://www.rfs.nsw.gov.au/__data/assets/pdf_file/0010/13321/Standards-for-Asset-Protection-Zones.pdf
+    publisher: NSW Rural Fire Service
+    licence: "CC BY 4.0 per the NSW RFS copyright page, but the RFS disclaimer limits redistribution: link and summary only."
+    region: NSW
+    dateChecked: "2026-11-24"
+    tags: [bushfire, asset protection zone, apz, pruning, canopy, grass, ground cover]
+    summary: >-
+      The RFS guide to setting up and maintaining an asset protection zone,
+      the fuel-reduced area between bushland and a building. It explains that
+      the width needed depends on the type of vegetation, because a forest
+      with a shrubby understorey burns more intensely than a grassy woodland.
+      Its maintenance standards include keeping grass short and green where
+      possible; pruning or removing trees so there is no continuous canopy
+      from the bush to the house, with tree crowns two to five metres apart
+      and no canopy overhanging within two to five metres of a dwelling;
+      keeping native trees and shrubs as clumps or islands covering no more
+      than 20 per cent of the area; and removing the lowest branches up to
+      two metres from the ground so a ground fire cannot climb into the
+      trees. It also asks that shrubs do not abut the house, that brush
+      fencing and pencil-pine type trees be avoided, that trees with loose or
+      stringy bark be avoided, and that ground cover is kept at 75 per cent or
+      more to prevent erosion. Paths, dams, pools and rows of trees can act as
+      breaks and ember traps.
+
+  - id: nsw-sydney-nature-small-spaces
+    title: Sydney Nature — gardens in small spaces
+    tier: link_catalogue
+    sourceUrl: https://www.environment.nsw.gov.au/about-us/get-involved/sydney-nature/gardens/small-spaces
+    publisher: NSW Government (Department of Climate Change, Energy, the Environment and Water)
+    licence: "Link and summary only. NSW Government web content is generally CC BY 4.0; this page's own licence was not confirmed."
+    region: NSW
+    dateChecked: "2026-11-24"
+    tags: [apartment, balcony, courtyard, small spaces, pots, birdbath, bee hotel, renter]
+    summary: >-
+      A NSW Government page, updated in June 2023, on bringing nature to a
+      courtyard, balcony or windowsill. It suggests hanging baskets on
+      railings planted with herbs, succulents or flowering plants such as
+      native daisies and violets, and a trellis or reinforced mesh for
+      climbers. It explains that in Sydney north-facing balconies get the
+      most winter sun, east-facing ones gentle morning sun and west-facing
+      ones harsh afternoon sun, and that exposed balconies need hardy plants
+      because of wind and sun. It recommends lightweight pots and good potting
+      mix if pots will be moved, notes that plastic pots hold more moisture
+      than terracotta or concrete, and lists natives suited to pots among
+      bee-friendly choices. Other ideas are a worm farm in a shady corner, a
+      birdbath for birds and bees, a small courtyard pond, and a bee or insect
+      hotel. It asks readers not to use poisons, because they harm people and
+      beneficial insects, and to check with their council about discounted
+      items.
+
+  - id: city-of-sydney-urban-habitat-guide
+    title: City of Sydney — urban habitat creation guide
+    tier: link_catalogue
+    sourceUrl: https://www.cityofsydney.nsw.gov.au/guides/urban-habitat-creation-guide
+    publisher: City of Sydney
+    licence: "Link and summary only. Licence not confirmed (terms page not checked)."
+    region: NSW coast
+    dateChecked: "2026-11-24"
+    tags: [habitat, apartment, balcony, urban wildlife, small birds, frogs, lizards, microbats, council]
+    summary: >-
+      A City of Sydney guide, published in May 2019, on helping native animals
+      in the inner city by creating native gardens and habitat. It explains
+      that urban wildlife such as frogs, small birds, lizards, owls, microbats
+      and bandicoots needs help because habitat in the city is scarce and
+      broken up, and it encourages residents, businesses, community groups and
+      developers to build habitat gardens in backyards, on balconies, in
+      shared common areas of apartment buildings and in places such as
+      schools. The detailed advice is in a linked PDF, Creating habitat for
+      urban wildlife, last modified in August 2020. Use this guide to connect
+      a balcony or courtyard plan to the council's wider habitat goals, and
+      ask the council about programs that support residents.
+
+  - id: nsw-weedwise-greater-sydney
+    title: NSW WeedWise — priority weeds for Greater Sydney
+    tier: link_catalogue
+    sourceUrl: https://weeds.dpi.nsw.gov.au/Region?Id=81
+    publisher: NSW Department of Primary Industries and Regional Development
+    licence: "Species names and duties copied into data/declared-weeds.csv as facts with links; page footer links the NSW Government CC BY 4.0 copyright notice. Link and summary only here."
+    region: NSW
+    dateChecked: "2026-11-24"
+    tags: [weeds, priority weeds, biosecurity, declared weeds, lantana, asparagus fern, legal duty]
+    summary: >-
+      The NSW WeedWise list of priority weeds for the Greater Sydney region,
+      which covers more than thirty council areas from the Blue Mountains and
+      Hawkesbury to the Central Coast, Sutherland and Wollondilly. Every
+      person has a general biosecurity duty to prevent, eliminate or minimise
+      the risk any plant poses. On top of that, each listed weed carries one or
+      more duties: prohibited matter that must be reported at once; a
+      prohibition on certain dealings, meaning it must not be brought into the
+      state, sold or offered for sale; control orders and biosecurity zones
+      that require eradication or suppression; and regional recommended
+      measures that ask land managers to stop the weed arriving or spreading
+      and not to buy, sell, move or release it. Garden escapes on the list
+      include lantana, ground asparagus and other asparagus ferns, fireweed,
+      bitou bush, boneseed, Madeira vine, cat's claw creeper, pampas grass and
+      African olive. Each weed links to a profile with identification and
+      control advice.
+
+  - id: greener-apartment-balcony-habitat
+    title: Habitat on a balcony, courtyard or rented site
+    tier: open_content
+    file: greener-apartment-balcony-habitat.md
+    sourceUrl: kb/sources/greener-apartment-balcony-habitat.md
+    publisher: Greener maintainers
+    licence: maintainer
+    region: NSW
+    dateChecked: "2026-11-24"
+    tags: [apartment, balcony, courtyard, renter, strata, pots, small spaces, removable]
+
+  - id: greener-bushfire-prone-habitat
+    title: Habitat on bushfire-prone land
+    tier: open_content
+    file: greener-bushfire-prone-habitat.md
+    sourceUrl: kb/sources/greener-bushfire-prone-habitat.md
+    publisher: Greener maintainers
+    licence: maintainer
+    region: NSW
+    dateChecked: "2026-11-24"
+    tags: [bushfire, asset protection zone, apz, habitat, garden design, maintenance]
