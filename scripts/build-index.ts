@@ -6,6 +6,7 @@
  * - question-bank.json   validated `data/question-bank.yaml`
  * - cost-reference.json  validated `data/cost-reference.csv`
  * - declared-weeds.json  validated `data/declared-weeds.csv`
+ * - native-nurseries.json validated `data/native-nurseries.csv`
  * - intake-card.ts       the question card HTML with its script inlined
  *
  * Heavy work happens here, not at request time (D-10).
@@ -16,6 +17,7 @@ import { buildIndex, type IndexedChunk } from "../server/src/rag/bm25.js";
 import { chunkMarkdown } from "../server/src/rag/chunk.js";
 import { manifestRuleErrors } from "../server/src/rag/manifest.js";
 import { parseCostReference } from "../server/src/core/cost.js";
+import { parseNurseries } from "../server/src/core/nurseries.js";
 import { fail, loadManifest, loadQuestionBank, parseDeclaredWeeds, path, readText } from "./lib.js";
 
 const OUT = path("server/src/generated");
@@ -66,6 +68,7 @@ write("question-bank.json", JSON.stringify(loadQuestionBank()));
 try {
   write("cost-reference.json", JSON.stringify(parseCostReference(readText("data/cost-reference.csv"))));
   write("declared-weeds.json", JSON.stringify(parseDeclaredWeeds(readText("data/declared-weeds.csv"))));
+  write("native-nurseries.json", JSON.stringify(parseNurseries(readText("data/native-nurseries.csv"))));
 } catch (e) {
   fail(e instanceof Error ? e.message : String(e));
 }

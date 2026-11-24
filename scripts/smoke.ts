@@ -65,6 +65,7 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
   get_site_strategies: { profile: { location: loc, answers: { site_type: { optionIds: ["apartment"] }, tenure: { optionIds: ["rent"] } } } },
   check_species: { names: ["Lomandra longifolia"], research },
   get_cost_reference: { items: ["Native tube stock"] },
+  find_native_nurseries: { location: { lat: -30.52, lon: 151.67, precision: "approximate", state: "NSW" } },
   schedule_plan: { actions: [action], startMonth: 3, capacity },
   mark_done: { actions: [action], actionId: "a1", month: 1, actualHours: 2, actualCostAud: 15, startMonth: 3, capacity },
   save_plan: { plan, research, profile: { location: loc } },
