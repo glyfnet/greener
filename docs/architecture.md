@@ -101,5 +101,5 @@ These are warnings, not refusals: `save_plan` returns them with the `strategyId`
 | Cost reference | 2 rows (YAN nurseries, southern tablelands). Sydney prices are listed in `data/README.md`, still to be checked by hand (Q-12). |
 | Icon set | Text placeholders (Q-14). |
 | Apartment question count | 17, not the "about 14" in Section 7.3 (TODO in `data/question-bank.yaml`). |
-| Server URL, contact URL, FUNDING.yml | Placeholders. `npm run release` refuses to run while they are set. |
+| Server URL, contact URL | Placeholders. `npm run release` refuses to run while they are set. |
 | Live CPU-time check (Q-17) | Check Workers logs after the first staging deploy. |

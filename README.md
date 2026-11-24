@@ -49,8 +49,8 @@ rows) have a first set of sourced data. See
 ## Support this project
 
 Greener is free, with no paid tier. If it's useful to you, you can support
-hosting costs via [Buy Me a Coffee](https://buymeacoffee.com/) (link set in
-`.github/FUNDING.yml` once the account exists — D-16).
+hosting costs via [Buy Me a Coffee](https://buymeacoffee.com/ericgreene)
+(D-16).
 
 ## Licence
 
