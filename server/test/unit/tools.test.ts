@@ -183,10 +183,10 @@ describe("research tools", () => {
     expect((await call("ala_species_profile", { name: "Lomandra longifolia" })).data).toMatchObject({ found: true, family: "Asparagaceae" });
   });
 
-  it("returns data gaps for sources still being checked", async () => {
-    for (const name of ["climate_normals"]) {
-      expect((await call(name, { location })).data).toMatchObject({ available: false, dataGap: expect.objectContaining({ reason: expect.stringContaining("still being checked") }) });
-    }
+  it("returns climate normals with a citation (FR-12, D-21)", async () => {
+    const r = await call("climate_normals", { location: { ...location, ...FIRE_POINT } });
+    expect(r.data).toMatchObject({ available: true, normals: { period: "1991–2020", coldNightsPerYear: { atOrBelow0C: 29.9 } }, citation: { id: "open-meteo:era5-normals" } });
+    expect((await call("climate_normals", { location })).data).toMatchObject({ available: false, dataGap: { topic: "climate normals" } });
   });
 
   it("returns modelled soil properties with units and a citation (FR-13, D-22)", async () => {

@@ -1184,7 +1184,7 @@ Input schema:
 
 ## climate_normals
 
-Get climate normals (temperature, rainfall, frost) for the site (FR-12). The data source is not confirmed yet (Q-06), so this returns a data gap to record in the report.
+Get 1991–2020 climate normals for the site from the Open-Meteo Historical Weather API (FR-12, D-21): monthly mean maximum and minimum temperature, monthly and annual rainfall, and mean nights a year at or below 0 °C and 2 °C. Use them to time planting and choose natives suited to the site. The grid is about 25 km, so local effects are smoothed out.
 
 Input schema:
 

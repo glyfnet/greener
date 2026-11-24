@@ -5,7 +5,7 @@ import { z } from "zod";
 import { normaliseName } from "../core/checks.js";
 import { Location, ResearchReport } from "../core/models.js";
 import { speciesNear, speciesProfile } from "../connectors/ala.js";
-import { PENDING, pendingGap } from "../connectors/pending.js";
+import { climateNormals as getClimate } from "../connectors/climate.js";
 import { soilProperties as getSoil } from "../connectors/soil.js";
 import { vegetationCommunity as getVegetation } from "../connectors/vegetation.js";
 import { fail, ok } from "./context.js";
@@ -51,16 +51,28 @@ export const alaSpeciesProfile = defineTool({
   },
 });
 
-const pendingTool = (name: "climate_normals", key: "climate", title: string, description: string) =>
-  defineTool({
-    name,
-    title,
-    description,
-    input: z.object({ location: Location }),
-    handler: () => ok({ available: false, dataGap: pendingGap(key), requirement: PENDING[key].requirement, nextStep: "Record this data gap in the research report and continue (NFR-07). Do not estimate the values." }),
-  });
+export const climateNormals = defineTool({
+  name: "climate_normals",
+  title: "Get climate normals",
+  description:
+    "Get 1991–2020 climate normals for the site from the Open-Meteo Historical Weather API (FR-12, D-21): monthly mean maximum and minimum temperature, monthly and annual rainfall, and mean nights a year at or below 0 °C and 2 °C. Use them to time planting and choose natives suited to the site. The grid is about 25 km, so local effects are smoothed out.",
+  input: z.object({ location: Location }),
+  handler: async ({ location }, ctx) => {
+    const r = await getClimate(location.lat, location.lon, ctx.http, ctx.today);
+    if (!r.ok) return ok({ available: false, dataGap: r.dataGap, requirement: "FR-12", nextStep: "Record this data gap in the research report and continue (NFR-07). Do not estimate the values." });
+    return ok({
+      available: true,
+      normals: r.normals,
+      citation: r.citation,
+      notes: [
+        "ERA5 reanalysis on a grid of about 25 km, not a weather station. Conditions at the site can differ from the grid average; ask the user what they see.",
+        "Cold nights count days with a minimum air temperature at or below 0 °C or 2 °C. They are thresholds, not a definition of frost.",
+        "Cite Open-Meteo with a link wherever these values are shown (CC BY 4.0).",
+      ],
+    });
+  },
+});
 
-export const climateNormals = pendingTool("climate_normals", "climate", "Get climate normals", "Get climate normals (temperature, rainfall, frost) for the site (FR-12). The data source is not confirmed yet (Q-06), so this returns a data gap to record in the report.");
 export const soilProperties = defineTool({
   name: "soil_properties",
   title: "Get soil properties",

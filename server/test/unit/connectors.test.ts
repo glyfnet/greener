@@ -244,3 +244,44 @@ describe("Soil and Landscape Grid of Australia (FR-13, D-22)", async () => {
     expect(await soilProperties(-33.8, 151.3, deps(async () => new Response('{"error":{"message":"bad"}}')), "d")).toMatchObject({ ok: false, dataGap: { reason: expect.stringContaining("bad") } });
   });
 });
+
+describe("Open-Meteo climate normals (FR-12, D-21)", async () => {
+  const { climateNormals, climateUrl, summariseDaily, CLIMATE_TTL_SECONDS } = await import("../../src/connectors/climate.js");
+  const { FIRE_POINT } = await import("../helpers.js");
+
+  it("builds the recorded URL at 1 decimal place", () => {
+    expect(climateUrl(FIRE_POINT.lat, FIRE_POINT.lon)).toBe(fixture("katoomba", "climate").url);
+    expect(climateUrl(-33.68, 150.26)).toBe(fixture("katoomba", "climate").url);
+  });
+
+  it("summarises 30 years of daily data into monthly normals, and caches for 30 days", async () => {
+    const cache = memoryCache();
+    const r = await climateNormals(FIRE_POINT.lat, FIRE_POINT.lon, deps(fixtureFetch().fn, { cache }), "2026-11-25");
+    expect(r).toMatchObject({ ok: true, normals: { period: "1991–2020", gridElevationM: 999 }, citation: { id: "open-meteo:era5-normals", url: "https://open-meteo.com/", licence: "CC BY 4.0" } });
+    if (!r.ok) return;
+    const { months, annualRainfallMm, coldNightsPerYear } = r.normals;
+    expect(months).toHaveLength(12);
+    const jan = months[0];
+    const jul = months[6];
+    expect(jan && jul && (jan.meanMaxC ?? 0) > (jul.meanMaxC ?? 0)).toBe(true);
+    expect(annualRainfallMm).toBeGreaterThan(0);
+    expect(coldNightsPerYear.atOrBelow0C).toBe(29.9);
+    expect(coldNightsPerYear.atOrBelow2C).toBeGreaterThanOrEqual(coldNightsPerYear.atOrBelow0C);
+    expect(cache.store.size).toBe(1);
+    expect(CLIMATE_TTL_SECONDS).toBe(2592000);
+  });
+
+  it("computes means, rainfall per year and cold nights, skipping nulls", () => {
+    const s = summariseDaily(["2001-01-01", "2001-01-02", "2002-01-01", "2001-07-01"], [30, null, 28, 12], [15, 16, null, -1], [10, 5, 20, null], 2);
+    expect(s.months[0]).toEqual({ month: 1, meanMaxC: 29, meanMinC: 15.5, rainfallMm: 17.5 });
+    expect(s.months[6]).toEqual({ month: 7, meanMaxC: 12, meanMinC: -1, rainfallMm: null });
+    expect(s.months[1]).toEqual({ month: 2, meanMaxC: null, meanMinC: null, rainfallMm: null });
+    expect(s.annualRainfallMm).toBeNull();
+    expect(s.coldNightsPerYear).toEqual({ atOrBelow0C: 0.5, atOrBelow2C: 0.5 });
+  });
+
+  it("turns errors into a data gap (NFR-07)", async () => {
+    expect(await climateNormals(-33.8, 151.3, deps(fixtureFetch().fn), "d")).toMatchObject({ ok: false, dataGap: { topic: "climate normals" } });
+    expect(await climateNormals(-33.8, 151.3, deps(async () => new Response('{"error":true,"reason":"Too many requests"}')), "d")).toMatchObject({ ok: false, dataGap: { reason: expect.stringContaining("Too many requests") } });
+  });
+});

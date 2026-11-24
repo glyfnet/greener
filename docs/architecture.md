@@ -95,7 +95,7 @@ These are warnings, not refusals: `save_plan` returns them with the `strategyId`
 | Bushfire-prone lookup (FR-03) | Done (D-18): the NSW RFS map within about 100 m of the site. A failed lookup is a data gap, and the user's answer is used. |
 | Vegetation (FR-14) | Done (D-20): the pre-clearing Plant Community Type from the NSW SVTM. Characteristic species per community (BioNet) are still to check. |
 | Soil (FR-13) | Done (D-22): modelled pH, clay, sand and organic carbon at 0–5 and 5–15 cm from the SLGA. Still to confirm: which SLGA release the services serve. |
-| Climate (FR-12) | Source confirmed (D-21). Connector still to build; the tool returns a data gap until then. |
+| Climate (FR-12) | Done (D-21): 1991–2020 normals from Open-Meteo (ERA5), cached 30 days. Parsing and summarising the 270 KB response took 1.7 ms median and 3.7 ms worst case in Node; Q-17 must confirm this on the Worker. |
 | Declared weed list | 126 Greater Sydney priority weeds from NSW WeedWise, applied across NSW. Other regions are still to add. |
 | Cost reference | 2 rows (YAN nurseries, southern tablelands). Sydney prices are listed in `data/README.md`, still to be checked by hand (Q-12). |
 | Icon set | Text placeholders (Q-14). |
