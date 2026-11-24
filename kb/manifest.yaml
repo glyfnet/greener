@@ -1,0 +1,57 @@
+# Global knowledge base manifest (FR-41, FR-42, D-15).
+#
+# Two tiers:
+#   open_content    full text in kb/sources/<file>. Only with a licence that
+#                   permits redistribution, or text the maintainer wrote
+#                   (licence: maintainer → CC BY 4.0, kb/LICENSE).
+#   link_catalogue  URL, metadata and a thorough summary in our own words
+#                   (at least 80 words, no copied passages). Claude reads
+#                   the live page for detail (FR-46).
+#
+# Every item needs: id, title, sourceUrl, publisher, licence, tier, region,
+# dateChecked (YYYY-MM-DD) and tags. A source used with permission records
+# it under `permission` (Q-20). See docs/kb-guide.md.
+#
+# TODO(maintainer): curate the first real guides (council planting lists,
+# NSW weed guidance, habitat guides). Each needs its licence or permission
+# confirmed before it goes in (Q-20).
+
+items:
+  - id: greener-how-plans-work
+    title: How Greener builds and checks a plan
+    tier: open_content
+    file: greener-how-plans-work.md
+    sourceUrl: kb/sources/greener-how-plans-work.md
+    publisher: Greener maintainers
+    licence: maintainer
+    region: Australia
+    dateChecked: "2026-11-24"
+    tags: [greener, plan, phases, budget, native species, weeds, citations]
+
+  - id: ala-atlas-of-living-australia
+    title: Atlas of Living Australia (ALA)
+    tier: link_catalogue
+    sourceUrl: https://www.ala.org.au/
+    publisher: Atlas of Living Australia
+    licence: "Not redistributed: link and summary only. ALA data used by Greener is CC BY (record licences vary)."
+    region: Australia
+    dateChecked: "2026-11-24"
+    tags: [species, occurrence records, native, introduced, threatened, data source]
+    summary: >-
+      The Atlas of Living Australia is the national online collection of
+      biodiversity data. It brings together species occurrence records from
+      museums, herbaria, government agencies, research groups and citizen
+      science projects, and lets anyone search them by place, species or
+      data set. Greener uses three ALA services. Occurrence search counts the
+      species recorded within a radius of a site, and can filter records by
+      kingdom, by establishment means (native or introduced), by state and
+      national conservation status, and by state invasive flags. Species
+      search returns the accepted scientific name, common name, family and
+      source of the name for a taxon. Name matching resolves a name the user
+      types to the accepted name in the ALA taxonomy. Record counts show how
+      often a species has been recorded, not how many individuals live there,
+      and many records carry no native or introduced tag, so a missing
+      species is not proof that it is absent. Sensitive species locations
+      are generalised by ALA before release. Data in ALA carries the licence
+      of each data resource, most often Creative Commons Attribution, so
+      exports must credit ALA and its data providers.
