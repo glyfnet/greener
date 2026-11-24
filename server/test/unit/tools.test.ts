@@ -204,6 +204,15 @@ describe("research tools", () => {
     expect(empty.data).toMatchObject({ available: false, dataGap: { reason: expect.stringContaining("no community") } });
   });
 
+  it("includes the Northern Tablelands priority weeds for Armidale and Uralla", async () => {
+    const r = await call("weed_status", { names: ["Rosa rubiginosa", "Gleditsia triacanthos", "Lantana camara"] });
+    const results = r.data.results as { declared: boolean; category?: string }[];
+    expect(results.every((x) => x.declared)).toBe(true);
+    expect(results[0]?.category).toBe("Northern Tablelands priority weed: Regional Recommended Measure");
+    expect(results[2]?.category).toContain("Greater Sydney priority weed");
+    expect(results[2]?.category).toContain("Northern Tablelands priority weed");
+  });
+
   it("checks names against the declared weed list", async () => {
     const r = await call("weed_status", { names: ["Lantana camara", "Lomandra longifolia"] });
     expect(r.data.results).toEqual([expect.objectContaining({ name: "Lantana camara", declared: true, sourceUrl: "https://weeds.dpi.nsw.gov.au/Weed/Lantana" }), { name: "Lomandra longifolia", declared: false }]);
