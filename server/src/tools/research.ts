@@ -6,6 +6,7 @@ import { normaliseName } from "../core/checks.js";
 import { Location, ResearchReport } from "../core/models.js";
 import { speciesNear, speciesProfile } from "../connectors/ala.js";
 import { PENDING, pendingGap } from "../connectors/pending.js";
+import { soilProperties as getSoil } from "../connectors/soil.js";
 import { vegetationCommunity as getVegetation } from "../connectors/vegetation.js";
 import { fail, ok } from "./context.js";
 import { defineTool } from "./define.js";
@@ -50,7 +51,7 @@ export const alaSpeciesProfile = defineTool({
   },
 });
 
-const pendingTool = (name: "climate_normals" | "soil_properties", key: "climate" | "soil", title: string, description: string) =>
+const pendingTool = (name: "climate_normals", key: "climate", title: string, description: string) =>
   defineTool({
     name,
     title,
@@ -60,7 +61,28 @@ const pendingTool = (name: "climate_normals" | "soil_properties", key: "climate"
   });
 
 export const climateNormals = pendingTool("climate_normals", "climate", "Get climate normals", "Get climate normals (temperature, rainfall, frost) for the site (FR-12). The data source is not confirmed yet (Q-06), so this returns a data gap to record in the report.");
-export const soilProperties = pendingTool("soil_properties", "soil", "Get soil properties", "Get soil pH, texture and organic carbon for the site (FR-13). The data source is not confirmed yet (Section 8), so this returns a data gap. Use the user's own soil answer meanwhile.");
+export const soilProperties = defineTool({
+  name: "soil_properties",
+  title: "Get soil properties",
+  description:
+    "Get modelled soil pH (CaCl₂), clay, sand and organic carbon at 0–5 cm and 5–15 cm for the site, from the Soil and Landscape Grid of Australia (FR-13, D-22). These are estimates on a 90 m grid: the user's own soil answer and a simple test on site come first.",
+  input: z.object({ location: Location }),
+  handler: async ({ location }, ctx) => {
+    const r = await getSoil(location.lat, location.lon, ctx.http, ctx.today);
+    if (!r.ok) return ok({ available: false, dataGap: r.dataGap, requirement: "FR-13", nextStep: "Record this data gap in the research report and use the user's own soil answer (NFR-07). Do not estimate the values." });
+    return ok({
+      available: true,
+      properties: r.properties,
+      units: { phCaCl2: "pH units (1:5 soil in 0.01 M CaCl₂)", clayPercent: "% of fine earth", sandPercent: "% of fine earth", organicCarbonPercent: "% by weight" },
+      dataGaps: r.dataGaps,
+      citation: r.citation,
+      notes: [
+        "Modelled estimates on a 90 m grid. Urban sites, fill and garden beds often differ. The user's own soil answer and a test on site come first.",
+        "pH here is measured in calcium chloride (CaCl₂). A garden kit may use a different method, so compare like with like.",
+      ],
+    });
+  },
+});
 export const vegetationCommunity = defineTool({
   name: "vegetation_community",
   title: "Get the pre-clearing vegetation community",

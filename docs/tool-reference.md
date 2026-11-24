@@ -1242,7 +1242,7 @@ Input schema:
 
 ## soil_properties
 
-Get soil pH, texture and organic carbon for the site (FR-13). The data source is not confirmed yet (Section 8), so this returns a data gap. Use the user's own soil answer meanwhile.
+Get modelled soil pH (CaCl₂), clay, sand and organic carbon at 0–5 cm and 5–15 cm for the site, from the Soil and Landscape Grid of Australia (FR-13, D-22). These are estimates on a 90 m grid: the user's own soil answer and a simple test on site come first.
 
 Input schema:
 

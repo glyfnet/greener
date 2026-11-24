@@ -212,3 +212,35 @@ describe("NSW pre-clearing vegetation community (FR-14, D-20)", async () => {
     expect(await vegetationCommunity(-33.8, 151.3, deps(async () => new Response('{"error":{"message":"bad"}}')), "d")).toMatchObject({ ok: false, dataGap: { reason: expect.stringContaining("bad") } });
   });
 });
+
+describe("Soil and Landscape Grid of Australia (FR-13, D-22)", async () => {
+  const { soilProperties, soilUrl } = await import("../../src/connectors/soil.js");
+
+  it("builds the recorded URLs", () => {
+    for (const code of ["PHC", "CLY", "SND", "SOC"]) expect(soilUrl(code, TEST_POINT.lat, TEST_POINT.lon)).toBe(fixture(`sydney-${code.toLowerCase()}`, "soil").url);
+  });
+
+  it("returns pH, clay, sand and organic carbon at two depths, never cached", async () => {
+    const cache = memoryCache();
+    const r = await soilProperties(TEST_POINT.lat, TEST_POINT.lon, deps(fixtureFetch().fn, { cache }), "2026-11-25");
+    expect(r).toMatchObject({ ok: true, dataGaps: [], citation: { id: "tern:slga", licence: "CC BY 4.0" } });
+    if (r.ok) {
+      expect(r.properties.phCaCl2).toEqual({ "0-5cm": 4.56, "5-15cm": 4.55 });
+      expect(r.properties.clayPercent?.["0-5cm"]).toBe(12);
+      expect(r.properties.sandPercent?.["0-5cm"]).toBe(62);
+      expect(r.properties.organicCarbonPercent?.["0-5cm"]).toBe(3.43);
+    }
+    expect(cache.store.size).toBe(0);
+  });
+
+  it("keeps the attributes that answered and lists gaps for the rest (NFR-07)", async () => {
+    const fx = fixtureFetch();
+    const partial = async (req: Request) => (req.url.includes("/SOC_") ? new Response("down", { status: 503 }) : req.url.includes("/SND_") ? new Response('{"results":[{"layerId":1,"attributes":{"Classify.Pixel Value":"NoData"}}]}') : fx.fn(req));
+    const r = await soilProperties(TEST_POINT.lat, TEST_POINT.lon, deps(partial), "d");
+    expect(r.ok && Object.keys(r.properties)).toEqual(["phCaCl2", "clayPercent", "sandPercent"]);
+    expect(r.ok && r.properties.sandPercent).toEqual({ "0-5cm": null, "5-15cm": null });
+    expect(r.ok && r.dataGaps.map((g) => g.topic)).toEqual(["soil organic carbon"]);
+    expect(await soilProperties(-33.8, 151.3, deps(fixtureFetch().fn), "d")).toMatchObject({ ok: false, dataGap: { topic: "soil properties" } });
+    expect(await soilProperties(-33.8, 151.3, deps(async () => new Response('{"error":{"message":"bad"}}')), "d")).toMatchObject({ ok: false, dataGap: { reason: expect.stringContaining("bad") } });
+  });
+});

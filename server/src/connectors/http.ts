@@ -20,6 +20,8 @@ export const ALLOWED_HOSTS = new Set([
   "maps.six.nsw.gov.au",
   // D-20: NSW State Vegetation Type Map.
   "mapprod3.environment.nsw.gov.au",
+  // D-22: Soil and Landscape Grid of Australia.
+  "soils.csiro.au",
 ]);
 
 /** FR-16 default cache time to live. */

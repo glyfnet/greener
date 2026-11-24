@@ -184,9 +184,15 @@ describe("research tools", () => {
   });
 
   it("returns data gaps for sources still being checked", async () => {
-    for (const name of ["climate_normals", "soil_properties"]) {
+    for (const name of ["climate_normals"]) {
       expect((await call(name, { location })).data).toMatchObject({ available: false, dataGap: expect.objectContaining({ reason: expect.stringContaining("still being checked") }) });
     }
+  });
+
+  it("returns modelled soil properties with units and a citation (FR-13, D-22)", async () => {
+    const r = await call("soil_properties", { location: { ...location, ...TEST_POINT } });
+    expect(r.data).toMatchObject({ available: true, properties: { phCaCl2: { "0-5cm": 4.56 } }, units: { organicCarbonPercent: "% by weight" }, citation: { id: "tern:slga" } });
+    expect((await call("soil_properties", { location })).data).toMatchObject({ available: false, dataGap: { topic: "soil properties" } });
   });
 
   it("returns the pre-clearing vegetation community with a citation (FR-14, D-20)", async () => {

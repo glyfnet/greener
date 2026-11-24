@@ -14,6 +14,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { establishmentUrl, NEAR_QUERIES, occurrenceUrl } from "../server/src/connectors/ala.js";
 import { bushfireUrl } from "../server/src/connectors/bushfire.js";
 import { addressUrl } from "../server/src/connectors/geocode.js";
+import { SOIL_ATTRIBUTES, soilUrl } from "../server/src/connectors/soil.js";
 import { vegetationUrl } from "../server/src/connectors/vegetation.js";
 import { path } from "./lib.js";
 
@@ -29,23 +30,10 @@ type Target = { name: string; url: string };
 const q = (base: string, params: Record<string, string>) => `${base}?${new URLSearchParams(params)}`;
 const NAMEMATCH = "https://api.ala.org.au/namematching/api/search";
 
-// TODO: when each remaining connector lands, import its URL builder here instead of the literal URLs below, as for ALA, bushfire, geocode and vegetation.
-const identifyParams = (lat: number, lon: number, layers: string) => ({
-  geometry: `${lon},${lat}`,
-  geometryType: "esriGeometryPoint",
-  sr: "4326",
-  layers,
-  tolerance: "0",
-  mapExtent: [lon - 0.01, lat - 0.01, lon + 0.01, lat + 0.01].map((n) => n.toFixed(4)).join(","),
-  imageDisplay: "100,100,96",
-  returnGeometry: "false",
-  f: "json",
-});
+// TODO: when each remaining connector lands, import its URL builder here instead of the literal URLs below, as for the other sources.
 const CLIMATE = "https://archive-api.open-meteo.com/v1/archive";
 const climateUrl = (lat: number, lon: number) =>
   q(CLIMATE, { latitude: lat.toFixed(1), longitude: lon.toFixed(1), start_date: "1991-01-01", end_date: "2020-12-31", daily: "temperature_2m_max,temperature_2m_min,precipitation_sum", timezone: "Australia/Sydney" });
-const SOIL_ATTRS = ["PHC", "CLY", "SND", "SOC"];
-const soilUrl = (attr: string, lat: number, lon: number) => q(`https://soils.csiro.au/arcgis/rest/services/TERN/${attr}_ACLEP_AU_TRN_N/MapServer/identify`, identifyParams(lat, lon, "all:1,5"));
 
 const SOURCES: Record<string, Target[]> = {
   ala: [
@@ -79,7 +67,7 @@ const SOURCES: Record<string, Target[]> = {
   climate: [
     { name: "katoomba", url: climateUrl(FIRE_POINT.lat, FIRE_POINT.lon) },
   ],
-  soil: SOIL_ATTRS.map((a) => ({ name: `sydney-${a.toLowerCase()}`, url: soilUrl(a, TEST_POINT.lat, TEST_POINT.lon) })),
+  soil: SOIL_ATTRIBUTES.map((a) => ({ name: `sydney-${a.code.toLowerCase()}`, url: soilUrl(a.code, TEST_POINT.lat, TEST_POINT.lon) })),
 };
 
 const wanted = process.argv.slice(2);
