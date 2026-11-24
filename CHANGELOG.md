@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `bushfire_status` looks up the NSW RFS Bush Fire Prone Land map within about 100 m of the site, and suggests an answer for the bushfire question with a citation (FR-03, D-18). The result is never cached.
+- Data source decisions D-18 to D-22 (bushfire, geocoding, vegetation, climate, soil), with recorded fixtures. Q-06 is closed.
 - D-17 rewilding policy: Australian natives only (local first), never invasives, and no chemicals. `save_plan` refuses invasives, non-natives and chemical methods; `check_species` and `save_plan` check species live with ALA, near the site and across Australia; new `chemical_free` and `phase_out_sprays` strategies; KB guides on chemical-free weed control (WeedWise lantana and ground asparagus).
 
 - `get_site_strategies` tool: strategies for apartments and courtyards, rented or strata sites, and bushfire-prone land, citing NSW RFS and NSW Government guidance (FR-23).

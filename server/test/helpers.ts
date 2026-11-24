@@ -10,7 +10,7 @@ import { ActionPlan, ResearchReport, SiteProfile, type ActionInput } from "../sr
 import { STATIC_DATA } from "../src/data.js";
 import type { StaticData, ToolContext } from "../src/tools/context.js";
 
-const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), "fixtures", "ala");
+const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), "fixtures");
 
 export interface Fixture {
   url: string;
@@ -20,19 +20,24 @@ export interface Fixture {
 
 export function loadFixtures(): Map<string, Fixture> {
   const m = new Map<string, Fixture>();
-  for (const f of readdirSync(FIXTURES)) {
-    const fx = JSON.parse(readFileSync(join(FIXTURES, f), "utf8")) as Fixture;
-    m.set(fx.url, fx);
+  for (const dir of readdirSync(FIXTURES)) {
+    for (const f of readdirSync(join(FIXTURES, dir))) {
+      const fx = JSON.parse(readFileSync(join(FIXTURES, dir, f), "utf8")) as Fixture;
+      m.set(fx.url, fx);
+    }
   }
   return m;
 }
 
-export function fixture(name: string): Fixture {
-  return JSON.parse(readFileSync(join(FIXTURES, `${name}.json`), "utf8")) as Fixture;
+/** One fixture by name; `source` is its folder under `fixtures/` (default `ala`). */
+export function fixture(name: string, source = "ala"): Fixture {
+  return JSON.parse(readFileSync(join(FIXTURES, source, `${name}.json`), "utf8")) as Fixture;
 }
 
 /** The public test point the fixtures were recorded at (scripts/record-fixtures.ts). */
 export const TEST_POINT = { lat: -33.873, lon: 151.211 };
+/** The public bushfire-prone test point (Katoomba escarpment). */
+export const FIRE_POINT = { lat: -33.733, lon: 150.313 };
 
 /** A fetch that serves fixtures by exact URL; anything else is a 404 and is recorded in `misses`. */
 export function fixtureFetch(fixtures = loadFixtures()) {

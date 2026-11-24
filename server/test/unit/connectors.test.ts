@@ -124,3 +124,36 @@ describe("ALA connector (recorded fixtures)", () => {
     expect((await matchName("Unrecorded name", deps(fixtureFetch().fn))).ok).toBe(false);
   });
 });
+
+describe("NSW bushfire-prone land (FR-03, D-18)", async () => {
+  const { bushfireProne, bushfireUrl, roundPoint } = await import("../../src/connectors/bushfire.js");
+  const { FIRE_POINT } = await import("../helpers.js");
+
+  it("builds the recorded URL, rounding the site to 3 decimal places", () => {
+    expect(bushfireUrl(FIRE_POINT.lat, FIRE_POINT.lon)).toBe(fixture("katoomba", "bushfire").url);
+    expect(bushfireUrl(-33.73304, 150.31296)).toBe(fixture("katoomba", "bushfire").url);
+    expect(roundPoint(151.2114)).toBe(151.211);
+  });
+
+  it("reports mapped categories at a bushfire-prone point", async () => {
+    const r = await bushfireProne(FIRE_POINT.lat, FIRE_POINT.lon, deps(fixtureFetch().fn), "2026-11-25");
+    expect(r).toMatchObject({ ok: true, status: "prone", mapUpdated: "2025-05-14", citation: { id: "nsw:bushfire-prone-land", publisher: "NSW Rural Fire Service" } });
+    if (r.ok) expect(r.categories).toEqual([{ category: 1, label: "Vegetation Category 1" }, { category: 0, label: "Vegetation Buffer" }]);
+  });
+
+  it("reports not mapped in central Sydney", async () => {
+    expect(await bushfireProne(TEST_POINT.lat, TEST_POINT.lon, deps(fixtureFetch().fn), "2026-11-25")).toMatchObject({ ok: true, status: "not_mapped", categories: [] });
+  });
+
+  it("never caches the result, because the URL holds the site to about 100 m", async () => {
+    const cache = memoryCache();
+    await bushfireProne(FIRE_POINT.lat, FIRE_POINT.lon, deps(fixtureFetch().fn, { cache }), "2026-11-25");
+    expect(cache.store.size).toBe(0);
+  });
+
+  it("turns a failed or malformed response into a data gap (NFR-07)", async () => {
+    expect(await bushfireProne(0, 0, deps(fixtureFetch().fn), "d")).toMatchObject({ ok: false, dataGap: { topic: "bushfire-prone land status" } });
+    const bad = async () => new Response(JSON.stringify({ error: { code: 400, message: "Invalid query" } }));
+    expect(await bushfireProne(-33.7, 150.3, deps(bad), "d")).toMatchObject({ ok: false, dataGap: { reason: expect.stringContaining("Invalid query") } });
+  });
+});

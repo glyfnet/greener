@@ -5,7 +5,8 @@
 import { z } from "zod";
 import { Answer, Location, SiteProfile } from "../core/models.js";
 import { applyAnswer, capacityFromProfile, findQuestion, nextQuestion, renderQuestionText, validateAnswer, visibleQuestions, type Question, type QuestionBank } from "../core/questionnaire.js";
-import { PENDING, pendingGap } from "../connectors/pending.js";
+import { bushfireProne } from "../connectors/bushfire.js";
+import { pendingGap } from "../connectors/pending.js";
 import { fail, ok } from "./context.js";
 import { defineTool } from "./define.js";
 
@@ -126,9 +127,27 @@ export const geocode = defineTool({
 export const bushfireStatus = defineTool({
   name: "bushfire_status",
   title: "Look up bushfire-prone land",
-  description: "Look up whether the site is on bushfire-prone land (FR-03). Use when the user answered Not sure. Until the NSW data source is checked, this returns a data gap and the plan treats the status as unknown.",
+  description:
+    "Look up whether the site is on NSW bushfire-prone land (FR-03, D-18), from the NSW RFS Bush Fire Prone Land map. Use when the user answered Not sure, or to check their answer. Checks land within about 100 m of the site. Returns a suggested answer for the bushfire_prone question and a citation. The council's certified map is authoritative.",
   input: z.object({ location: Location }),
-  handler: () => ok({ status: "unknown", dataGap: pendingGap("bushfire"), requirement: PENDING.bushfire.requirement, nextStep: "Tell the user the status is unknown. Suggest they check with their local council. The plan will add bushfire cautions." }),
+  handler: async ({ location }, ctx) => {
+    const r = await bushfireProne(location.lat, location.lon, ctx.http, ctx.today);
+    if (!r.ok) return ok({ status: "unknown", dataGap: r.dataGap, requirement: "FR-03", nextStep: "Tell the user the status is unknown. Suggest they check their council's bushfire-prone land map. The plan will add bushfire cautions." });
+    const prone = r.status === "prone";
+    return ok({
+      status: r.status,
+      categories: r.categories,
+      ...(r.mapUpdated ? { mapUpdated: r.mapUpdated } : {}),
+      suggestedAnswer: { questionId: "bushfire_prone", answer: { optionIds: [prone ? "yes" : "no"] } },
+      citation: r.citation,
+      notes: [
+        prone ? "Bushfire-prone land is mapped within about 100 m of the site." : "No bushfire-prone land is mapped within about 100 m of the site.",
+        "This is a map check, not a planning certificate. The council's certified bushfire-prone land map, and a Bushfire Attack Level (BAL) assessment for building work, are authoritative.",
+        ...(location.precision === "approximate" ? ["The site location is approximate, so the result may not match the exact property."] : []),
+      ],
+      nextStep: "Tell the user the result and ask them to confirm it. Then call save_answer with the suggested answer, and add the citation to the research report.",
+    });
+  },
 });
 
 export const saveProfile = defineTool({

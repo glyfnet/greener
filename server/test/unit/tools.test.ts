@@ -3,7 +3,7 @@ import { z } from "zod";
 import { buildServer, handleMcp } from "../../src/server.js";
 import { TOOLS } from "../../src/tools/registry.js";
 import type { Tool } from "../../src/tools/define.js";
-import { action, fixtureFetch, location, plan, profile, research, testContext } from "../helpers.js";
+import { action, FIRE_POINT, fixtureFetch, location, plan, profile, research, TEST_POINT, testContext } from "../helpers.js";
 
 const tool = (name: string): Tool => {
   const t = TOOLS.find((x) => x.name === name);
@@ -122,7 +122,16 @@ describe("intake tools", () => {
     expect((await call("geocode", {})).isError).toBe(true);
   });
 
-  it("returns unknown bushfire status with a gap, not a guess (FR-03)", async () => {
+  it("looks up bushfire-prone land and suggests an answer (FR-03, D-18)", async () => {
+    const fire = await call("bushfire_status", { location: { ...location, ...FIRE_POINT, precision: "exact" } });
+    expect(fire.data).toMatchObject({ status: "prone", suggestedAnswer: { questionId: "bushfire_prone", answer: { optionIds: ["yes"] } }, citation: { id: "nsw:bushfire-prone-land" } });
+    expect((fire.data.notes as string[]).join(" ")).toContain("not a planning certificate");
+    const city = await call("bushfire_status", { location: { ...location, ...TEST_POINT } });
+    expect(city.data).toMatchObject({ status: "not_mapped", suggestedAnswer: { answer: { optionIds: ["no"] } } });
+    expect((city.data.notes as string[]).join(" ")).toContain("approximate");
+  });
+
+  it("returns unknown bushfire status with a gap when the map fails, not a guess (NFR-07)", async () => {
     expect((await call("bushfire_status", { location })).data).toMatchObject({ status: "unknown", dataGap: { topic: "bushfire-prone land status" } });
   });
 
