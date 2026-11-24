@@ -157,3 +157,34 @@ describe("NSW bushfire-prone land (FR-03, D-18)", async () => {
     expect(await bushfireProne(-33.7, 150.3, deps(bad), "d")).toMatchObject({ ok: false, dataGap: { reason: expect.stringContaining("Invalid query") } });
   });
 });
+
+describe("NSW address lookup (FR-02, D-19)", async () => {
+  const { addressUrl, lookupAddress } = await import("../../src/connectors/geocode.js");
+  const bathurst = { houseNumber: "346", roadName: "Panorama", roadType: "Ave", suburb: "Bathurst", postCode: "2795" };
+
+  it("builds the recorded URL", () => {
+    expect(addressUrl(bathurst)).toBe(fixture("panorama-ave-bathurst", "geocode").url);
+    expect(addressUrl({ roadName: " George ", postCode: "2000" })).toBe("https://maps.six.nsw.gov.au/services/public/Address_Location?roadName=George&postCode=2000&projection=EPSG%3A4326");
+  });
+
+  it("returns the address point, suburb and council, never cached", async () => {
+    const cache = memoryCache();
+    const r = await lookupAddress(bathurst, deps(fixtureFetch().fn, { cache }), "2026-11-25");
+    expect(r).toMatchObject({ ok: true, citation: { id: "nsw:address-location" } });
+    if (r.ok) expect(r.candidates).toEqual([{ lat: -33.429684292575985, lon: 149.56705027301055, suburb: "Bathurst", postCode: "2795", council: "Bathurst Regional" }]);
+    expect(cache.store.size).toBe(0);
+  });
+
+  it("says when no address matches, and when the service fails (NFR-07)", async () => {
+    expect(await lookupAddress({ houseNumber: "1", roadName: "Notarealname", roadType: "St", suburb: "Bathurst" }, deps(fixtureFetch().fn), "d")).toMatchObject({ ok: false, notFound: true, dataGap: { reason: expect.stringContaining("No matching records") } });
+    expect(await lookupAddress({ roadName: "X", suburb: "Y" }, deps(fixtureFetch().fn), "d")).toMatchObject({ ok: false, notFound: false });
+    expect(await lookupAddress({ roadName: "X", suburb: "Y" }, deps(async () => new Response("{}")), "d")).toMatchObject({ ok: false, dataGap: { reason: expect.stringContaining("unexpected") } });
+  });
+
+  it("caps the candidates and skips entries without a point", async () => {
+    const many = { addressResult: { numRecs: 8, addresses: [{ suburbName: "NOWHERE" }, ...Array.from({ length: 7 }, (_, i) => ({ suburbName: `PLACE ${i}`, addressPoint: { centreX: 150, centreY: -33 } }))] } };
+    const r = await lookupAddress({ roadName: "Main", suburb: "X" }, deps(async () => new Response(JSON.stringify(many))), "d");
+    expect(r.ok && r.candidates.length).toBe(5);
+    expect(r.ok && r.candidates[0]).toEqual({ lat: -33, lon: 150, suburb: "Place 0" });
+  });
+});

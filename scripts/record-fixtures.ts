@@ -13,6 +13,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { establishmentUrl, NEAR_QUERIES, occurrenceUrl } from "../server/src/connectors/ala.js";
 import { bushfireUrl } from "../server/src/connectors/bushfire.js";
+import { addressUrl } from "../server/src/connectors/geocode.js";
 import { path } from "./lib.js";
 
 /** Public test point: Hyde Park, Sydney. Not a user site. */
@@ -27,8 +28,7 @@ type Target = { name: string; url: string };
 const q = (base: string, params: Record<string, string>) => `${base}?${new URLSearchParams(params)}`;
 const NAMEMATCH = "https://api.ala.org.au/namematching/api/search";
 
-// TODO: when each remaining connector lands, import its URL builder here instead of the literal URLs below, as for ALA and bushfire.
-const ADDRESS = "https://maps.six.nsw.gov.au/services/public/Address_Location";
+// TODO: when each remaining connector lands, import its URL builder here instead of the literal URLs below, as for ALA, bushfire and geocode.
 const VEG = "https://mapprod3.environment.nsw.gov.au/arcgis/rest/services/VIS/SVTM_NSW_1750_PCT/MapServer/identify";
 const identifyParams = (lat: number, lon: number, layers: string) => ({
   geometry: `${lon},${lat}`,
@@ -69,8 +69,8 @@ const SOURCES: Record<string, Target[]> = {
     { name: "katoomba", url: bushfireUrl(FIRE_POINT.lat, FIRE_POINT.lon) },
   ],
   geocode: [
-    { name: "panorama-ave-bathurst", url: q(ADDRESS, { houseNumber: "346", roadName: "Panorama", roadType: "Ave", suburb: "Bathurst", postCode: "2795", projection: "EPSG:4326" }) },
-    { name: "not-found", url: q(ADDRESS, { houseNumber: "1", roadName: "Notarealname", roadType: "St", suburb: "Bathurst", projection: "EPSG:4326" }) },
+    { name: "panorama-ave-bathurst", url: addressUrl({ houseNumber: "346", roadName: "Panorama", roadType: "Ave", suburb: "Bathurst", postCode: "2795" }) },
+    { name: "not-found", url: addressUrl({ houseNumber: "1", roadName: "Notarealname", roadType: "St", suburb: "Bathurst" }) },
   ],
   vegetation: [
     { name: "sydney", url: q(VEG, identifyParams(TEST_POINT.lat, TEST_POINT.lon, "all:2")) },

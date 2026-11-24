@@ -15,8 +15,8 @@ export interface PendingSource {
 }
 
 export const PENDING: Record<"geocode" | "climate" | "soil" | "vegetation", PendingSource> = {
-  // TODO(Section 8): confirm Nominatim usage terms or choose a state address service.
-  geocode: { topic: "address lookup", requirement: "FR-02", candidate: "Nominatim (OpenStreetMap) or a state address service", question: "Section 8, geocoding: To check" },
+  // TODO(D-19): street addresses work; suburb-only lookup waits for the NSW Administrative Boundaries Theme licence.
+  geocode: { topic: "suburb or postcode lookup", requirement: "FR-02", candidate: "NSW Administrative Boundaries Theme (suburb centroids)", question: "D-19, suburb lookup licence: To check" },
   // TODO(Q-06): BOM data or Open-Meteo? Check licence and attribution terms.
   climate: { topic: "climate normals", requirement: "FR-12", candidate: "Bureau of Meteorology or Open-Meteo", question: "Q-06" },
   // TODO(Section 8): confirm the Soil and Landscape Grid of Australia (TERN) API and licence.

@@ -118,8 +118,24 @@ describe("intake tools", () => {
   it("geocodes coordinates, refuses non-Australian ones, and records a gap for addresses (FR-02)", async () => {
     expect((await call("geocode", { lat: -33.87, lon: 151.21 })).data.location).toMatchObject({ precision: "exact", state: "NSW" });
     expect((await call("geocode", { lat: 51.5, lon: -0.1 })).isError).toBe(true);
-    expect((await call("geocode", { query: "Newtown NSW" })).data).toMatchObject({ location: null, dataGap: { topic: "address lookup" } });
+    expect((await call("geocode", { query: "Newtown NSW" })).data).toMatchObject({ location: null, dataGap: { topic: "suburb or postcode lookup" } });
     expect((await call("geocode", {})).isError).toBe(true);
+  });
+
+  it("geocodes a NSW street address to its suburb, with the council and a citation (FR-02, D-19)", async () => {
+    const r = await call("geocode", { address: { houseNumber: "346", roadName: "Panorama", roadType: "Ave", suburb: "Bathurst", postCode: "2795" } });
+    expect(r.data).toMatchObject({ location: { lat: -33.429684292575985, lon: 149.56705027301055, label: "Bathurst", precision: "exact", state: "NSW" }, council: "Bathurst Regional", citation: { id: "nsw:address-location" } });
+    expect(JSON.stringify(r.data)).not.toContain("Panorama");
+    const missing = await call("geocode", { address: { houseNumber: "1", roadName: "Notarealname", roadType: "St", suburb: "Bathurst" } });
+    expect(missing.data).toMatchObject({ location: null, nextStep: expect.stringContaining("not found") });
+    expect((await call("geocode", { address: { roadName: "Panorama" } })).isError).toBe(true);
+  });
+
+  it("asks the user to pick when several addresses match", async () => {
+    const two = { addressResult: { numRecs: 2, addresses: ["BATHURST", "KELSO"].map((s, i) => ({ suburbName: s, postCode: 2795, addressPoint: { centreX: 149.5 + i / 10, centreY: -33.4 } })) } };
+    const r = await call("geocode", { address: { roadName: "Main", postCode: "2795" } }, testContext({ fetch: async () => new Response(JSON.stringify(two)) }));
+    expect(r.data.location).toBeNull();
+    expect((r.data.candidates as { location: { label: string } }[]).map((c) => c.location.label)).toEqual(["Bathurst", "Kelso"]);
   });
 
   it("looks up bushfire-prone land and suggests an answer (FR-03, D-18)", async () => {
