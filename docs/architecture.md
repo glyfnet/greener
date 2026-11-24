@@ -91,7 +91,7 @@ These are warnings, not refusals: `save_plan` returns them with the `strategyId`
 
 | Item | Status |
 | --- | --- |
-| Geocoding of addresses (FR-02) | Source confirmed (D-19); connector still to build. Coordinates and the current location work. |
+| Geocoding of addresses (FR-02) | NSW street addresses done (D-19). Suburb-only lookup waits for the Administrative Boundaries licence. Coordinates and the current location work. |
 | Bushfire-prone lookup (FR-03) | Done (D-18): the NSW RFS map within about 100 m of the site. A failed lookup is a data gap, and the user's answer is used. |
 | Climate (FR-12), soil (FR-13), vegetation (FR-14) | Sources confirmed (D-20 to D-22). Connectors still to build; the tools return data gaps until then. |
 | Declared weed list | 126 Greater Sydney priority weeds from NSW WeedWise, applied across NSW. Other regions are still to add. |

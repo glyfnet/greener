@@ -16,6 +16,8 @@ export const ALLOWED_HOSTS = new Set([
   "api.ala.org.au",
   // D-18: NSW RFS bushfire-prone land map.
   "portal.spatial.nsw.gov.au",
+  // D-19: NSW Address Location Service.
+  "maps.six.nsw.gov.au",
 ]);
 
 /** FR-16 default cache time to live. */

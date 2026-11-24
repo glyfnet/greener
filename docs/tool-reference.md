@@ -744,7 +744,7 @@ Input schema:
 
 ## geocode
 
-Turn the user's location into site coordinates (FR-02). Pass lat and lon from the user's current location or typed coordinates. Address and suburb lookup is not available yet; the result says so.
+Turn the user's location into site coordinates (FR-02). Pass lat and lon from the user's current location or typed coordinates. For a NSW street address, split it into `address` fields (roadName, and suburb or postCode, are needed); it is looked up in the NSW Address Location Service (D-19). Suburb-only or postcode-only lookup is not available yet; the result says so.
 
 Input schema:
 
@@ -759,8 +759,40 @@ Input schema:
     "lon": {
       "type": "number"
     },
+    "address": {
+      "type": "object",
+      "properties": {
+        "houseNumber": {
+          "description": "House number, e.g. '12' or '12A'",
+          "type": "string",
+          "maxLength": 20
+        },
+        "roadName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Road name without the type, e.g. 'Panorama'"
+        },
+        "roadType": {
+          "description": "Road type, full or short, e.g. 'Avenue' or 'Ave'",
+          "type": "string",
+          "maxLength": 30
+        },
+        "suburb": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "postCode": {
+          "type": "string",
+          "pattern": "^\\d{4}$"
+        }
+      },
+      "required": [
+        "roadName"
+      ]
+    },
     "query": {
-      "description": "Address, suburb or postcode",
+      "description": "Suburb or postcode, when there is no street address",
       "type": "string",
       "maxLength": 200
     },
