@@ -12,6 +12,7 @@
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { establishmentUrl, NEAR_QUERIES, occurrenceUrl } from "../server/src/connectors/ala.js";
+import { bushfireUrl } from "../server/src/connectors/bushfire.js";
 import { path } from "./lib.js";
 
 /** Public test point: Hyde Park, Sydney. Not a user site. */
@@ -26,18 +27,7 @@ type Target = { name: string; url: string };
 const q = (base: string, params: Record<string, string>) => `${base}?${new URLSearchParams(params)}`;
 const NAMEMATCH = "https://api.ala.org.au/namematching/api/search";
 
-// TODO: when each connector lands, import its URL builder here instead of the literal URLs below, as for ALA.
-const BUSHFIRE = "https://portal.spatial.nsw.gov.au/server/rest/services/Hosted/NSW_BushFire_Prone_Land/FeatureServer/0/query";
-const bushfireUrl = (lat: number, lon: number) =>
-  q(BUSHFIRE, {
-    geometry: [lon - 0.001, lat - 0.001, lon + 0.001, lat + 0.001].map((n) => n.toFixed(4)).join(","),
-    geometryType: "esriGeometryEnvelope",
-    inSR: "4326",
-    spatialRel: "esriSpatialRelIntersects",
-    outFields: "category,d_category,d_guidelin,lastupdate",
-    returnGeometry: "false",
-    f: "json",
-  });
+// TODO: when each remaining connector lands, import its URL builder here instead of the literal URLs below, as for ALA and bushfire.
 const ADDRESS = "https://maps.six.nsw.gov.au/services/public/Address_Location";
 const VEG = "https://mapprod3.environment.nsw.gov.au/arcgis/rest/services/VIS/SVTM_NSW_1750_PCT/MapServer/identify";
 const identifyParams = (lat: number, lon: number, layers: string) => ({

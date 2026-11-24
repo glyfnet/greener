@@ -774,7 +774,7 @@ Input schema:
 
 ## bushfire_status
 
-Look up whether the site is on bushfire-prone land (FR-03). Use when the user answered Not sure. Until the NSW data source is checked, this returns a data gap and the plan treats the status as unknown.
+Look up whether the site is on NSW bushfire-prone land (FR-03, D-18), from the NSW RFS Bush Fire Prone Land map. Use when the user answered Not sure, or to check their answer. Checks land within about 100 m of the site. Returns a suggested answer for the bushfire_prone question and a citation. The council's certified map is authoritative.
 
 Input schema:
 

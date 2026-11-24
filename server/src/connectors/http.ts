@@ -4,13 +4,19 @@
  * - Fetches only fixed, known hosts — never a URL from a user.
  * - Every fetch has a timeout.
  * - Retries 429 and 5xx with backoff, honouring Retry-After.
- * - Caches public responses in the edge cache for 7 days by default.
+ * - Caches public responses in the edge cache for 7 days by default, except
+ *   queries that hold a precise site location (`noCache`).
  * - Sends a contact User-Agent.
  * - Never throws: failures come back as a result, so a run can record a data
  *   gap and continue.
  */
 
-export const ALLOWED_HOSTS = new Set(["biocache-ws.ala.org.au", "api.ala.org.au"]);
+export const ALLOWED_HOSTS = new Set([
+  "biocache-ws.ala.org.au",
+  "api.ala.org.au",
+  // D-18: NSW RFS bushfire-prone land map.
+  "portal.spatial.nsw.gov.au",
+]);
 
 /** FR-16 default cache time to live. */
 export const DEFAULT_TTL_SECONDS = 7 * 24 * 60 * 60;
@@ -35,6 +41,8 @@ export interface FetchOptions {
   timeoutMs?: number;
   retries?: number;
   ttlSeconds?: number;
+  /** Skip the edge cache: for queries whose URL holds a precise site location (docs/privacy.md). */
+  noCache?: boolean;
 }
 
 const defaultSleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
@@ -55,9 +63,10 @@ export async function fetchJson<T = unknown>(url: string, deps: HttpDeps, opts: 
   const sleep = deps.sleep ?? defaultSleep;
   const cacheKey = new Request(parsed.toString(), { method: "GET" });
 
-  if (deps.cache) {
+  const cache = opts.noCache ? undefined : deps.cache;
+  if (cache) {
     try {
-      const hit = await deps.cache.match(cacheKey);
+      const hit = await cache.match(cacheKey);
       if (hit) return { ok: true, data: (await hit.json()) as T, fromCache: true };
     } catch {
       // A cache failure must not stop the call.
@@ -83,9 +92,9 @@ export async function fetchJson<T = unknown>(url: string, deps: HttpDeps, opts: 
         } catch {
           return { ok: false, error: "service returned data that is not JSON", status: res.status };
         }
-        if (deps.cache) {
+        if (cache) {
           try {
-            await deps.cache.put(cacheKey, new Response(text, { headers: { "Content-Type": "application/json", "Cache-Control": `public, max-age=${ttl}` } }));
+            await cache.put(cacheKey, new Response(text, { headers: { "Content-Type": "application/json", "Cache-Control": `public, max-age=${ttl}` } }));
           } catch {
             // Ignore cache write failures.
           }

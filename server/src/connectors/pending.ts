@@ -14,7 +14,7 @@ export interface PendingSource {
   question: string;
 }
 
-export const PENDING: Record<"geocode" | "climate" | "soil" | "vegetation" | "bushfire", PendingSource> = {
+export const PENDING: Record<"geocode" | "climate" | "soil" | "vegetation", PendingSource> = {
   // TODO(Section 8): confirm Nominatim usage terms or choose a state address service.
   geocode: { topic: "address lookup", requirement: "FR-02", candidate: "Nominatim (OpenStreetMap) or a state address service", question: "Section 8, geocoding: To check" },
   // TODO(Q-06): BOM data or Open-Meteo? Check licence and attribution terms.
@@ -23,8 +23,6 @@ export const PENDING: Record<"geocode" | "climate" | "soil" | "vegetation" | "bu
   soil: { topic: "soil properties", requirement: "FR-13", candidate: "Soil and Landscape Grid of Australia (TERN)", question: "Section 8, soil: To check" },
   // TODO(Section 8): confirm the NVIS / NSW vegetation map spatial service.
   vegetation: { topic: "pre-clearing vegetation community", requirement: "FR-14", candidate: "NVIS and state vegetation maps", question: "Section 8, vegetation: To check" },
-  // TODO(Section 8): confirm the NSW planning spatial service for bushfire-prone land.
-  bushfire: { topic: "bushfire-prone land status", requirement: "FR-03", candidate: "NSW planning spatial services", question: "Section 8, bushfire-prone land: To check" },
 };
 
 export function pendingGap(key: keyof typeof PENDING): DataGap {
