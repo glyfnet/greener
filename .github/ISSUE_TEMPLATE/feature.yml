@@ -1,0 +1,19 @@
+name: Feature request
+description: Suggest something Greener should do
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+  - type: input
+    id: spec-section
+    attributes:
+      label: Related specification section, if any
+      placeholder: e.g. FR-26, Section 7.7

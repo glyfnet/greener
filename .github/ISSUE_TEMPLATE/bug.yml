@@ -1,0 +1,24 @@
+name: Bug report
+description: Report something that isn't working as the specification describes
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what did you see instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: input
+    id: surface
+    attributes:
+      label: Where did this happen?
+      placeholder: claude.ai web / desktop app / mobile / Claude Code
+    validations:
+      required: true

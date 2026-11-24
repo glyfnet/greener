@@ -1,0 +1,13 @@
+{
+  "name": "greener-marketplace",
+  "owner": {
+    "name": "Greener contributors"
+  },
+  "plugins": [
+    {
+      "name": "greener",
+      "source": "./plugin",
+      "description": "Help Australian land holders increase the biodiversity of their site: intake, research, action plan, and Q&A."
+    }
+  ]
+}

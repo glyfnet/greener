@@ -1,0 +1,42 @@
+{
+  "name": "greener",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A Claude plugin and remote MCP server that helps Australian land holders increase the biodiversity of their site.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "workspaces": [
+    "server"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "npm run build:index && npm run dev -w server",
+    "check": "npm run check:kb && npm run build:index && npm run check:lint && npm run check:types && npm test -w server -- --coverage && npm run check:docs && npm run check:audit",
+    "check:lint": "eslint .",
+    "check:types": "tsc -p server/tsconfig.json && tsc -p server/ui/tsconfig.json && tsc -p scripts/tsconfig.json",
+    "check:kb": "tsx scripts/check-kb.ts",
+    "check:links": "tsx scripts/check-kb.ts --links",
+    "check:docs": "tsx scripts/gen-tool-reference.ts --check",
+    "check:audit": "npm audit --omit=dev --audit-level=high",
+    "test": "npm run build:index && npm test -w server",
+    "build:index": "tsx scripts/build-index.ts",
+    "build:plugin": "tsx scripts/build-plugin.ts",
+    "docs:tools": "tsx scripts/gen-tool-reference.ts",
+    "deploy:staging": "npm run build:index && npm run deploy -w server -- --env staging",
+    "smoke": "tsx scripts/smoke.ts",
+    "release": "tsx scripts/release.ts",
+    "test:coverage": "npm run build:index && npm test -w server -- --coverage --project unit",
+    "fixtures:record": "tsx scripts/record-fixtures.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "eslint": "^10.15.0",
+    "tsx": "^4.19.0",
+    "typescript": "~5.9.0",
+    "typescript-eslint": "^8.74.0",
+    "yaml": "^2.9.0",
+    "zod": "^4.1.0"
+  }
+}

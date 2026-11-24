@@ -1,0 +1,17 @@
+{
+  "name": "greener",
+  "version": "0.1.0",
+  "description": "Grow biodiversity on your own site in New South Wales, Australia: a guided intake, local species research, a site-specific action plan that fits your time and budget, and answers with citations.",
+  "author": {
+    "name": "Greener contributors"
+  },
+  "license": "Apache-2.0",
+  "mcpServers": {
+    "greener": {
+      "type": "http",
+      "url": "https://greener.example.workers.dev/mcp"
+    }
+  },
+  "commands": "./commands",
+  "skills": "./skills"
+}

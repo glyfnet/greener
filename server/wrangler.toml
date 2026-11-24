@@ -1,0 +1,23 @@
+name = "greener"
+main = "src/index.ts"
+# Pinned on purpose (Section 12.2). Change it deliberately and re-run the tests.
+compatibility_date = "2026-11-24"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# Contact URL sent in the User-Agent to data services (NFR-08).
+# TODO: set to the public GitHub repository URL once it exists.
+CONTACT_URL = "TODO-set-public-repository-url"
+
+[observability]
+enabled = true
+
+[env.staging]
+name = "greener-staging"
+[env.staging.vars]
+CONTACT_URL = "TODO-set-public-repository-url"
+
+[env.production]
+name = "greener-production"
+[env.production.vars]
+CONTACT_URL = "TODO-set-public-repository-url"
