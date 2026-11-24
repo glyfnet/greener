@@ -41,9 +41,10 @@ and the [ADRs](docs/adr/README.md).
 Working now: the simple-mode intake with a question card and a numbered-list
 fallback, ALA species research, native, weed and constraint checks, the
 budget and phasing engine, keyword search over the KB, Markdown and JSON
-export, and all 23 MCP tools. Climate, soil, vegetation, address lookup,
-bushfire lookup, the declared weed list and the cost table are still waiting
-on source checks: those tools return data gaps. See
+export, and all 24 MCP tools, with strategies for apartments, rented sites and bushfire-prone land. Climate, soil, vegetation, address lookup,
+and bushfire lookup are still waiting on source checks: those tools return
+data gaps. The declared weed list (Greater Sydney) and the cost table (two
+rows) have a first set of sourced data. See
 [docs/architecture.md, Open items](docs/architecture.md#open-items).
 
 ## Support this project

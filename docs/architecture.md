@@ -44,14 +44,28 @@ Logs hold `{ tool, ms, result }` only. Coordinates are rounded to 2 decimal plac
 
 | Evidence | Verdict | Planting |
 | --- | --- | --- |
-| On `data/declared-weeds.csv` for the state | `declared_weed` | blocked |
+| On `data/declared-weeds.csv` for the state, or in a genus listed as `<Genus> species` | `declared_weed` | blocked |
 | ALA `stateInvasive` record near the site | `biosecurity_pest` | blocked |
 | Introduced records nearby, no native records | `introduced` | blocked |
 | Native and introduced records nearby | `mixed_records` | warning |
+| A subspecies of it is on the declared list (e.g. *Olea europaea* vs African olive) | `related_declared` | warning |
 | Native records nearby | `local_native` | allowed |
 | No records nearby | `not_recorded_locally` | warning |
 
-`save_plan` runs the same checks on every planting, plus checks that citation IDs resolve (FR-25) and site constraints (FR-23). A renter or strata site needs a `renter` caution on permanent works. Bushfire-prone land needs a `bushfire` caution on planting and habitat actions. See [ADR P-03](adr/p-03-species-checks.md).
+`save_plan` runs the same checks on every planting, and checks that citation IDs resolve (FR-25). Either failure refuses the plan.
+
+## Constrained sites (FR-23)
+
+Apartments, courtyards, rented and strata sites, and bushfire-prone land are accepted. `get_site_strategies` (`core/strategies.ts`) gives each one a strategy: guidance, rules for the plan, the caution tag to use, and global KB citations.
+
+| Situation | Strategy | Warning when missed |
+| --- | --- | --- |
+| Apartment or townhouse | `small_space`: pots and baskets, layers, birdbath, insect hotel, load, drainage, wind | `strata_permission` (fixed works), `small_space_safety` (water or habitat structures without a `safety` caution) |
+| Rented or strata | `removable`: movable items; written approval for fixed works | `renter_permission` |
+| Bushfire-prone: yes | `bushfire`: asset protection zone, small separated havens, grading plant height, low litter, fire-season upkeep (NSW RFS guidance) | `bushfire_caution` |
+| Bushfire-prone: not sure | `bushfire_unknown`: check the council map; plan cautiously | `bushfire_unknown` |
+
+These are warnings, not refusals: `save_plan` returns them with the `strategyId` that fixes each one. See [ADR P-03](adr/p-03-species-checks.md).
 
 ## Phasing engine (Section 7.7)
 
@@ -73,8 +87,8 @@ Logs hold `{ tool, ms, result }` only. Coordinates are rounded to 2 decimal plac
 | Geocoding of addresses (FR-02) | Data gap until the source is checked (Section 8). Coordinates and the current location work. |
 | Bushfire-prone lookup (FR-03) | Data gap; the user's answer is used. |
 | Climate (FR-12), soil (FR-13), vegetation (FR-14) | Data gaps until Q-06 and the Section 8 checks close. |
-| Declared weed list | `data/declared-weeds.csv` is empty (Section 8: To check). |
-| Cost reference | `data/cost-reference.csv` is empty (Q-12). Plans show hours, and costs as "no data". |
+| Declared weed list | 126 Greater Sydney priority weeds from NSW WeedWise, applied across NSW. Other regions are still to add. |
+| Cost reference | 2 rows (YAN nurseries, southern tablelands). Sydney prices are listed in `data/README.md`, still to be checked by hand (Q-12). |
 | Icon set | Text placeholders (Q-14). |
 | Apartment question count | 17, not the "about 14" in Section 7.3 (TODO in `data/question-bank.yaml`). |
 | Server URL, contact URL, FUNDING.yml | Placeholders. `npm run release` refuses to run while they are set. |

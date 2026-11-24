@@ -21,6 +21,7 @@ The server is stateless (D-09): tools that need site data take it as input, and 
 | [`weed_status`](#weed_status) | Check declared weed status |
 | [`save_research`](#save_research) | Check and save the research report |
 | [`search_knowledge`](#search_knowledge) | Search the global knowledge base |
+| [`get_site_strategies`](#get_site_strategies) | Get strategies for this site |
 | [`check_species`](#check_species) | Check species for planting |
 | [`get_cost_reference`](#get_cost_reference) | Get cost estimates |
 | [`schedule_plan`](#schedule_plan) | Put actions into phases |
@@ -1411,6 +1412,217 @@ Input schema:
   },
   "required": [
     "query"
+  ]
+}
+```
+
+## get_site_strategies
+
+Get planning strategies for sites with special constraints: apartments and courtyards, rented or strata sites, and bushfire-prone land (FR-23). Use before drafting actions. Each strategy has guidance, rules for the plan, the caution tag to use, and citations to copy into the plan.
+
+Input schema:
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "profile": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "default": 1,
+          "type": "number",
+          "const": 1
+        },
+        "mode": {
+          "default": "simple",
+          "type": "string",
+          "enum": [
+            "simple",
+            "detailed"
+          ]
+        },
+        "location": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number",
+              "minimum": -44,
+              "maximum": -10,
+              "description": "Latitude, Australia only (D-02)"
+            },
+            "lon": {
+              "type": "number",
+              "minimum": 112,
+              "maximum": 154,
+              "description": "Longitude, Australia only (D-02)"
+            },
+            "label": {
+              "description": "Suburb or place name the user gave",
+              "type": "string",
+              "maxLength": 200
+            },
+            "precision": {
+              "default": "approximate",
+              "type": "string",
+              "enum": [
+                "exact",
+                "approximate"
+              ]
+            },
+            "state": {
+              "default": "NSW",
+              "description": "MVP covers NSW only (D-02)",
+              "type": "string",
+              "const": "NSW"
+            }
+          },
+          "required": [
+            "lat",
+            "lon"
+          ]
+        },
+        "answers": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "optionIds": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "other": {
+                "description": "Free text from the Other option",
+                "type": "string",
+                "maxLength": 500
+              },
+              "notSure": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "detailed": {
+          "type": "object",
+          "properties": {
+            "hoursPerWeekBySeason": {
+              "type": "object",
+              "properties": {
+                "summer": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 80
+                },
+                "autumn": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 80
+                },
+                "winter": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 80
+                },
+                "spring": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 80
+                }
+              },
+              "required": [
+                "summer",
+                "autumn",
+                "winter",
+                "spring"
+              ]
+            },
+            "upfrontBudgetAud": {
+              "type": "number",
+              "minimum": 0
+            },
+            "yearlyBudgetAud": {
+              "type": "number",
+              "minimum": 0
+            },
+            "areaM2": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        },
+        "localPrices": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "item": {
+                "type": "string",
+                "minLength": 1
+              },
+              "unit": {
+                "type": "string",
+                "minLength": 1
+              },
+              "lowAud": {
+                "type": "number",
+                "minimum": 0
+              },
+              "highAud": {
+                "type": "number",
+                "minimum": 0
+              },
+              "asOf": {
+                "type": "string",
+                "minLength": 1
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "item",
+              "unit",
+              "lowAud",
+              "highAud",
+              "asOf"
+            ]
+          }
+        },
+        "dataGaps": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "topic": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "topic",
+              "reason"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "profile"
   ]
 }
 ```
@@ -2922,7 +3134,7 @@ Input schema:
 
 ## save_plan
 
-Validate the plan against its schema, then run the native-species, weed, citation and site-constraint checks (FR-22–FR-25). Refuses a plan with any error; fix the listed items and call again. On success, save the plan as plans/v<version>.json and export it as Markdown.
+Validate the plan against its schema, then run the native-species, weed, citation and site-constraint checks (FR-22–FR-25). Refuses a plan that plants a weed or has broken citations; fix the listed items and call again. Apartment, rented and bushfire-prone sites are accepted: missing cautions come back as warnings with the strategy that fixes them. On success, save the plan as plans/v<version>.json and export it as Markdown.
 
 Input schema:
 
