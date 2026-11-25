@@ -14,7 +14,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { establishmentUrl, NEAR_QUERIES, occurrenceUrl } from "../server/src/connectors/ala.js";
 import { bushfireUrl } from "../server/src/connectors/bushfire.js";
 import { climateUrl } from "../server/src/connectors/climate.js";
-import { commonsInfoUrl, wikidataImageUrl } from "../server/src/connectors/images.js";
+import { alaImageInfoUrl, alaSpeciesImageUrl, commonsInfoUrl, wikidataImageUrl } from "../server/src/connectors/images.js";
 import { addressUrl } from "../server/src/connectors/geocode.js";
 import { SOIL_ATTRIBUTES, soilUrl } from "../server/src/connectors/soil.js";
 import { vegetationUrl } from "../server/src/connectors/vegetation.js";
@@ -70,6 +70,11 @@ const SOURCES: Record<string, Target[]> = {
     { name: "wikidata-phascolarctos-cinereus", url: wikidataImageUrl("Phascolarctos cinereus") },
     { name: "commons-phascolarctos-cinereus", url: commonsInfoUrl("Koala_climbing_tree.jpg") },
     { name: "wikidata-not-a-plant", url: wikidataImageUrl("Notaplant fakeus") },
+    // ALA fallback: silver wattle's species image is CC BY-NC; yellow box's has no licence.
+    { name: "ala-search-acacia-dealbata", url: alaSpeciesImageUrl("Acacia dealbata") },
+    { name: "ala-image-acacia-dealbata", url: alaImageInfoUrl("71491b2d-cf69-4c1c-950b-803e3418ad44") },
+    { name: "ala-search-eucalyptus-melliodora", url: alaSpeciesImageUrl("Eucalyptus melliodora") },
+    { name: "ala-image-eucalyptus-melliodora", url: alaImageInfoUrl("1b4c785a-800a-46f0-9d83-8e6c8287e310") },
   ],
   soil: SOIL_ATTRIBUTES.map((a) => ({ name: `sydney-${a.code.toLowerCase()}`, url: soilUrl(a.code, TEST_POINT.lat, TEST_POINT.lon) })),
 };

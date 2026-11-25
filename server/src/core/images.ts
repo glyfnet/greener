@@ -2,21 +2,24 @@
  * Species photos (FR-17, D-23).
  *
  * Photos come from Wikimedia Commons, through the image Wikidata picks for a
- * taxon (P18). The server never stores or serves image bytes: it returns a
- * thumbnail link, the creator, the licence and the Commons file page.
+ * taxon (P18), or else from the species image in the Atlas of Living
+ * Australia. The server never stores or serves image bytes: it returns a
+ * thumbnail link, the creator, the licence and the source page.
  *
  * `data/species-images.csv` holds rows recorded by `npm run images:record`
  * and checked by hand (`reviewed`). Species not in the file are looked up
  * live and marked unreviewed.
  *
  * Only licences that allow reuse with attribution are accepted (rule 6:
- * the rule lives here, not in a prompt): CC0, public domain, CC BY and
- * CC BY-SA. Commons does not accept non-commercial licences.
+ * the rule lives here, not in a prompt): CC0, public domain, CC BY, CC BY-SA
+ * and CC BY-NC (the maintainer allowed NC on 26 Nov 2026, because Greener is
+ * free). No-derivatives and unlicensed photos are refused.
  */
 import { z } from "zod";
 import { parseCsv } from "./cost.js";
 
-const IMAGE_HOSTS = new Set(["upload.wikimedia.org", "thumb.wikimedia.org"]);
+const IMAGE_HOSTS = new Set(["upload.wikimedia.org", "thumb.wikimedia.org", "images.ala.org.au"]);
+const SOURCE_HOSTS = new Set(["commons.wikimedia.org", "images.ala.org.au"]);
 const host = (u: string) => {
   try {
     return new URL(u).hostname;
@@ -30,10 +33,10 @@ export const SpeciesImage = z.object({
   alaGuid: z.string().url().optional(),
   kind: z.enum(["flora", "fauna"]),
   commonName: z.string().min(1).optional(),
-  thumbUrl: z.string().url().refine((u) => IMAGE_HOSTS.has(host(u)), "must be a Wikimedia image host"),
-  sourcePage: z.string().url().refine((u) => host(u) === "commons.wikimedia.org", "must be a Commons file page"),
+  thumbUrl: z.string().url().refine((u) => IMAGE_HOSTS.has(host(u)), "must be a Wikimedia or ALA image host"),
+  sourcePage: z.string().url().refine((u) => SOURCE_HOSTS.has(host(u)), "must be a Commons or ALA image page"),
   creator: z.string().min(1).max(200),
-  licence: z.string().refine((l) => usableLicence(l) !== undefined, "licence must be CC0, public domain, CC BY or CC BY-SA"),
+  licence: z.string().refine((l) => usableLicence(l) !== undefined, "licence must be CC0, public domain, CC BY, CC BY-SA or CC BY-NC"),
   retrievedOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   reviewed: z.boolean(),
 });
@@ -47,9 +50,18 @@ export function usableLicence(short: string): string | undefined {
   const s = short.trim().replace(/\s+/g, " ");
   if (/^(CC0|CC0 1\.0)$/i.test(s)) return "CC0";
   if (/^(public domain|PDM|PD)$/i.test(s)) return "Public domain";
-  const m = /^CC[ -]BY(-SA)?(?: (\d\.\d))?(?: ([a-z]{2,3}))?$/i.exec(s);
+  const m = /^CC[ -]BY(-SA|-NC)?(?: (\d\.\d))?(?: ([a-z]{2,3}))?$/i.exec(s);
   if (!m) return undefined;
-  return `CC BY${m[1] ? "-SA" : ""}${m[2] ? ` ${m[2]}` : ""}${m[3] ? ` ${m[3].toLowerCase()}` : ""}`;
+  return `CC BY${m[1] ? m[1].toUpperCase() : ""}${m[2] ? ` ${m[2]}` : ""}${m[3] ? ` ${m[3].toLowerCase()}` : ""}`;
+}
+
+/** A Creative Commons licence URL (as ALA gives it) as a short name, or "". */
+export function licenceFromUrl(url: string): string {
+  const cc = /creativecommons\.org\/licenses\/([a-z-]+)\/(\d\.\d)(?:\/([a-z]{2}))?/i.exec(url);
+  if (cc) return `CC ${cc[1]!.toUpperCase()} ${cc[2]}${cc[3] ? ` ${cc[3].toLowerCase()}` : ""}`;
+  if (/creativecommons\.org\/publicdomain\/zero/i.test(url)) return "CC0";
+  if (/creativecommons\.org\/publicdomain\/mark/i.test(url)) return "Public domain";
+  return "";
 }
 
 /** Plain text from the HTML that Commons gives for an author. */
@@ -72,8 +84,9 @@ export function cleanImageUrl(u: string): string {
 }
 
 /** The credit line to show next to the photo (NFR-17). */
-export function imageCredit(img: Pick<SpeciesImage, "creator" | "licence">): string {
-  return `Photo: ${img.creator}, ${img.licence}, via Wikimedia Commons`;
+export function imageCredit(img: Pick<SpeciesImage, "creator" | "licence" | "sourcePage">): string {
+  const via = host(img.sourcePage) === "images.ala.org.au" ? "the Atlas of Living Australia" : "Wikimedia Commons";
+  return `Photo: ${img.creator}, ${img.licence}, via ${via}`;
 }
 
 /** Markdown that shows the photo, links it to its file page, and credits it. */

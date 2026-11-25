@@ -1,0 +1,62 @@
+{
+  "url": "https://api.ala.org.au/species/search?q=Acacia+dealbata&pageSize=1",
+  "recordedAt": "2026-11-25T21:31:59.381Z",
+  "status": 200,
+  "body": {
+    "searchResults": {
+      "totalRecords": 3693,
+      "facetResults": [],
+      "results": [
+        {
+          "id": "aecbc4d6-e411-46a4-baac-1b3a7d50be74",
+          "guid": "https://id.biodiversity.org.au/taxon/apni/51286863",
+          "linkIdentifier": "Acacia_dealbata",
+          "idxtype": "TAXON",
+          "name": "Acacia dealbata",
+          "kingdom": "Plantae",
+          "nomenclaturalCode": "ICBN",
+          "scientificName": "Acacia dealbata",
+          "scientificNameAuthorship": "Link",
+          "author": "Link",
+          "nameComplete": "Acacia dealbata Link",
+          "nameFormatted": "<span class=\"scientific-name rank-species\"><span class=\"name\">Acacia</span> <span class=\"name\">dealbata</span> <span class=\"author\">Link</span></span>",
+          "taxonomicStatus": "accepted",
+          "nomenclaturalStatus": null,
+          "parentGuid": "https://id.biodiversity.org.au/taxon/apni/51788513",
+          "rank": "species",
+          "rankID": 7000,
+          "commonName": "Silver Wattle",
+          "commonNameSingle": "Silver Wattle",
+          "occurrenceCount": 37661,
+          "conservationStatus": null,
+          "favourite": "interest",
+          "infoSourceName": "APC",
+          "infoSourceURL": "https://collections.ala.org.au/public/show/dr5214",
+          "image": "71491b2d-cf69-4c1c-950b-803e3418ad44",
+          "imageUrl": "https://images.ala.org.au/image/71491b2d-cf69-4c1c-950b-803e3418ad44/original",
+          "thumbnailUrl": "https://images.ala.org.au/image/71491b2d-cf69-4c1c-950b-803e3418ad44/thumbnail",
+          "smallImageUrl": "https://images.ala.org.au/image/71491b2d-cf69-4c1c-950b-803e3418ad44/original",
+          "largeImageUrl": "https://images.ala.org.au/image/71491b2d-cf69-4c1c-950b-803e3418ad44/large",
+          "kingdomGuid": "https://id.biodiversity.org.au/taxon/apni/51795632",
+          "phylum": "Charophyta",
+          "phylumGuid": "https://id.biodiversity.org.au/taxon/apni/51795631",
+          "class": "Equisetopsida",
+          "classGuid": "https://id.biodiversity.org.au/taxon/apni/51795630",
+          "subclass": "Magnoliidae",
+          "subclassGuid": "https://id.biodiversity.org.au/taxon/apni/51794776",
+          "superorder": "Rosanae",
+          "superorderGuid": "https://id.biodiversity.org.au/taxon/apni/51788762",
+          "order": "Fabales",
+          "orderGuid": "https://id.biodiversity.org.au/taxon/apni/51788515",
+          "family": "Fabaceae",
+          "familyGuid": "https://id.biodiversity.org.au/taxon/apni/51788514",
+          "genus": "Acacia",
+          "genusGuid": "https://id.biodiversity.org.au/taxon/apni/51788513",
+          "species": "Acacia dealbata",
+          "speciesGuid": "https://id.biodiversity.org.au/taxon/apni/51286863"
+        }
+      ],
+      "queryTitle": "Acacia dealbata"
+    }
+  }
+}

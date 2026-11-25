@@ -1390,7 +1390,7 @@ Input schema:
 
 ## get_species_images
 
-Get a photo for each plant or animal species, from Wikimedia Commons (FR-17, D-23). Each result has a thumbnail link, the Commons file page, the creator, the licence, a credit line and ready-made Markdown. Use it for the key species in the research report and the planting list, and when the user asks what a species looks like. Show the credit line with every photo. Photos marked reviewed: false were not checked by Greener, so call them example photos, not identification guides. At most 12 species a call are looked up live; the rest come back in `retry`.
+Get a photo for each plant or animal species, from Wikimedia Commons or the Atlas of Living Australia (FR-17, D-23). Each result has a thumbnail link, the Commons file page, the creator, the licence, a credit line and ready-made Markdown. Use it for the key species in the research report and the planting list, and when the user asks what a species looks like. Show the credit line with every photo. Photos marked reviewed: false were not checked by Greener, so call them example photos, not identification guides. At most 8 species a call are looked up live; the rest come back in `retry`.
 
 Input schema:
 

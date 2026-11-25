@@ -1,0 +1,41 @@
+{
+  "url": "https://images.ala.org.au/ws/image/71491b2d-cf69-4c1c-950b-803e3418ad44",
+  "recordedAt": "2026-11-25T21:31:59.595Z",
+  "status": 200,
+  "body": {
+    "success": true,
+    "imageIdentifier": "71491b2d-cf69-4c1c-950b-803e3418ad44",
+    "mimeType": "image/jpeg",
+    "originalFileName": "https://inaturalist-open-data.s3.amazonaws.com/photos/543729222/original.jpg",
+    "sizeInBytes": 608438,
+    "rights": "",
+    "rightsHolder": "Geoff Warn",
+    "dateUploaded": "2025-08-04 14:10:26",
+    "dateTaken": "2025-08-04 14:10:26",
+    "imageUrl": "https://images.ala.org.au/store/4/4/d/a/71491b2d-cf69-4c1c-950b-803e3418ad44/original",
+    "tileUrlPattern": "https://images.ala.org.au/store/4/4/d/a/71491b2d-cf69-4c1c-950b-803e3418ad44/tms/{z}/{x}/{y}.png",
+    "mmPerPixel": "",
+    "height": 1190,
+    "width": 1800,
+    "tileZoomLevels": 4,
+    "description": "",
+    "title": "",
+    "type": "StillImage",
+    "audience": "",
+    "references": "https://www.inaturalist.org/photos/543729222",
+    "publisher": "iNaturalist",
+    "contributor": "",
+    "created": "2023-09-15T15:52:31-07:00",
+    "source": "",
+    "creator": "Geoff Warn",
+    "license": "http://creativecommons.org/licenses/by-nc/4.0/",
+    "recognisedLicence": {
+      "acronym": "CC BY-NC 4.0",
+      "name": "Creative Commons Attribution-Noncommercial (International)",
+      "url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "imageUrl": "https://licensebuttons.net/l/by-nc/3.0/88x31.png"
+    },
+    "dataResourceUid": "dr1411",
+    "occurrenceID": ""
+  }
+}

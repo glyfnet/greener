@@ -27,6 +27,8 @@ export const ALLOWED_HOSTS = new Set([
   // D-23: species photos (Wikidata image, Commons licence and creator).
   "www.wikidata.org",
   "commons.wikimedia.org",
+  // D-23: ALA species image metadata (fallback photo source).
+  "images.ala.org.au",
 ]);
 
 /** FR-16 default cache time to live. */

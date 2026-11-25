@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
-import { commonsInfoUrl, lookupSpeciesImage, wikidataImageUrl } from "../../src/connectors/images.js";
-import { imageMarkdown, parseSpeciesImages, plainText, speciesImagesCsv, usableLicence, IMAGE_CSV_HEADER } from "../../src/core/images.js";
+import { alaImageInfoUrl, alaSpeciesImageUrl, commonsInfoUrl, lookupSpeciesImage, wikidataImageUrl } from "../../src/connectors/images.js";
+import { imageCredit, imageMarkdown, licenceFromUrl, parseSpeciesImages, plainText, speciesImagesCsv, usableLicence, IMAGE_CSV_HEADER } from "../../src/core/images.js";
 import { TOOLS } from "../../src/tools/registry.js";
 import { fixture, fixtureFetch, loadFixtures, testContext } from "../helpers.js";
 
@@ -10,9 +10,17 @@ const csv = readFileSync(new URL("../../../data/species-images.csv", import.meta
 const row = "Lomandra longifolia,,flora,Mat-rush,https://thumb.wikimedia.org/a/330px-L.jpg,https://commons.wikimedia.org/wiki/File:L.jpg,Eric in SF,CC BY-SA 3.0,2026-11-25,no";
 
 describe("species photo rules (FR-17, D-23)", () => {
-  it("accepts only CC0, public domain, CC BY and CC BY-SA", () => {
-    expect(["CC0", "Public domain", "CC BY 3.0 au", "CC BY-SA 4.0", "cc by-sa 3.0"].map(usableLicence)).toEqual(["CC0", "Public domain", "CC BY 3.0 au", "CC BY-SA 4.0", "CC BY-SA 3.0"]);
-    for (const l of ["CC BY-NC 4.0", "CC BY-NC-SA 4.0", "CC BY-ND 4.0", "GFDL", "Attribution", ""]) expect(usableLicence(l)).toBeUndefined();
+  it("accepts only CC0, public domain, CC BY, CC BY-SA and CC BY-NC", () => {
+    expect(["CC0", "Public domain", "CC BY 3.0 au", "CC BY-SA 4.0", "cc by-sa 3.0", "CC BY-NC 4.0"].map(usableLicence)).toEqual(["CC0", "Public domain", "CC BY 3.0 au", "CC BY-SA 4.0", "CC BY-SA 3.0", "CC BY-NC 4.0"]);
+    for (const l of ["CC BY-NC-SA 4.0", "CC BY-ND 4.0", "CC BY-NC-ND 4.0", "GFDL", "Attribution", ""]) expect(usableLicence(l)).toBeUndefined();
+  });
+
+  it("reads ALA licence URLs", () => {
+    expect(licenceFromUrl("http://creativecommons.org/licenses/by-nc/4.0/")).toBe("CC BY-NC 4.0");
+    expect(licenceFromUrl("https://creativecommons.org/licenses/by/3.0/au/")).toBe("CC BY 3.0 au");
+    expect(licenceFromUrl("https://creativecommons.org/publicdomain/zero/1.0/")).toBe("CC0");
+    expect(licenceFromUrl("https://creativecommons.org/publicdomain/mark/1.0/")).toBe("Public domain");
+    expect(licenceFromUrl("All rights reserved")).toBe("");
   });
 
   it("turns a Commons author into plain text", () => {
@@ -28,8 +36,8 @@ describe("species photo rules (FR-17, D-23)", () => {
 
   it("rejects bad rows with the row number", () => {
     const bad = (r: string) => () => parseSpeciesImages(`${IMAGE_CSV_HEADER}\n${r}\n`);
-    expect(bad(row.replace("CC BY-SA 3.0", "CC BY-NC 4.0"))).toThrow(/row 2: licence/);
-    expect(bad(row.replace("thumb.wikimedia.org", "example.com"))).toThrow(/Wikimedia image host/);
+    expect(bad(row.replace("CC BY-SA 3.0", "CC BY-ND 4.0"))).toThrow(/row 2: licence/);
+    expect(bad(row.replace("thumb.wikimedia.org", "example.com"))).toThrow(/Wikimedia or ALA image host/);
     expect(bad(row.replace(",no", ",maybe"))).toThrow(/reviewed must be yes or no/);
     expect(() => parseSpeciesImages(`${IMAGE_CSV_HEADER}\n${row}\n${row}\n`)).toThrow(/duplicate species/);
     expect(() => parseSpeciesImages("name\n")).toThrow(/header/);
@@ -55,7 +63,7 @@ describe("Wikidata and Commons photo lookup (recorded fixtures)", () => {
   });
 
   it("returns a reason, not a photo, when there is none or it cannot be used", async () => {
-    expect(await lookupSpeciesImage("Notaplant fakeus", { kind: "flora" }, deps(), "d")).toEqual({ ok: false, reason: "Wikidata has no image for this species" });
+    expect(await lookupSpeciesImage("Notaplant fakeus", { kind: "flora" }, deps(), "d")).toEqual({ ok: false, reason: expect.stringMatching(/^Wikidata has no image for this species; ALA: /) });
     const fixtures = loadFixtures();
     const url = fixture("commons-lomandra-longifolia", "images").url;
     const swap = (from: string, to: string) => {
@@ -63,9 +71,35 @@ describe("Wikidata and Commons photo lookup (recorded fixtures)", () => {
       m.set(url, { ...fixtures.get(url)!, body: JSON.parse(JSON.stringify(fixtures.get(url)!.body).replace(from, to)) });
       return deps(fixtureFetch(m).fn);
     };
-    expect(await lookupSpeciesImage("Lomandra longifolia", { kind: "flora" }, swap("CC BY-SA 3.0", "CC BY-NC 4.0"), "2026-11-25")).toMatchObject({ ok: false, reason: expect.stringContaining("does not allow reuse") });
-    expect(await lookupSpeciesImage("Lomandra longifolia", { kind: "flora" }, swap(">Eric in SF<", "><"), "2026-11-25")).toMatchObject({ ok: false, reason: "the image has no named creator to credit" });
+    expect(await lookupSpeciesImage("Lomandra longifolia", { kind: "flora" }, swap("CC BY-SA 3.0", "CC BY-ND 4.0"), "2026-11-25")).toMatchObject({ ok: false, reason: expect.stringContaining("does not allow reuse") });
+    expect(await lookupSpeciesImage("Lomandra longifolia", { kind: "flora" }, swap(">Eric in SF<", "><"), "2026-11-25")).toMatchObject({ ok: false, reason: expect.stringContaining("the image has no named creator to credit") });
     expect(await lookupSpeciesImage("Lomandra longifolia", { kind: "flora" }, deps(async () => new Response("x", { status: 500 })), "2026-11-25")).toMatchObject({ ok: false, reason: expect.stringContaining("Wikidata") });
+  });
+});
+
+describe("ALA fallback photos (recorded fixtures)", () => {
+  it("builds the URLs the fixtures were recorded from", () => {
+    expect(alaSpeciesImageUrl("Acacia dealbata")).toBe(fixture("ala-search-acacia-dealbata", "images").url);
+    expect(alaImageInfoUrl("71491b2d-cf69-4c1c-950b-803e3418ad44")).toBe(fixture("ala-image-acacia-dealbata", "images").url);
+  });
+
+  it("uses the ALA species image when Commons has none, with a CC BY-NC licence", async () => {
+    const r = await lookupSpeciesImage("Acacia dealbata", { kind: "flora" }, deps(), "2026-11-26");
+    expect(r).toMatchObject({
+      ok: true,
+      image: {
+        creator: "Geoff Warn",
+        licence: "CC BY-NC 4.0",
+        thumbUrl: "https://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=71491b2d-cf69-4c1c-950b-803e3418ad44",
+        sourcePage: "https://images.ala.org.au/image/details?imageId=71491b2d-cf69-4c1c-950b-803e3418ad44",
+      },
+    });
+    if (r.ok) expect(imageCredit(r.image)).toBe("Photo: Geoff Warn, CC BY-NC 4.0, via the Atlas of Living Australia");
+  });
+
+  it("refuses an ALA image with no licence", async () => {
+    const r = await lookupSpeciesImage("Eucalyptus melliodora", { kind: "flora" }, deps(), "2026-11-26");
+    expect(r).toMatchObject({ ok: false, reason: expect.stringContaining("the image licence (none) does not allow reuse") });
   });
 });
 
@@ -87,9 +121,9 @@ describe("get_species_images tool", () => {
   });
 
   it("caps live lookups and returns the rest to retry", async () => {
-    const names = Array.from({ length: 14 }, (_, i) => `Fake species${String.fromCharCode(97 + i)}`);
+    const names = Array.from({ length: 10 }, (_, i) => `Fake species${String.fromCharCode(97 + i)}`);
     const r = await run(names, testContext({ data: { speciesImages: [] } }));
-    expect(r.retry).toEqual(names.slice(12));
-    expect((r.missing as unknown[]).length).toBe(12);
+    expect(r.retry).toEqual(names.slice(8));
+    expect((r.missing as unknown[]).length).toBe(8);
   });
 });

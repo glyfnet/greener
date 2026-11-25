@@ -1,13 +1,14 @@
 /**
- * `npm run images:record -- <scientific name>...` — look up a Commons photo
- * for each species and add it to `data/species-images.csv` (D-23). Run on
- * purpose only. New rows are `reviewed: no`.
+ * `npm run images:record -- <scientific name>...` — look up a photo (Commons,
+ * then ALA) for each species and add it to `data/species-images.csv` (D-23).
+ * Run on purpose only. New rows are `reviewed: no`. Rows already in the file
+ * are left as they are, unless `--refresh` is given, which re-records
+ * unreviewed rows.
  *
- * Review each new row by hand: open `source_page`, check that the photo
- * shows the named species (a living plant or animal, not a map, drawing or
- * herbarium sheet) and that the licence and creator match. Then set
- * `reviewed` to `yes`. Rows already in the file are left as they are, unless
- * `--refresh` is given, which re-records unreviewed rows.
+ * Review (the `review-species-images` skill walks through it):
+ *   --pending            list unreviewed rows as JSON
+ *   --approve <name>...  set `reviewed` to yes, after a person has checked it
+ *   --remove <name>...   drop a wrong photo (the species then has no row)
  */
 import { writeFileSync } from "node:fs";
 import { matchName } from "../server/src/connectors/ala.js";
@@ -18,8 +19,26 @@ import { path, readText } from "./lib.js";
 const FILE = "data/species-images.csv";
 const args = process.argv.slice(2);
 const refresh = args.includes("--refresh");
-const names = args.filter((a) => a !== "--refresh");
+const names = args.filter((a) => !a.startsWith("--"));
 const rows = new Map<string, SpeciesImage>(parseSpeciesImages(readText(FILE)).map((r) => [r.scientificName.toLowerCase(), r]));
+const save = () => writeFileSync(path(FILE), speciesImagesCsv([...rows.values()]));
+
+if (args.includes("--pending")) {
+  console.log(JSON.stringify([...rows.values()].filter((r) => !r.reviewed), null, 2));
+  process.exit(0);
+}
+for (const flag of ["--approve", "--remove"] as const) {
+  if (!args.includes(flag)) continue;
+  for (const name of names) {
+    const r = rows.get(name.toLowerCase());
+    if (!r) throw new Error(`${name} is not in ${FILE}`);
+    if (flag === "--approve") rows.set(name.toLowerCase(), { ...r, reviewed: true });
+    else rows.delete(name.toLowerCase());
+    console.log(`${flag === "--approve" ? "approved" : "removed "} ${r.scientificName}`);
+  }
+  save();
+  process.exit(0);
+}
 if (refresh) for (const r of rows.values()) if (!r.reviewed) names.push(r.scientificName);
 if (!names.length) throw new Error("give one or more scientific names, or --refresh");
 
@@ -52,5 +71,5 @@ for (const name of [...new Set(names)]) {
   rows.set(match.scientificName.toLowerCase(), r.image);
   console.log(`added    ${match.scientificName} (${r.image.licence}, ${r.image.creator}) ${r.image.sourcePage}`);
 }
-writeFileSync(path(FILE), speciesImagesCsv([...rows.values()]));
+save();
 console.log(`wrote ${FILE}: ${rows.size} rows. Review the new rows before you commit.`);
