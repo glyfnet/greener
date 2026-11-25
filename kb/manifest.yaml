@@ -444,32 +444,6 @@ items:
       (D-17). Box prices change and sales are frequent; check the site before
       quoting a cost.
 
-  - id: australian-plants-online-natives
-    title: Australian Plants Online — Australian native tubestock
-    tier: link_catalogue
-    sourceUrl: https://www.australianplantsonline.com.au/tubestockplants/natives.html
-    publisher: Australian Plants Online
-    licence: "Link and summary only. Licence not stated (footer: © 2026 Australian Plants Online)."
-    region: Australia
-    dateChecked: "2026-11-25"
-    tags: [nursery, mail order, buy plants, tubestock, delivery, state biosecurity, Acacia, Banksia, Grevillea, Lomandra, Dianella, Westringia, Eremophila, Leptospermum]
-    summary: >-
-      The Australian natives section of an online tubestock nursery that is
-      not open to the public, except for pre-ordered pickups. The natives
-      section lists about 450 plants, grouped by genus: wattles, woolly bush,
-      kangaroo paws, banksias, boronias, bottlebrushes, waxflowers, correas,
-      flax lilies, emu bushes, grevilleas, hibbertias, kunzeas, tea trees,
-      mat rushes, honey myrtles, boobiallas, mint bushes, saltbushes, fan
-      flowers, lilly pillies and westringias, with prices per plant. It
-      delivers nationwide for a fee, with free shipping on larger orders.
-      Some plants cannot be sent to some states because of state biosecurity
-      laws; each product page says where it can go, and buyers outside
-      Queensland and New South Wales can filter by state. Caution: the same
-      store also sells many plants that are not Australian, for example
-      gazania, agapanthus and fountain grass, which Greener never recommends.
-      Order only from the natives section, prefer species local to the site,
-      and check every species with Greener before buying (D-17).
-
   - id: casey-cardinia-indigenous-plant-guide
     title: Indigenous Plant Guide — Cardinia Shire and City of Casey
     tier: link_catalogue
