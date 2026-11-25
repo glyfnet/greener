@@ -24,6 +24,7 @@ The server is stateless (D-09): tools that need site data take it as input, and 
 | [`get_site_strategies`](#get_site_strategies) | Get strategies for this site |
 | [`check_species`](#check_species) | Check species for planting |
 | [`get_cost_reference`](#get_cost_reference) | Get cost estimates |
+| [`find_native_nurseries`](#find_native_nurseries) | Find native plant nurseries |
 | [`schedule_plan`](#schedule_plan) | Put actions into phases |
 | [`mark_done`](#mark_done) | Mark an action done |
 | [`save_plan`](#save_plan) | Check and save the plan |
@@ -744,7 +745,7 @@ Input schema:
 
 ## geocode
 
-Turn the user's location into site coordinates (FR-02). Pass lat and lon from the user's current location or typed coordinates. Address and suburb lookup is not available yet; the result says so.
+Turn the user's location into site coordinates (FR-02). Pass lat and lon from the user's current location or typed coordinates. For a NSW street address, split it into `address` fields (roadName, and suburb or postCode, are needed); it is looked up in the NSW Address Location Service (D-19). Suburb-only or postcode-only lookup is not available yet; the result says so.
 
 Input schema:
 
@@ -759,8 +760,40 @@ Input schema:
     "lon": {
       "type": "number"
     },
+    "address": {
+      "type": "object",
+      "properties": {
+        "houseNumber": {
+          "description": "House number, e.g. '12' or '12A'",
+          "type": "string",
+          "maxLength": 20
+        },
+        "roadName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Road name without the type, e.g. 'Panorama'"
+        },
+        "roadType": {
+          "description": "Road type, full or short, e.g. 'Avenue' or 'Ave'",
+          "type": "string",
+          "maxLength": 30
+        },
+        "suburb": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "postCode": {
+          "type": "string",
+          "pattern": "^\\d{4}$"
+        }
+      },
+      "required": [
+        "roadName"
+      ]
+    },
     "query": {
-      "description": "Address, suburb or postcode",
+      "description": "Suburb or postcode, when there is no street address",
       "type": "string",
       "maxLength": 200
     },
@@ -774,7 +807,7 @@ Input schema:
 
 ## bushfire_status
 
-Look up whether the site is on bushfire-prone land (FR-03). Use when the user answered Not sure. Until the NSW data source is checked, this returns a data gap and the plan treats the status as unknown.
+Look up whether the site is on NSW bushfire-prone land (FR-03, D-18), from the NSW RFS Bush Fire Prone Land map. Use when the user answered Not sure, or to check their answer. Checks land within about 100 m of the site. Returns a suggested answer for the bushfire_prone question and a citation. The council's certified map is authoritative.
 
 Input schema:
 
@@ -1152,7 +1185,7 @@ Input schema:
 
 ## climate_normals
 
-Get climate normals (temperature, rainfall, frost) for the site (FR-12). The data source is not confirmed yet (Q-06), so this returns a data gap to record in the report.
+Get 1991–2020 climate normals for the site from the Open-Meteo Historical Weather API (FR-12, D-21): monthly mean maximum and minimum temperature, monthly and annual rainfall, and mean nights a year at or below 0 °C and 2 °C. Use them to time planting and choose natives suited to the site. The grid is about 25 km, so local effects are smoothed out.
 
 Input schema:
 
@@ -1210,7 +1243,7 @@ Input schema:
 
 ## soil_properties
 
-Get soil pH, texture and organic carbon for the site (FR-13). The data source is not confirmed yet (Section 8), so this returns a data gap. Use the user's own soil answer meanwhile.
+Get modelled soil pH (CaCl₂), clay, sand and organic carbon at 0–5 cm and 5–15 cm for the site, from the Soil and Landscape Grid of Australia (FR-13, D-22). These are estimates on a 90 m grid: the user's own soil answer and a simple test on site come first.
 
 Input schema:
 
@@ -1268,7 +1301,7 @@ Input schema:
 
 ## vegetation_community
 
-Get the pre-clearing vegetation community for the site (FR-14). The data source is not confirmed yet (Section 8), so this returns a data gap.
+Get the likely original (pre-clearing) Plant Community Type for the site from the NSW State Vegetation Type Map (FR-14, D-20). Use it to choose local natives that belong in that community, and to explain the plan. It is a statewide model, not a site survey.
 
 Input schema:
 
@@ -2057,6 +2090,70 @@ Input schema:
   },
   "required": [
     "items"
+  ]
+}
+```
+
+## find_native_nurseries
+
+Find nurseries and plant stalls that specialise in Australian native plants near the site (FR-20 local resources, D-17). Returns name, town, distance, what they offer, how to visit, a website and a citation for each. Add the ones the user may use to the plan's localResources. The directory is small and growing; it says when there is nothing nearby.
+
+Input schema:
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "location": {
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": "number",
+          "minimum": -44,
+          "maximum": -10,
+          "description": "Latitude, Australia only (D-02)"
+        },
+        "lon": {
+          "type": "number",
+          "minimum": 112,
+          "maximum": 154,
+          "description": "Longitude, Australia only (D-02)"
+        },
+        "label": {
+          "description": "Suburb or place name the user gave",
+          "type": "string",
+          "maxLength": 200
+        },
+        "precision": {
+          "default": "approximate",
+          "type": "string",
+          "enum": [
+            "exact",
+            "approximate"
+          ]
+        },
+        "state": {
+          "default": "NSW",
+          "description": "MVP covers NSW only (D-02)",
+          "type": "string",
+          "const": "NSW"
+        }
+      },
+      "required": [
+        "lat",
+        "lon"
+      ]
+    },
+    "radiusKm": {
+      "default": 100,
+      "type": "number",
+      "minimum": 5,
+      "maximum": 300
+    }
+  },
+  "required": [
+    "location"
   ]
 }
 ```

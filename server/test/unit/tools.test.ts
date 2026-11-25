@@ -3,7 +3,7 @@ import { z } from "zod";
 import { buildServer, handleMcp } from "../../src/server.js";
 import { TOOLS } from "../../src/tools/registry.js";
 import type { Tool } from "../../src/tools/define.js";
-import { action, fixtureFetch, location, plan, profile, research, testContext } from "../helpers.js";
+import { action, FIRE_POINT, fixtureFetch, location, plan, profile, research, TEST_POINT, testContext } from "../helpers.js";
 
 const tool = (name: string): Tool => {
   const t = TOOLS.find((x) => x.name === name);
@@ -38,6 +38,7 @@ describe("tool contract (Section 12.3)", () => {
         "get_site_strategies",
         "check_species",
         "get_cost_reference",
+        "find_native_nurseries",
         "schedule_plan",
         "mark_done",
         "save_plan",
@@ -118,11 +119,36 @@ describe("intake tools", () => {
   it("geocodes coordinates, refuses non-Australian ones, and records a gap for addresses (FR-02)", async () => {
     expect((await call("geocode", { lat: -33.87, lon: 151.21 })).data.location).toMatchObject({ precision: "exact", state: "NSW" });
     expect((await call("geocode", { lat: 51.5, lon: -0.1 })).isError).toBe(true);
-    expect((await call("geocode", { query: "Newtown NSW" })).data).toMatchObject({ location: null, dataGap: { topic: "address lookup" } });
+    expect((await call("geocode", { query: "Newtown NSW" })).data).toMatchObject({ location: null, dataGap: { topic: "suburb or postcode lookup" } });
     expect((await call("geocode", {})).isError).toBe(true);
   });
 
-  it("returns unknown bushfire status with a gap, not a guess (FR-03)", async () => {
+  it("geocodes a NSW street address to its suburb, with the council and a citation (FR-02, D-19)", async () => {
+    const r = await call("geocode", { address: { houseNumber: "346", roadName: "Panorama", roadType: "Ave", suburb: "Bathurst", postCode: "2795" } });
+    expect(r.data).toMatchObject({ location: { lat: -33.429684292575985, lon: 149.56705027301055, label: "Bathurst", precision: "exact", state: "NSW" }, council: "Bathurst Regional", citation: { id: "nsw:address-location" } });
+    expect(JSON.stringify(r.data)).not.toContain("Panorama");
+    const missing = await call("geocode", { address: { houseNumber: "1", roadName: "Notarealname", roadType: "St", suburb: "Bathurst" } });
+    expect(missing.data).toMatchObject({ location: null, nextStep: expect.stringContaining("not found") });
+    expect((await call("geocode", { address: { roadName: "Panorama" } })).isError).toBe(true);
+  });
+
+  it("asks the user to pick when several addresses match", async () => {
+    const two = { addressResult: { numRecs: 2, addresses: ["BATHURST", "KELSO"].map((s, i) => ({ suburbName: s, postCode: 2795, addressPoint: { centreX: 149.5 + i / 10, centreY: -33.4 } })) } };
+    const r = await call("geocode", { address: { roadName: "Main", postCode: "2795" } }, testContext({ fetch: async () => new Response(JSON.stringify(two)) }));
+    expect(r.data.location).toBeNull();
+    expect((r.data.candidates as { location: { label: string } }[]).map((c) => c.location.label)).toEqual(["Bathurst", "Kelso"]);
+  });
+
+  it("looks up bushfire-prone land and suggests an answer (FR-03, D-18)", async () => {
+    const fire = await call("bushfire_status", { location: { ...location, ...FIRE_POINT, precision: "exact" } });
+    expect(fire.data).toMatchObject({ status: "prone", suggestedAnswer: { questionId: "bushfire_prone", answer: { optionIds: ["yes"] } }, citation: { id: "nsw:bushfire-prone-land" } });
+    expect((fire.data.notes as string[]).join(" ")).toContain("not a planning certificate");
+    const city = await call("bushfire_status", { location: { ...location, ...TEST_POINT } });
+    expect(city.data).toMatchObject({ status: "not_mapped", suggestedAnswer: { answer: { optionIds: ["no"] } } });
+    expect((city.data.notes as string[]).join(" ")).toContain("approximate");
+  });
+
+  it("returns unknown bushfire status with a gap when the map fails, not a guess (NFR-07)", async () => {
     expect((await call("bushfire_status", { location })).data).toMatchObject({ status: "unknown", dataGap: { topic: "bushfire-prone land status" } });
   });
 
@@ -158,10 +184,34 @@ describe("research tools", () => {
     expect((await call("ala_species_profile", { name: "Lomandra longifolia" })).data).toMatchObject({ found: true, family: "Asparagaceae" });
   });
 
-  it("returns data gaps for sources still being checked", async () => {
-    for (const name of ["climate_normals", "soil_properties", "vegetation_community"]) {
-      expect((await call(name, { location })).data).toMatchObject({ available: false, dataGap: expect.objectContaining({ reason: expect.stringContaining("still being checked") }) });
-    }
+  it("returns climate normals with a citation (FR-12, D-21)", async () => {
+    const r = await call("climate_normals", { location: { ...location, ...FIRE_POINT } });
+    expect(r.data).toMatchObject({ available: true, normals: { period: "1991–2020", coldNightsPerYear: { atOrBelow0C: 29.9 } }, citation: { id: "open-meteo:era5-normals" } });
+    expect((await call("climate_normals", { location })).data).toMatchObject({ available: false, dataGap: { topic: "climate normals" } });
+  });
+
+  it("returns modelled soil properties with units and a citation (FR-13, D-22)", async () => {
+    const r = await call("soil_properties", { location: { ...location, ...TEST_POINT } });
+    expect(r.data).toMatchObject({ available: true, properties: { phCaCl2: { "0-5cm": 4.56 } }, units: { organicCarbonPercent: "% by weight" }, citation: { id: "tern:slga" } });
+    expect((await call("soil_properties", { location })).data).toMatchObject({ available: false, dataGap: { topic: "soil properties" } });
+  });
+
+  it("returns the pre-clearing vegetation community with a citation (FR-14, D-20)", async () => {
+    const r = await call("vegetation_community", { location: { ...location, ...TEST_POINT, precision: "exact" } });
+    expect(r.data).toMatchObject({ available: true, community: { pctId: 3262, name: "Sydney Turpentine Ironbark Forest" }, citation: { id: "nsw:svtm-pre-clearing" } });
+    expect((r.data.notes as string[]).join(" ")).toContain("not a site survey");
+    expect((await call("vegetation_community", { location })).data).toMatchObject({ available: false, dataGap: { topic: "pre-clearing vegetation community" } });
+    const empty = await call("vegetation_community", { location }, testContext({ fetch: async () => new Response('{"results":[]}') }));
+    expect(empty.data).toMatchObject({ available: false, dataGap: { reason: expect.stringContaining("no community") } });
+  });
+
+  it("includes the Northern Tablelands priority weeds for Armidale and Uralla", async () => {
+    const r = await call("weed_status", { names: ["Rosa rubiginosa", "Gleditsia triacanthos", "Lantana camara"] });
+    const results = r.data.results as { declared: boolean; category?: string }[];
+    expect(results.every((x) => x.declared)).toBe(true);
+    expect(results[0]?.category).toBe("Northern Tablelands priority weed: Regional Recommended Measure");
+    expect(results[2]?.category).toContain("Greater Sydney priority weed");
+    expect(results[2]?.category).toContain("Northern Tablelands priority weed");
   });
 
   it("checks names against the declared weed list", async () => {
@@ -228,6 +278,18 @@ describe("knowledge and plan tools", () => {
     expect((r.data.fixHints as string[])[0]).toContain("invasive here");
     const sprayed = plan({ actions: [action("a1", { title: "Spray weeds", category: "weed_control" })] });
     expect((await call("save_plan", { plan: sprayed, research: research(), profile: profile() })).isError).toBe(true);
+  });
+
+  it("finds native nurseries near Armidale and Uralla, with citations (FR-20)", async () => {
+    const uralla = { lat: -30.645, lon: 151.508, precision: "exact" as const, state: "NSW" as const };
+    const r = await call("find_native_nurseries", { location: uralla });
+    const list = r.data.nurseries as { id: string; distanceKm: number; localResource: { citationId: string }; citation: { id: string } }[];
+    expect(list[0]?.id).toBe("aps-armidale-stall-uralla");
+    expect(list.map((n) => n.id)).toContain("armidale-tree-group");
+    for (const n of list) expect(n.localResource.citationId).toBe(n.citation.id);
+    expect(list.find((n) => n.id === "armidale-tree-group")?.distanceKm).toBe(21);
+    const sydney = await call("find_native_nurseries", { location });
+    expect(sydney.data).toMatchObject({ nurseries: [], dataGap: { topic: "native plant nurseries" } });
   });
 
   it("returns dated costs, and no data for unknown items (FR-68, FR-70)", async () => {

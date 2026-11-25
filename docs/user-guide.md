@@ -2,7 +2,7 @@
 
 Greener helps you increase biodiversity on your own land in New South Wales. It runs inside Claude, with nothing to install. Your answers, research and plans are saved in your own Claude Project. The Greener server keeps nothing.
 
-Start by making a Claude Project for your site. Then turn on web access, so Claude can read the guides that Greener links to.
+To install Greener, see the [install guide](install.md). Start by making a Claude Project for your site. Then turn on web access, so Claude can read the guides that Greener links to.
 
 ## 1. Tell Greener about your site — `/greener-new`
 

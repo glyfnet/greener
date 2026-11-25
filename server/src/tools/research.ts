@@ -5,7 +5,9 @@ import { z } from "zod";
 import { normaliseName } from "../core/checks.js";
 import { Location, ResearchReport } from "../core/models.js";
 import { speciesNear, speciesProfile } from "../connectors/ala.js";
-import { PENDING, pendingGap } from "../connectors/pending.js";
+import { climateNormals as getClimate } from "../connectors/climate.js";
+import { soilProperties as getSoil } from "../connectors/soil.js";
+import { vegetationCommunity as getVegetation } from "../connectors/vegetation.js";
 import { fail, ok } from "./context.js";
 import { defineTool } from "./define.js";
 
@@ -49,18 +51,72 @@ export const alaSpeciesProfile = defineTool({
   },
 });
 
-const pendingTool = (name: "climate_normals" | "soil_properties" | "vegetation_community", key: "climate" | "soil" | "vegetation", title: string, description: string) =>
-  defineTool({
-    name,
-    title,
-    description,
-    input: z.object({ location: Location }),
-    handler: () => ok({ available: false, dataGap: pendingGap(key), requirement: PENDING[key].requirement, nextStep: "Record this data gap in the research report and continue (NFR-07). Do not estimate the values." }),
-  });
+export const climateNormals = defineTool({
+  name: "climate_normals",
+  title: "Get climate normals",
+  description:
+    "Get 1991–2020 climate normals for the site from the Open-Meteo Historical Weather API (FR-12, D-21): monthly mean maximum and minimum temperature, monthly and annual rainfall, and mean nights a year at or below 0 °C and 2 °C. Use them to time planting and choose natives suited to the site. The grid is about 25 km, so local effects are smoothed out.",
+  input: z.object({ location: Location }),
+  handler: async ({ location }, ctx) => {
+    const r = await getClimate(location.lat, location.lon, ctx.http, ctx.today);
+    if (!r.ok) return ok({ available: false, dataGap: r.dataGap, requirement: "FR-12", nextStep: "Record this data gap in the research report and continue (NFR-07). Do not estimate the values." });
+    return ok({
+      available: true,
+      normals: r.normals,
+      citation: r.citation,
+      notes: [
+        "ERA5 reanalysis on a grid of about 25 km, not a weather station. Conditions at the site can differ from the grid average; ask the user what they see.",
+        "Cold nights count days with a minimum air temperature at or below 0 °C or 2 °C. They are thresholds, not a definition of frost.",
+        "Cite Open-Meteo with a link wherever these values are shown (CC BY 4.0).",
+      ],
+    });
+  },
+});
 
-export const climateNormals = pendingTool("climate_normals", "climate", "Get climate normals", "Get climate normals (temperature, rainfall, frost) for the site (FR-12). The data source is not confirmed yet (Q-06), so this returns a data gap to record in the report.");
-export const soilProperties = pendingTool("soil_properties", "soil", "Get soil properties", "Get soil pH, texture and organic carbon for the site (FR-13). The data source is not confirmed yet (Section 8), so this returns a data gap. Use the user's own soil answer meanwhile.");
-export const vegetationCommunity = pendingTool("vegetation_community", "vegetation", "Get the pre-clearing vegetation community", "Get the pre-clearing vegetation community for the site (FR-14). The data source is not confirmed yet (Section 8), so this returns a data gap.");
+export const soilProperties = defineTool({
+  name: "soil_properties",
+  title: "Get soil properties",
+  description:
+    "Get modelled soil pH (CaCl₂), clay, sand and organic carbon at 0–5 cm and 5–15 cm for the site, from the Soil and Landscape Grid of Australia (FR-13, D-22). These are estimates on a 90 m grid: the user's own soil answer and a simple test on site come first.",
+  input: z.object({ location: Location }),
+  handler: async ({ location }, ctx) => {
+    const r = await getSoil(location.lat, location.lon, ctx.http, ctx.today);
+    if (!r.ok) return ok({ available: false, dataGap: r.dataGap, requirement: "FR-13", nextStep: "Record this data gap in the research report and use the user's own soil answer (NFR-07). Do not estimate the values." });
+    return ok({
+      available: true,
+      properties: r.properties,
+      units: { phCaCl2: "pH units (1:5 soil in 0.01 M CaCl₂)", clayPercent: "% of fine earth", sandPercent: "% of fine earth", organicCarbonPercent: "% by weight" },
+      dataGaps: r.dataGaps,
+      citation: r.citation,
+      notes: [
+        "Modelled estimates on a 90 m grid. Urban sites, fill and garden beds often differ. The user's own soil answer and a test on site come first.",
+        "pH here is measured in calcium chloride (CaCl₂). A garden kit may use a different method, so compare like with like.",
+      ],
+    });
+  },
+});
+export const vegetationCommunity = defineTool({
+  name: "vegetation_community",
+  title: "Get the pre-clearing vegetation community",
+  description:
+    "Get the likely original (pre-clearing) Plant Community Type for the site from the NSW State Vegetation Type Map (FR-14, D-20). Use it to choose local natives that belong in that community, and to explain the plan. It is a statewide model, not a site survey.",
+  input: z.object({ location: Location }),
+  handler: async ({ location }, ctx) => {
+    const r = await getVegetation(location.lat, location.lon, ctx.http, ctx.today);
+    if (!r.ok) return ok({ available: false, dataGap: r.dataGap, requirement: "FR-14", nextStep: "Record this data gap in the research report and continue (NFR-07). Do not guess the community." });
+    if (!r.community) return ok({ available: false, dataGap: { topic: "pre-clearing vegetation community", reason: "The NSW State Vegetation Type Map has no community at this point." }, citation: r.citation });
+    return ok({
+      available: true,
+      community: r.community,
+      citation: r.citation,
+      notes: [
+        "This is the likely original vegetation before clearing, from a statewide model at 5 m resolution. It is not what grows there now, and not a site survey.",
+        "Search for the community name, for example with search_knowledge or a council planting list, to find its typical local natives. Check every species with check_species.",
+        ...(location.precision === "approximate" ? ["The site location is approximate, so the community may differ at the exact property."] : []),
+      ],
+    });
+  },
+});
 
 export const weedStatus = defineTool({
   name: "weed_status",

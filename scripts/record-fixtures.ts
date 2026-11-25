@@ -12,6 +12,11 @@
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { establishmentUrl, NEAR_QUERIES, occurrenceUrl } from "../server/src/connectors/ala.js";
+import { bushfireUrl } from "../server/src/connectors/bushfire.js";
+import { climateUrl } from "../server/src/connectors/climate.js";
+import { addressUrl } from "../server/src/connectors/geocode.js";
+import { SOIL_ATTRIBUTES, soilUrl } from "../server/src/connectors/soil.js";
+import { vegetationUrl } from "../server/src/connectors/vegetation.js";
 import { path } from "./lib.js";
 
 /** Public test point: Hyde Park, Sydney. Not a user site. */
@@ -25,37 +30,6 @@ const LIVE_SPECIES = ["Banksia serrata", "Eucalyptus marginata", "Jacaranda mimo
 type Target = { name: string; url: string };
 const q = (base: string, params: Record<string, string>) => `${base}?${new URLSearchParams(params)}`;
 const NAMEMATCH = "https://api.ala.org.au/namematching/api/search";
-
-// TODO: when each connector lands, import its URL builder here instead of the literal URLs below, as for ALA.
-const BUSHFIRE = "https://portal.spatial.nsw.gov.au/server/rest/services/Hosted/NSW_BushFire_Prone_Land/FeatureServer/0/query";
-const bushfireUrl = (lat: number, lon: number) =>
-  q(BUSHFIRE, {
-    geometry: [lon - 0.001, lat - 0.001, lon + 0.001, lat + 0.001].map((n) => n.toFixed(4)).join(","),
-    geometryType: "esriGeometryEnvelope",
-    inSR: "4326",
-    spatialRel: "esriSpatialRelIntersects",
-    outFields: "category,d_category,d_guidelin,lastupdate",
-    returnGeometry: "false",
-    f: "json",
-  });
-const ADDRESS = "https://maps.six.nsw.gov.au/services/public/Address_Location";
-const VEG = "https://mapprod3.environment.nsw.gov.au/arcgis/rest/services/VIS/SVTM_NSW_1750_PCT/MapServer/identify";
-const identifyParams = (lat: number, lon: number, layers: string) => ({
-  geometry: `${lon},${lat}`,
-  geometryType: "esriGeometryPoint",
-  sr: "4326",
-  layers,
-  tolerance: "0",
-  mapExtent: [lon - 0.01, lat - 0.01, lon + 0.01, lat + 0.01].map((n) => n.toFixed(4)).join(","),
-  imageDisplay: "100,100,96",
-  returnGeometry: "false",
-  f: "json",
-});
-const CLIMATE = "https://archive-api.open-meteo.com/v1/archive";
-const climateUrl = (lat: number, lon: number) =>
-  q(CLIMATE, { latitude: lat.toFixed(1), longitude: lon.toFixed(1), start_date: "1991-01-01", end_date: "2020-12-31", daily: "temperature_2m_max,temperature_2m_min,precipitation_sum", timezone: "Australia/Sydney" });
-const SOIL_ATTRS = ["PHC", "CLY", "SND", "SOC"];
-const soilUrl = (attr: string, lat: number, lon: number) => q(`https://soils.csiro.au/arcgis/rest/services/TERN/${attr}_ACLEP_AU_TRN_N/MapServer/identify`, identifyParams(lat, lon, "all:1,5"));
 
 const SOURCES: Record<string, Target[]> = {
   ala: [
@@ -79,17 +53,17 @@ const SOURCES: Record<string, Target[]> = {
     { name: "katoomba", url: bushfireUrl(FIRE_POINT.lat, FIRE_POINT.lon) },
   ],
   geocode: [
-    { name: "panorama-ave-bathurst", url: q(ADDRESS, { houseNumber: "346", roadName: "Panorama", roadType: "Ave", suburb: "Bathurst", postCode: "2795", projection: "EPSG:4326" }) },
-    { name: "not-found", url: q(ADDRESS, { houseNumber: "1", roadName: "Notarealname", roadType: "St", suburb: "Bathurst", projection: "EPSG:4326" }) },
+    { name: "panorama-ave-bathurst", url: addressUrl({ houseNumber: "346", roadName: "Panorama", roadType: "Ave", suburb: "Bathurst", postCode: "2795" }) },
+    { name: "not-found", url: addressUrl({ houseNumber: "1", roadName: "Notarealname", roadType: "St", suburb: "Bathurst" }) },
   ],
   vegetation: [
-    { name: "sydney", url: q(VEG, identifyParams(TEST_POINT.lat, TEST_POINT.lon, "all:2")) },
-    { name: "katoomba", url: q(VEG, identifyParams(FIRE_POINT.lat, FIRE_POINT.lon, "all:2")) },
+    { name: "sydney", url: vegetationUrl(TEST_POINT.lat, TEST_POINT.lon) },
+    { name: "katoomba", url: vegetationUrl(FIRE_POINT.lat, FIRE_POINT.lon) },
   ],
   climate: [
     { name: "katoomba", url: climateUrl(FIRE_POINT.lat, FIRE_POINT.lon) },
   ],
-  soil: SOIL_ATTRS.map((a) => ({ name: `sydney-${a.toLowerCase()}`, url: soilUrl(a, TEST_POINT.lat, TEST_POINT.lon) })),
+  soil: SOIL_ATTRIBUTES.map((a) => ({ name: `sydney-${a.code.toLowerCase()}`, url: soilUrl(a.code, TEST_POINT.lat, TEST_POINT.lon) })),
 };
 
 const wanted = process.argv.slice(2);

@@ -5,7 +5,9 @@
 import { z } from "zod";
 import { Answer, Location, SiteProfile } from "../core/models.js";
 import { applyAnswer, capacityFromProfile, findQuestion, nextQuestion, renderQuestionText, validateAnswer, visibleQuestions, type Question, type QuestionBank } from "../core/questionnaire.js";
-import { PENDING, pendingGap } from "../connectors/pending.js";
+import { bushfireProne } from "../connectors/bushfire.js";
+import { lookupAddress } from "../connectors/geocode.js";
+import { pendingGap } from "../connectors/pending.js";
 import { fail, ok } from "./context.js";
 import { defineTool } from "./define.js";
 
@@ -100,35 +102,84 @@ export const saveAnswer = defineTool({
   },
 });
 
+const StreetAddressInput = z.object({
+  houseNumber: z.string().max(20).optional().describe("House number, e.g. '12' or '12A'"),
+  roadName: z.string().min(1).max(80).describe("Road name without the type, e.g. 'Panorama'"),
+  roadType: z.string().max(30).optional().describe("Road type, full or short, e.g. 'Avenue' or 'Ave'"),
+  suburb: z.string().max(80).optional(),
+  postCode: z.string().regex(/^\d{4}$/).optional(),
+});
+
 export const geocode = defineTool({
   name: "geocode",
   title: "Find site coordinates",
-  description: "Turn the user's location into site coordinates (FR-02). Pass lat and lon from the user's current location or typed coordinates. Address and suburb lookup is not available yet; the result says so.",
+  description:
+    "Turn the user's location into site coordinates (FR-02). Pass lat and lon from the user's current location or typed coordinates. For a NSW street address, split it into `address` fields (roadName, and suburb or postCode, are needed); it is looked up in the NSW Address Location Service (D-19). Suburb-only or postcode-only lookup is not available yet; the result says so.",
   input: z.object({
     lat: z.number().optional(),
     lon: z.number().optional(),
-    query: z.string().max(200).optional().describe("Address, suburb or postcode"),
+    address: StreetAddressInput.optional(),
+    query: z.string().max(200).optional().describe("Suburb or postcode, when there is no street address"),
     label: z.string().max(200).optional(),
   }),
-  handler: ({ lat, lon, query, label }) => {
+  handler: async ({ lat, lon, address, query, label }, ctx) => {
     if (lat !== undefined && lon !== undefined) {
       const loc = Location.safeParse({ lat, lon, label: label ?? query, precision: "exact" });
       if (!loc.success) return fail("Those coordinates are not in Australia.", ["latitude must be between -44 and -10", "longitude must be between 112 and 154"]);
       return ok({ location: loc.data, note: "Release 1 has NSW data only (D-02). Outside NSW, results may be incomplete." });
     }
-    if (query) {
-      return ok({ location: null, dataGap: pendingGap("geocode"), nextStep: "Ask the user to share their current location, or to give latitude and longitude. Then call geocode again with lat and lon." });
+    if (address) {
+      if (!address.suburb && !address.postCode) return fail("A street address needs a suburb or a postcode.", ["Example: { roadName: 'Panorama', roadType: 'Ave', houseNumber: '346', suburb: 'Bathurst' }"]);
+      const r = await lookupAddress(address, ctx.http, ctx.today);
+      if (!r.ok) {
+        return ok({
+          location: null,
+          dataGap: r.dataGap,
+          nextStep: r.notFound
+            ? "Tell the user the address was not found in NSW. Check the spelling and the road type with them, or ask them to share their current location."
+            : "Ask the user to share their current location, or to give latitude and longitude. Then call geocode again with lat and lon.",
+        });
+      }
+      const candidates = r.candidates.map((c) => ({ location: Location.parse({ lat: c.lat, lon: c.lon, label: c.suburb, precision: "exact" }), postCode: c.postCode, council: c.council }));
+      return ok({
+        location: candidates.length === 1 ? candidates[0]?.location : null,
+        ...(candidates.length > 1 ? { candidates, nextStep: "Several addresses matched. Ask the user which suburb and postcode is theirs, then use that location." } : { council: candidates[0]?.council }),
+        citation: r.citation,
+        note: "The site label is the suburb, so the street address does not appear in the plan. The council is useful for council planting lists and permits.",
+      });
     }
-    return fail("Give lat and lon, or a query.", ["Example: { lat: -33.87, lon: 151.21 }"]);
+    if (query) {
+      // TODO(D-19): suburb and postcode lookup needs the NSW Administrative Boundaries Theme licence confirmed first.
+      return ok({ location: null, dataGap: pendingGap("geocode"), nextStep: "Ask the user for a street address (call geocode with `address`), or to share their current location. Suburb-only lookup is not available yet." });
+    }
+    return fail("Give lat and lon, an address, or a query.", ["Example: { lat: -33.87, lon: 151.21 }", "Example: { address: { houseNumber: '346', roadName: 'Panorama', roadType: 'Ave', suburb: 'Bathurst' } }"]);
   },
 });
 
 export const bushfireStatus = defineTool({
   name: "bushfire_status",
   title: "Look up bushfire-prone land",
-  description: "Look up whether the site is on bushfire-prone land (FR-03). Use when the user answered Not sure. Until the NSW data source is checked, this returns a data gap and the plan treats the status as unknown.",
+  description:
+    "Look up whether the site is on NSW bushfire-prone land (FR-03, D-18), from the NSW RFS Bush Fire Prone Land map. Use when the user answered Not sure, or to check their answer. Checks land within about 100 m of the site. Returns a suggested answer for the bushfire_prone question and a citation. The council's certified map is authoritative.",
   input: z.object({ location: Location }),
-  handler: () => ok({ status: "unknown", dataGap: pendingGap("bushfire"), requirement: PENDING.bushfire.requirement, nextStep: "Tell the user the status is unknown. Suggest they check with their local council. The plan will add bushfire cautions." }),
+  handler: async ({ location }, ctx) => {
+    const r = await bushfireProne(location.lat, location.lon, ctx.http, ctx.today);
+    if (!r.ok) return ok({ status: "unknown", dataGap: r.dataGap, requirement: "FR-03", nextStep: "Tell the user the status is unknown. Suggest they check their council's bushfire-prone land map. The plan will add bushfire cautions." });
+    const prone = r.status === "prone";
+    return ok({
+      status: r.status,
+      categories: r.categories,
+      ...(r.mapUpdated ? { mapUpdated: r.mapUpdated } : {}),
+      suggestedAnswer: { questionId: "bushfire_prone", answer: { optionIds: [prone ? "yes" : "no"] } },
+      citation: r.citation,
+      notes: [
+        prone ? "Bushfire-prone land is mapped within about 100 m of the site." : "No bushfire-prone land is mapped within about 100 m of the site.",
+        "This is a map check, not a planning certificate. The council's certified bushfire-prone land map, and a Bushfire Attack Level (BAL) assessment for building work, are authoritative.",
+        ...(location.precision === "approximate" ? ["The site location is approximate, so the result may not match the exact property."] : []),
+      ],
+      nextStep: "Tell the user the result and ask them to confirm it. Then call save_answer with the suggested answer, and add the citation to the research report.",
+    });
+  },
 });
 
 export const saveProfile = defineTool({

@@ -124,3 +124,164 @@ describe("ALA connector (recorded fixtures)", () => {
     expect((await matchName("Unrecorded name", deps(fixtureFetch().fn))).ok).toBe(false);
   });
 });
+
+describe("NSW bushfire-prone land (FR-03, D-18)", async () => {
+  const { bushfireProne, bushfireUrl, roundPoint } = await import("../../src/connectors/bushfire.js");
+  const { FIRE_POINT } = await import("../helpers.js");
+
+  it("builds the recorded URL, rounding the site to 3 decimal places", () => {
+    expect(bushfireUrl(FIRE_POINT.lat, FIRE_POINT.lon)).toBe(fixture("katoomba", "bushfire").url);
+    expect(bushfireUrl(-33.73304, 150.31296)).toBe(fixture("katoomba", "bushfire").url);
+    expect(roundPoint(151.2114)).toBe(151.211);
+  });
+
+  it("reports mapped categories at a bushfire-prone point", async () => {
+    const r = await bushfireProne(FIRE_POINT.lat, FIRE_POINT.lon, deps(fixtureFetch().fn), "2026-11-25");
+    expect(r).toMatchObject({ ok: true, status: "prone", mapUpdated: "2025-05-14", citation: { id: "nsw:bushfire-prone-land", publisher: "NSW Rural Fire Service" } });
+    if (r.ok) expect(r.categories).toEqual([{ category: 1, label: "Vegetation Category 1" }, { category: 0, label: "Vegetation Buffer" }]);
+  });
+
+  it("reports not mapped in central Sydney", async () => {
+    expect(await bushfireProne(TEST_POINT.lat, TEST_POINT.lon, deps(fixtureFetch().fn), "2026-11-25")).toMatchObject({ ok: true, status: "not_mapped", categories: [] });
+  });
+
+  it("never caches the result, because the URL holds the site to about 100 m", async () => {
+    const cache = memoryCache();
+    await bushfireProne(FIRE_POINT.lat, FIRE_POINT.lon, deps(fixtureFetch().fn, { cache }), "2026-11-25");
+    expect(cache.store.size).toBe(0);
+  });
+
+  it("turns a failed or malformed response into a data gap (NFR-07)", async () => {
+    expect(await bushfireProne(0, 0, deps(fixtureFetch().fn), "d")).toMatchObject({ ok: false, dataGap: { topic: "bushfire-prone land status" } });
+    const bad = async () => new Response(JSON.stringify({ error: { code: 400, message: "Invalid query" } }));
+    expect(await bushfireProne(-33.7, 150.3, deps(bad), "d")).toMatchObject({ ok: false, dataGap: { reason: expect.stringContaining("Invalid query") } });
+  });
+});
+
+describe("NSW address lookup (FR-02, D-19)", async () => {
+  const { addressUrl, lookupAddress } = await import("../../src/connectors/geocode.js");
+  const bathurst = { houseNumber: "346", roadName: "Panorama", roadType: "Ave", suburb: "Bathurst", postCode: "2795" };
+
+  it("builds the recorded URL", () => {
+    expect(addressUrl(bathurst)).toBe(fixture("panorama-ave-bathurst", "geocode").url);
+    expect(addressUrl({ roadName: " George ", postCode: "2000" })).toBe("https://maps.six.nsw.gov.au/services/public/Address_Location?roadName=George&postCode=2000&projection=EPSG%3A4326");
+  });
+
+  it("returns the address point, suburb and council, never cached", async () => {
+    const cache = memoryCache();
+    const r = await lookupAddress(bathurst, deps(fixtureFetch().fn, { cache }), "2026-11-25");
+    expect(r).toMatchObject({ ok: true, citation: { id: "nsw:address-location" } });
+    if (r.ok) expect(r.candidates).toEqual([{ lat: -33.429684292575985, lon: 149.56705027301055, suburb: "Bathurst", postCode: "2795", council: "Bathurst Regional" }]);
+    expect(cache.store.size).toBe(0);
+  });
+
+  it("says when no address matches, and when the service fails (NFR-07)", async () => {
+    expect(await lookupAddress({ houseNumber: "1", roadName: "Notarealname", roadType: "St", suburb: "Bathurst" }, deps(fixtureFetch().fn), "d")).toMatchObject({ ok: false, notFound: true, dataGap: { reason: expect.stringContaining("No matching records") } });
+    expect(await lookupAddress({ roadName: "X", suburb: "Y" }, deps(fixtureFetch().fn), "d")).toMatchObject({ ok: false, notFound: false });
+    expect(await lookupAddress({ roadName: "X", suburb: "Y" }, deps(async () => new Response("{}")), "d")).toMatchObject({ ok: false, dataGap: { reason: expect.stringContaining("unexpected") } });
+  });
+
+  it("caps the candidates and skips entries without a point", async () => {
+    const many = { addressResult: { numRecs: 8, addresses: [{ suburbName: "NOWHERE" }, ...Array.from({ length: 7 }, (_, i) => ({ suburbName: `PLACE ${i}`, addressPoint: { centreX: 150, centreY: -33 } }))] } };
+    const r = await lookupAddress({ roadName: "Main", suburb: "X" }, deps(async () => new Response(JSON.stringify(many))), "d");
+    expect(r.ok && r.candidates.length).toBe(5);
+    expect(r.ok && r.candidates[0]).toEqual({ lat: -33, lon: 150, suburb: "Place 0" });
+  });
+});
+
+describe("NSW pre-clearing vegetation community (FR-14, D-20)", async () => {
+  const { vegetationCommunity, vegetationUrl } = await import("../../src/connectors/vegetation.js");
+  const { FIRE_POINT } = await import("../helpers.js");
+
+  it("builds the recorded URL", () => {
+    expect(vegetationUrl(TEST_POINT.lat, TEST_POINT.lon)).toBe(fixture("sydney", "vegetation").url);
+    expect(vegetationUrl(-33.87304, 151.21096)).toBe(fixture("sydney", "vegetation").url);
+  });
+
+  it("returns the Plant Community Type at each test point, never cached", async () => {
+    const cache = memoryCache();
+    const syd = await vegetationCommunity(TEST_POINT.lat, TEST_POINT.lon, deps(fixtureFetch().fn, { cache }), "2026-11-25");
+    expect(syd).toMatchObject({ ok: true, community: { pctId: 3262, name: "Sydney Turpentine Ironbark Forest", vegetationClass: "Northern Hinterland Wet Sclerophyll Forests" }, citation: { id: "nsw:svtm-pre-clearing" } });
+    expect(cache.store.size).toBe(0);
+    expect(await vegetationCommunity(FIRE_POINT.lat, FIRE_POINT.lon, deps(fixtureFetch().fn), "d")).toMatchObject({ ok: true, community: { pctId: 3692, name: "Upper Blue Mountains Moist Forest" } });
+  });
+
+  it("returns no community off the map, and a gap on failure (NFR-07)", async () => {
+    expect(await vegetationCommunity(-33.8, 151.3, deps(async () => new Response('{"results":[]}')), "d")).toMatchObject({ ok: true, community: null });
+    expect(await vegetationCommunity(-33.8, 151.3, deps(fixtureFetch().fn), "d")).toMatchObject({ ok: false, dataGap: { topic: "pre-clearing vegetation community" } });
+    expect(await vegetationCommunity(-33.8, 151.3, deps(async () => new Response('{"error":{"message":"bad"}}')), "d")).toMatchObject({ ok: false, dataGap: { reason: expect.stringContaining("bad") } });
+  });
+});
+
+describe("Soil and Landscape Grid of Australia (FR-13, D-22)", async () => {
+  const { soilProperties, soilUrl } = await import("../../src/connectors/soil.js");
+
+  it("builds the recorded URLs", () => {
+    for (const code of ["PHC", "CLY", "SND", "SOC"]) expect(soilUrl(code, TEST_POINT.lat, TEST_POINT.lon)).toBe(fixture(`sydney-${code.toLowerCase()}`, "soil").url);
+  });
+
+  it("returns pH, clay, sand and organic carbon at two depths, never cached", async () => {
+    const cache = memoryCache();
+    const r = await soilProperties(TEST_POINT.lat, TEST_POINT.lon, deps(fixtureFetch().fn, { cache }), "2026-11-25");
+    expect(r).toMatchObject({ ok: true, dataGaps: [], citation: { id: "tern:slga", licence: "CC BY 4.0" } });
+    if (r.ok) {
+      expect(r.properties.phCaCl2).toEqual({ "0-5cm": 4.56, "5-15cm": 4.55 });
+      expect(r.properties.clayPercent?.["0-5cm"]).toBe(12);
+      expect(r.properties.sandPercent?.["0-5cm"]).toBe(62);
+      expect(r.properties.organicCarbonPercent?.["0-5cm"]).toBe(3.43);
+    }
+    expect(cache.store.size).toBe(0);
+  });
+
+  it("keeps the attributes that answered and lists gaps for the rest (NFR-07)", async () => {
+    const fx = fixtureFetch();
+    const partial = async (req: Request) => (req.url.includes("/SOC_") ? new Response("down", { status: 503 }) : req.url.includes("/SND_") ? new Response('{"results":[{"layerId":1,"attributes":{"Classify.Pixel Value":"NoData"}}]}') : fx.fn(req));
+    const r = await soilProperties(TEST_POINT.lat, TEST_POINT.lon, deps(partial), "d");
+    expect(r.ok && Object.keys(r.properties)).toEqual(["phCaCl2", "clayPercent", "sandPercent"]);
+    expect(r.ok && r.properties.sandPercent).toEqual({ "0-5cm": null, "5-15cm": null });
+    expect(r.ok && r.dataGaps.map((g) => g.topic)).toEqual(["soil organic carbon"]);
+    expect(await soilProperties(-33.8, 151.3, deps(fixtureFetch().fn), "d")).toMatchObject({ ok: false, dataGap: { topic: "soil properties" } });
+    expect(await soilProperties(-33.8, 151.3, deps(async () => new Response('{"error":{"message":"bad"}}')), "d")).toMatchObject({ ok: false, dataGap: { reason: expect.stringContaining("bad") } });
+  });
+});
+
+describe("Open-Meteo climate normals (FR-12, D-21)", async () => {
+  const { climateNormals, climateUrl, summariseDaily, CLIMATE_TTL_SECONDS } = await import("../../src/connectors/climate.js");
+  const { FIRE_POINT } = await import("../helpers.js");
+
+  it("builds the recorded URL at 1 decimal place", () => {
+    expect(climateUrl(FIRE_POINT.lat, FIRE_POINT.lon)).toBe(fixture("katoomba", "climate").url);
+    expect(climateUrl(-33.68, 150.26)).toBe(fixture("katoomba", "climate").url);
+  });
+
+  it("summarises 30 years of daily data into monthly normals, and caches for 30 days", async () => {
+    const cache = memoryCache();
+    const r = await climateNormals(FIRE_POINT.lat, FIRE_POINT.lon, deps(fixtureFetch().fn, { cache }), "2026-11-25");
+    expect(r).toMatchObject({ ok: true, normals: { period: "1991–2020", gridElevationM: 999 }, citation: { id: "open-meteo:era5-normals", url: "https://open-meteo.com/", licence: "CC BY 4.0" } });
+    if (!r.ok) return;
+    const { months, annualRainfallMm, coldNightsPerYear } = r.normals;
+    expect(months).toHaveLength(12);
+    const jan = months[0];
+    const jul = months[6];
+    expect(jan && jul && (jan.meanMaxC ?? 0) > (jul.meanMaxC ?? 0)).toBe(true);
+    expect(annualRainfallMm).toBeGreaterThan(0);
+    expect(coldNightsPerYear.atOrBelow0C).toBe(29.9);
+    expect(coldNightsPerYear.atOrBelow2C).toBeGreaterThanOrEqual(coldNightsPerYear.atOrBelow0C);
+    expect(cache.store.size).toBe(1);
+    expect(CLIMATE_TTL_SECONDS).toBe(2592000);
+  });
+
+  it("computes means, rainfall per year and cold nights, skipping nulls", () => {
+    const s = summariseDaily(["2001-01-01", "2001-01-02", "2002-01-01", "2001-07-01"], [30, null, 28, 12], [15, 16, null, -1], [10, 5, 20, null], 2);
+    expect(s.months[0]).toEqual({ month: 1, meanMaxC: 29, meanMinC: 15.5, rainfallMm: 17.5 });
+    expect(s.months[6]).toEqual({ month: 7, meanMaxC: 12, meanMinC: -1, rainfallMm: null });
+    expect(s.months[1]).toEqual({ month: 2, meanMaxC: null, meanMinC: null, rainfallMm: null });
+    expect(s.annualRainfallMm).toBeNull();
+    expect(s.coldNightsPerYear).toEqual({ atOrBelow0C: 0.5, atOrBelow2C: 0.5 });
+  });
+
+  it("turns errors into a data gap (NFR-07)", async () => {
+    expect(await climateNormals(-33.8, 151.3, deps(fixtureFetch().fn), "d")).toMatchObject({ ok: false, dataGap: { topic: "climate normals" } });
+    expect(await climateNormals(-33.8, 151.3, deps(async () => new Response('{"error":true,"reason":"Too many requests"}')), "d")).toMatchObject({ ok: false, dataGap: { reason: expect.stringContaining("Too many requests") } });
+  });
+});

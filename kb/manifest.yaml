@@ -266,3 +266,309 @@ items:
     region: NSW
     dateChecked: "2026-11-24"
     tags: [chemical-free, rewilding, weed control, hand weeding, pests, local natives, no pesticides]
+
+  - id: atg-plants-of-the-new-england
+    title: Armidale Tree Group — Plants of the New England
+    tier: link_catalogue
+    sourceUrl: https://armidaletreegroup.org.au/plants-database/
+    publisher: Armidale Tree Group
+    licence: "Link and summary only. Licence not stated on the site."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [Armidale, Uralla, New England, Northern Tablelands, local natives, plant identification, seed collection, propagation, direct seeding, farm planting]
+    summary: >-
+      An online plant database from the Armidale Tree Group, a not-for-profit
+      native nursery in Armidale, for people who manage land on the New
+      England Tablelands. The page introduces the region's vegetation (eucalypt
+      forests and woodlands, natural and derived grasslands, rainforests,
+      heaths and wetlands) and, citing PlantNET, counts about 2,725 plant
+      species in the region, most of them natives, with 188 threatened species
+      and several hundred exotics. The database started with about 220 common
+      species and is still growing. For each species it offers a printable
+      field guide (description, where it grows, preferred soils and site, and
+      uses) and a seed guide (when and how to collect seed, how to store it,
+      germination temperature and time, propagation method, and whether it
+      suits direct seeding or farm planting). The fields include Aboriginal
+      names where known. Use it to identify local natives, to choose species
+      that suit a site's soil and position, and to plan seed collection for
+      local-provenance planting around Armidale and Uralla.
+
+  - id: atg-wholesale-species-lists
+    title: Armidale Tree Group — wholesale species lists and order forms (2026)
+    tier: link_catalogue
+    sourceUrl: https://armidaletreegroup.org.au/products/wholesale/
+    publisher: Armidale Tree Group
+    licence: "Link and summary only. Prices copied into data/cost-reference.csv as dated facts with a link."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [Armidale, Uralla, New England, nursery, hiko seedlings, tubestock, prices, local natives, soil type, revegetation, screening, habitat packs]
+    summary: >-
+      The Armidale Tree Group's wholesale page links its 2026 species lists
+      and order forms for revegetation, shelterbelts and screening, grouped
+      as clay and basalt soils, general species, creek and riparian, and koala
+      habitat, plus ready-made packs of forty hiko seedlings (Neighbour-Hider
+      screening shrubs, a bee pack, and Saumarez and Invergowrie packs). Each
+      list gives the species, common name, mature height, the soils it suits
+      (trap, basalt or granite) and its slope position (upper, mid or lower).
+      Two marks matter for rewilding: one flags species grown only in small
+      numbers, and another flags species that are not local to the New
+      England Tablelands, so planners can keep to local natives. The 2026
+      hiko seedling prices fall with order size, from $3.00 each for fewer
+      than 40 plants to $1.80 each for 1,000 or more. A refundable deposit
+      applies to each tray. Orders go through the nursery coordinator.
+
+  - id: weedwise-northern-tablelands
+    title: NSW WeedWise — Priority weeds for the Northern Tablelands
+    tier: link_catalogue
+    sourceUrl: https://weeds.dpi.nsw.gov.au/Region?Id=8
+    publisher: NSW Department of Primary Industries and Regional Development
+    licence: "Species names and duties copied into data/declared-weeds.csv as facts with links; page footer links the NSW Government CC BY 4.0 copyright notice. Link and summary only here."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [weeds, priority weeds, Armidale, Uralla, Walcha, Glen Innes, Inverell, Tenterfield, Northern Tablelands, biosecurity duty, blackberry, serrated tussock, sweet briar]
+    summary: >-
+      The NSW WeedWise list of priority weeds for the Northern Tablelands
+      region, which covers the Armidale Regional, Glen Innes Severn,
+      Inverell, Tenterfield, Uralla and Walcha council areas. It starts with
+      the general biosecurity duty that applies to every pest plant: anyone
+      who deals with a plant and knows, or ought to know, its risk must
+      prevent or minimise that risk as far as is reasonably practicable. It
+      then lists about a hundred weeds with their legal measures: prohibited
+      matter that must be reported at once, plants that must not be sold or
+      traded, biosecurity zones, control orders, and regional recommended
+      measures. The list includes blackberry, serrated tussock, Chilean
+      needle grass, gorse, broom, sweet briar, honey locust, willows and many
+      prickly pears and cacti. Each entry links
+      to a profile with identification and control advice. Greener blocks
+      every listed species from planting and uses only the non-chemical
+      control advice.
+
+  - id: uralla-biosecurity-pests-weeds
+    title: Uralla Shire Council — Pest, weeds and biosecurity
+    tier: link_catalogue
+    sourceUrl: https://www.uralla.nsw.gov.au/Council-Services/Environment/Biosecurity-Pests-and-Weeds
+    publisher: Uralla Shire Council
+    licence: "Link and summary only. Licence not stated (footer: © 2026 Uralla Shire Council)."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [Uralla, weeds, biosecurity duty, landholders, priority weeds, hand removal, grazing, slashing, council, Local Land Services]
+    summary: >-
+      Uralla Shire Council's page on pests, weeds and biosecurity for
+      residents and landholders. It explains that the NSW Biosecurity Act
+      2015 puts a general biosecurity duty on everyone, and that landholders
+      must manage biosecurity risks on their land, including priority weeds.
+      The council manages weeds on roadsides, public reserves and parks. The
+      page points landholders to Northern Tablelands Local Land Services for
+      advice on their duties, and to NSW WeedWise for identification and the
+      regional priority weed list. Its non-chemical control options are
+      digging or grubbing out small infestations, slashing, cultivation,
+      grazing management and biological control, with the aim of stopping
+      weeds from setting seed, controlling regrowth and keeping pasture or
+      ground cover healthy so weeds cannot take hold. The page also links
+      the council's biosecurity strategy and the national farm biosecurity
+      planner.
+
+  - id: armidale-know-your-weeds
+    title: Armidale Regional Council — Know your weeds and how they are managed
+    tier: link_catalogue
+    sourceUrl: https://www.armidale.nsw.gov.au/Services/Biosecurity-and-weeds-management/Know-your-weeds-and-how-they-are-managed
+    publisher: Armidale Regional Council
+    licence: "Link and summary only. Licence not confirmed (footer: © 2026 Armidale Regional Council, with a Disclaimer & Copyright link)."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [Armidale, weeds, biosecurity, landholders, reporting weeds, hand pulling, digging, ground cover, native planting, council]
+    summary: >-
+      Armidale Regional Council's guide to weeds and how they are managed in
+      the Armidale region. The landing page links sections on priority weeds
+      in the region, the NSW Biosecurity Act 2015, and how weeds are
+      controlled. The control section describes manual removal, biological
+      control, cultural practices and herbicides; Greener uses only the
+      non-chemical parts. For small or sensitive infestations it recommends
+      hand pulling and digging out plants. To stop weeds coming back it
+      advises disturbing the soil as little as possible, planting competitive
+      native species and keeping the ground covered. It asks landholders to
+      learn to identify the weeds on their land, manage them, choose
+      non-invasive plants for gardens, and report infestations to the council
+      by phone. Use it with the NSW WeedWise Northern Tablelands list and the
+      Greener chemical-free rewilding guide.
+
+  - id: anpsa-plant-guides
+    title: Australian Native Plants Society (Australia) — Guide to Australian Native Plants
+    tier: link_catalogue
+    sourceUrl: https://anpsa.org.au/plant-guides/
+    publisher: Australian Native Plants Society (Australia)
+    licence: "Link and summary only. Licence not stated (footer: Copyright 2026 ANPSA)."
+    region: Australia
+    dateChecked: "2026-11-25"
+    tags: [native plants, genus guides, Acacia, Banksia, Grevillea, Callistemon, tubestock, planting, pruning, propagation, rabbits, drought, nurseries, seed suppliers]
+    summary: >-
+      The Australian Native Plants Society's hub for growing Australian
+      plants. It links detailed guides to common genera and families, each
+      with natural distribution, cultivation and propagation: Acacia,
+      Banksia (including the former Dryandra), the Boronia family, Callistemon,
+      Epacris and relatives, the waratah and relatives, and Australian daisies,
+      with more under "View all". Its general advice: plant small plants or
+      tubestock, because they suffer less transplant shock and are less
+      likely to be root bound. Protect young plants from rabbits with plastic
+      guards, which also cut drying. A tin with holes in its base set beside
+      each plant sends hand watering to the roots. Species with a lignotuber,
+      such as many banksias, eucalypts and melaleucas, can be cut to the
+      ground; otherwise prune lightly after flowering, by no more than about
+      a third. Not all natives are drought hardy: mainly those from dry
+      areas, and only once they have had about a year to establish. The hub
+      also links lists of native nurseries and seed suppliers, plants for
+      fire-prone areas, plants at risk and environmental weeds.
+
+  - id: native-plant-project-e-nursery
+    title: Native Plant Project — online native plant nursery
+    tier: link_catalogue
+    sourceUrl: https://nativeplantproject.com.au/e-nursery/
+    publisher: Native Plant Project
+    licence: "Link and summary only. Licence not stated (footer: Copyright © Native Plant Project. All rights reserved)."
+    region: Australia
+    dateChecked: "2026-11-25"
+    tags: [nursery, mail order, buy plants, tubestock, plant boxes, delivery, Victoria, NSW, Queensland, South Australia, kangaroo paw, Banksia, Correa, Grevillea]
+    summary: >-
+      An online nursery, based in Victoria, that sells only Australian native
+      plants as mature tubestock. Plants come in boxes of 4, 8, 16, 24 or 32,
+      chosen from more than 100 varieties, either one variety or a mix. It
+      delivers to Victoria, New South Wales, South Australia and Queensland
+      by Australia Post, but not to Western Australia, the Northern Territory
+      or Tasmania, because of quarantine rules. There is no pickup from the
+      nursery. Boxes are packed and sent early in the week. The range includes
+      wattles, kangaroo paws (many of them cultivars), banksias, boronias,
+      bottlebrushes, correas, everlasting daisies, pigface, grevilleas,
+      lomandras and westringias. Plants that are out of stock are marked as
+      growing. Many of these are not local to any one site, so check each
+      species against the site's local list first and prefer local species
+      (D-17). Box prices change and sales are frequent; check the site before
+      quoting a cost.
+
+  - id: australian-plants-online-natives
+    title: Australian Plants Online — Australian native tubestock
+    tier: link_catalogue
+    sourceUrl: https://www.australianplantsonline.com.au/tubestockplants/natives.html
+    publisher: Australian Plants Online
+    licence: "Link and summary only. Licence not stated (footer: © 2026 Australian Plants Online)."
+    region: Australia
+    dateChecked: "2026-11-25"
+    tags: [nursery, mail order, buy plants, tubestock, delivery, state biosecurity, Acacia, Banksia, Grevillea, Lomandra, Dianella, Westringia, Eremophila, Leptospermum]
+    summary: >-
+      The Australian natives section of an online tubestock nursery that is
+      not open to the public, except for pre-ordered pickups. The natives
+      section lists about 450 plants, grouped by genus: wattles, woolly bush,
+      kangaroo paws, banksias, boronias, bottlebrushes, waxflowers, correas,
+      flax lilies, emu bushes, grevilleas, hibbertias, kunzeas, tea trees,
+      mat rushes, honey myrtles, boobiallas, mint bushes, saltbushes, fan
+      flowers, lilly pillies and westringias, with prices per plant. It
+      delivers nationwide for a fee, with free shipping on larger orders.
+      Some plants cannot be sent to some states because of state biosecurity
+      laws; each product page says where it can go, and buyers outside
+      Queensland and New South Wales can filter by state. Caution: the same
+      store also sells many plants that are not Australian, for example
+      gazania, agapanthus and fountain grass, which Greener never recommends.
+      Order only from the natives section, prefer species local to the site,
+      and check every species with Greener before buying (D-17).
+
+  - id: casey-cardinia-indigenous-plant-guide
+    title: Indigenous Plant Guide — Cardinia Shire and City of Casey
+    tier: link_catalogue
+    sourceUrl: https://www.rbg.vic.gov.au/media/r3rbnaae/indigenous-plant-guide-casey-and-cardinia.pdf
+    publisher: Cardinia Shire Council and City of Casey (PDF hosted by Royal Botanic Gardens Victoria)
+    licence: "Link and summary only. No licence stated in the PDF; photographs are © their named photographers."
+    region: VIC (Casey and Cardinia, south-east Melbourne)
+    dateChecked: "2026-11-25"
+    tags: [indigenous plants, local provenance, planting guide, vegetation zones, Victoria, Casey, Cardinia, Western Port, trees, shrubs, grasses, groundcovers, watering, mulch, indigenous nurseries]
+    summary: >-
+      A council guide to plants indigenous to Cardinia Shire and the City of
+      Casey, from the southern Dandenong Ranges to Western Port in Victoria.
+      Only about 7 per cent of the original vegetation remains in Casey and
+      about 11 per cent in Cardinia. The guide covers 141 local species, 97
+      with photos, in colour-coded sections for trees, shrubs, wildflowers,
+      grasses, sedges and rushes, and groundcovers and climbers. Maps divide
+      both council areas into vegetation zones based on soil and landform,
+      so readers find their zone and pick plants that suit it. Species
+      include silver wattle, black wattle, blackwood, coast banksia, river
+      red gum, messmate, swamp gum, golden wattle, silver banksia, sweet
+      bursaria and common correa. It explains why local provenance matters:
+      plants grown from local seed establish and survive better, and support
+      local animals. It advises planting all layers (canopy, shrubs and
+      ground layer), watering rarely but deeply between dusk and early
+      morning, using drippers under mulch, and avoiding rich mulches for
+      indigenous plants. It ends with a list of local indigenous nurseries.
+      Useful as a model for other regions, but its species lists apply only
+      to this part of Victoria.
+
+  - id: botanic-gardens-horticulturists-guide
+    title: Botanic Gardens of Sydney — A horticulturist's guide to Australian native plants
+    tier: link_catalogue
+    sourceUrl: https://www.botanicgardens.org.au/discover-and-learn/watch-listen-read/horticulturists-guide-australian-native-plants
+    publisher: Botanic Gardens of Sydney (Australian Botanic Garden Mount Annan horticulture team)
+    licence: "Link and summary only. Licence not confirmed (footer: Copyright © 2026 Botanic Gardens of Sydney, with a Copyright & Disclaimer link)."
+    region: NSW
+    dateChecked: "2026-11-25"
+    tags: [native plants, home gardens, balconies, containers, waratah, Gymea lily, pigface, dwarf acacias, midgen berry, water saving, Sydney]
+    summary: >-
+      A short 2020 article from the horticulture team at the Australian
+      Botanic Garden Mount Annan, encouraging home gardeners to grow natives
+      in lawns, hedges, garden beds and small spaces. It picks out about nine
+      plants. The waratah (Telopea speciosissima), the NSW floral emblem, is
+      pollinated by birds and feeds honeyeaters. The Gymea lily (Doryanthes
+      excelsa) saves water in a large pot, but takes about eight years to
+      flower from seed, so buy an established plant. Native pigface
+      (Carpobrotus glaucescens) is a succulent ground cover that binds sand
+      and resists wind. Dwarf wattles give winter colour with little care,
+      and do best on a raised bed or mound on clay. Midgen berry (Austromyrtus
+      dulcis) has edible fruit and suits pots and balconies. The article also
+      names desert grevillea, rice flower and cactus pea, which come from
+      Western Australia; these are natives but not local to NSW, so under
+      Greener's local-first rule they come after local species (D-17).
+
+  - id: csiro-useful-native-plants-eastern-temperate
+    title: Guide to Useful Native Plants from Eastern Temperate Australia (Caton and Hardwick, CSIRO Publishing 2026)
+    tier: link_catalogue
+    sourceUrl: https://www.publishing.csiro.au/book/8189
+    publisher: CSIRO Publishing
+    licence: "Link and summary only. Commercial book (paperback ISBN 9781486319336); summary from the publisher's listing."
+    region: Eastern temperate Australia (Brisbane to the Victoria–South Australia border)
+    dateChecked: "2026-11-25"
+    tags: [book, plant identification, useful plants, food, fibre, medicine, habitats, rainforest, sclerophyll forest, grasslands, wetlands, coastal plants, eastern Australia]
+    summary: >-
+      A book by Judith Caton and Richard Hardwick, published by CSIRO
+      Publishing in November 2026: 424 pages, with about 600 colour photos
+      and drawings, and distribution maps. It describes more than 150 native
+      plants from Brisbane to the Victoria–South Australia border that have
+      been used for food, fibre and medicine, with enough detail to identify
+      each one. The chapters group plants by habitat: beaches, estuaries and
+      saltwater lagoons; grasslands and woodlands; freshwater lakes, rivers
+      and swamps; temperate rainforests; tall wet forests; dry forests; and
+      parasitic plants. It also covers hazards in the bush and how plants
+      are structured, and carries a cultural sensitivity warning. It is
+      written for people who live in or visit the region, including
+      bushwalkers, educators and native plant enthusiasts. It is sold as a
+      print-on-demand paperback and as an eBook. Greener cites it for
+      identification and habitat, not as advice to eat or use wild plants.
+
+  - id: cva-native-plants-nature-block
+    title: Conservation Volunteers Australia — Native Australian plants for your Nature Block
+    tier: link_catalogue
+    sourceUrl: https://cva.org.au/native-plants-for-your-nature-block/
+    publisher: Conservation Volunteers Australia
+    licence: "Link and summary only. Licence not stated on the page."
+    region: Australia
+    dateChecked: "2026-11-25"
+    tags: [native plants, backyards, balconies, small gardens, pots, wildlife, bees, birds, butterflies, sun, indigenous nursery, Nature Blocks]
+    summary: >-
+      A 2023 guide from Conservation Volunteers Australia for turning a
+      backyard, balcony, community garden or workplace into a "Nature Block":
+      a small patch of habitat. It sets out three steps. First, watch how
+      much sun the spot gets and how that changes through the day. Second,
+      decide which animals and insects you want to attract, such as bees,
+      birds or butterflies. Third, decide whether to plant in the ground or
+      in pots. It then suggests plants under trees and shrubs, wildflowers
+      and groundcovers, and grasses, with symbols for the conditions each
+      suits; the plant lists themselves are images, so check the page for
+      the species. It warns that some eucalypts and wattles can be weeds
+      outside their natural range, and advises asking a local indigenous
+      nursery what grows naturally in your area. The page links CVA's
+      Community Hub app for iOS and Android.

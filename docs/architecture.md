@@ -91,12 +91,15 @@ These are warnings, not refusals: `save_plan` returns them with the `strategyId`
 
 | Item | Status |
 | --- | --- |
-| Geocoding of addresses (FR-02) | Data gap until the source is checked (Section 8). Coordinates and the current location work. |
-| Bushfire-prone lookup (FR-03) | Data gap; the user's answer is used. |
-| Climate (FR-12), soil (FR-13), vegetation (FR-14) | Data gaps until Q-06 and the Section 8 checks close. |
+| Geocoding of addresses (FR-02) | NSW street addresses done (D-19). Suburb-only lookup waits for the Administrative Boundaries licence. Coordinates and the current location work. |
+| Bushfire-prone lookup (FR-03) | Done (D-18): the NSW RFS map within about 100 m of the site. A failed lookup is a data gap, and the user's answer is used. |
+| Vegetation (FR-14) | Done (D-20): the pre-clearing Plant Community Type from the NSW SVTM. Characteristic species per community (BioNet) are still to check. |
+| Soil (FR-13) | Done (D-22): modelled pH, clay, sand and organic carbon at 0–5 and 5–15 cm from the SLGA. Still to confirm: which SLGA release the services serve. |
+| Climate (FR-12) | Done (D-21): 1991–2020 normals from Open-Meteo (ERA5), cached 30 days. Parsing and summarising the 270 KB response took 1.7 ms median and 3.7 ms worst case in Node; Q-17 must confirm this on the Worker. |
+| Native nursery directory (FR-20) | 4 entries in Armidale and Uralla (`data/native-nurseries.csv`). Other regions still to add. |
 | Declared weed list | 126 Greater Sydney priority weeds from NSW WeedWise, applied across NSW. Other regions are still to add. |
 | Cost reference | 2 rows (YAN nurseries, southern tablelands). Sydney prices are listed in `data/README.md`, still to be checked by hand (Q-12). |
 | Icon set | Text placeholders (Q-14). |
 | Apartment question count | 17, not the "about 14" in Section 7.3 (TODO in `data/question-bank.yaml`). |
-| Server URL, contact URL, FUNDING.yml | Placeholders. `npm run release` refuses to run while they are set. |
+| Contact URL | Placeholder until the repository is public. `npm run release` refuses to run while it is set. The Worker URLs are set; staging is deployed and passed `npm run smoke`, and production is deployed by the first release. |
 | Live CPU-time check (Q-17) | Check Workers logs after the first staging deploy. |
