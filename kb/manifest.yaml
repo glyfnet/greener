@@ -572,3 +572,153 @@ items:
       outside their natural range, and advises asking a local indigenous
       nursery what grows naturally in your area. The page links CVA's
       Community Hub app for iOS and Android.
+
+  - id: abc-native-plants-thrive
+    title: ABC News — Expert tips on how to help Australia's native plants thrive in your garden
+    tier: link_catalogue
+    sourceUrl: https://www.abc.net.au/news/science/2026-08-20/native-plants-australia-how-to-guide/107049034
+    publisher: ABC News (Jacinta Bowler and Kylie Andrews; expert Digby Growns, Kings Park and Botanic Garden)
+    licence: "Link and summary only. © 2026 ABC, ABC Terms of Use."
+    region: Australia
+    dateChecked: "2026-11-25"
+    tags: [native plants, watering, pruning, propagation, smoke water, cuttings, phosphorus, Proteaceae, kangaroo paw, Lomandra, Callistemon, specialist nurseries, Western Australia]
+    summary: >-
+      A National Science Week article from August 2026, built on advice from
+      a plant breeder at Kings Park and Botanic Garden in Perth. Whether a
+      native will grow for you depends on the species: choose plants from a
+      rainfall and climate like your own, and match the soil to where the
+      plant comes from (Western Australian plants generally need very
+      free-draining, sandy soil). Natives still need water: water often until
+      they are established, then taper off, and use deep soaks two or three
+      times a week in hot weather. Plant in mild weather. Prune straight
+      after flowering, taking up to a third, but never cut back to bare wood
+      with no leaves. Banksias, grevilleas and hakeas are sensitive to
+      phosphorus. Flannel flowers and kangaroo paws need smoke treatment to
+      germinate from seed; some plants, such as melaleucas, grow from
+      cuttings. Lomandra and bottlebrushes need little care. Buy from
+      specialist native nurseries. Greener does not use the article's
+      fertiliser advice (D-17).
+
+  - id: green-adelaide-choosing-plants
+    title: Green Adelaide — Choosing your plants
+    tier: link_catalogue
+    sourceUrl: https://www.greenadelaide.sa.gov.au/discover/gardening/gardening-tools-and-events/choosing-your-plants
+    publisher: Green Adelaide
+    licence: "Link and summary only. Licence not stated (footer: © Green Adelaide 2026)."
+    region: SA (Adelaide)
+    dateChecked: "2026-11-25"
+    tags: [local natives, Adelaide, South Australia, declared weeds, planting guides, coastal gardens, plant diversity, native nurseries, autumn planting]
+    summary: >-
+      Green Adelaide's starting page for choosing garden plants in Adelaide.
+      It recommends local natives, meaning plants native to the Adelaide
+      area, because they are adapted to hot summers and wet winters and need
+      little care. Plants from elsewhere in Australia or overseas must not be
+      declared weeds in South Australia: check the state's declared plant list
+      before buying, and check the "what not to plant" pages of the planting
+      guides for emerging weeds. It links three free guides: one for Adelaide
+      gardens (city, northern plains, foothills and southern suburbs), one for
+      gardens within 5 km of the coast, and one for new homes. It also links
+      a list of native plant nurseries, the Botanic Gardens of South
+      Australia's Plant Selector+ tool, and short articles on plants for
+      suburban and coastal gardens. Its top tip is to plant many different
+      species, and it suggests autumn as a good time to plant.
+
+  - id: green-adelaide-local-native-plants
+    title: Green Adelaide — Local native plants (map and species lists)
+    tier: link_catalogue
+    sourceUrl: https://www.greenadelaide.sa.gov.au/discover/local-native-plants
+    publisher: Green Adelaide
+    licence: "Link and summary only. Licence not stated (footer: © Green Adelaide 2026)."
+    region: SA (Adelaide and the Southern Mount Lofty Ranges)
+    dateChecked: "2026-11-25"
+    tags: [local natives, pre-European vegetation, species lists, map, Adelaide, Mount Lofty Ranges, revegetation, Eucalyptus leucoxylon, Banksia marginata, Themeda triandra]
+    summary: >-
+      An interactive map for finding the plants native to any spot in the
+      Green Adelaide region. Click a location to see its likely pre-European
+      vegetation type, taken from the state's mapping of vegetation in 1836,
+      with a short list of species that are generally sold in nurseries and
+      a complete list of every locally native species recorded there. There
+      are about 80 lists for the central and northern suburbs, the southern
+      suburbs and the Southern Mount Lofty Ranges. Example species include
+      South Australian blue gum (Eucalyptus leucoxylon), river red gum,
+      silver banksia, drooping sheoak, kangaroo grass (Themeda triandra),
+      coast daisy-bush, coastal wattle and scented mat-rush. The map is meant
+      for home gardeners, schools, landscape architects and developers. For
+      remnant vegetation or conservation work, Green Adelaide asks people to
+      contact it for site-specific advice. This is the Adelaide equivalent of
+      Greener's own pre-clearing vegetation lookup for NSW.
+
+  - id: phillip-island-bushbank-planting-guide
+    title: Phillip Island Nature Parks — Barb Martin Bushbank planting guide
+    tier: link_catalogue
+    sourceUrl: https://www.penguins.org.au/assets/About/Barb-Martin-Bushbank/Bushbank-Planting-Guide-A4.pdf
+    publisher: Phillip Island Nature Parks (Barb Martin Bushbank nursery)
+    licence: "Link and summary only. No licence stated in the PDF."
+    region: VIC (Phillip Island)
+    dateChecked: "2026-11-25"
+    tags: [planting tubestock, planting hole, roots, mulch, watering, tree guards, staking, pruning, planting time, indigenous nursery, Phillip Island, pot reuse]
+    summary: >-
+      A one-page planting guide from the indigenous plant nursery run by
+      Phillip Island Nature Parks, which grows its stock from cuttings made
+      by volunteers. Best planting time is autumn to winter, so plants
+      establish before the heat; spring works with extra summer watering.
+      Soak tubes when you get them home and plant soon. Tap plants out of the
+      pot, never pull them. Dig about 100 mm deeper and wider than the pot,
+      fill a dry hole with water first, set the top of the roots just below
+      the soil, and mound leftover soil into a watering basin. Do not tease
+      the roots. Mulch 50–100 mm deep, but keep it off the stem to avoid
+      collar rot. Water deeply rather than little and often, and water before
+      a heatwave. Tree guards help against frost, wind and grazing; if
+      staking is needed, use three stakes and remove them early. Tip prune
+      shrubs in mild weather. The nursery, at 1810 Phillip Island Road, takes
+      back empty pots for reuse.
+
+  - id: ozbreed-native-gardens-guide
+    title: "Ozbreed — Native gardens: a guide to selecting, planting and maintaining native plants"
+    tier: link_catalogue
+    sourceUrl: https://ozbreed.com.au/native-gardens-guide-to-selecting-planting-and-maintaining
+    publisher: Ozbreed Pty Ltd (plant breeder)
+    licence: "Link and summary only. All rights reserved (site disclaimer: no part may be reproduced without written permission)."
+    region: Australia
+    dateChecked: "2026-11-25"
+    tags: [native gardens, maintenance myths, planting method, planting time, mulch, pruning, native grasses, frost, Proteaceae, cultivars, commercial]
+    summary: >-
+      A 2024 guide from a commercial breeder of native plant cultivars. Its
+      main point is that native gardens are not maintenance-free: like any
+      garden they need regular care, and some natives need more than some
+      exotics. Plant in the cooler months, from autumn to early spring, but
+      avoid planting young banksias in winter in cold areas because frost can
+      damage them. Clear weeds and grass, dig a hole as deep as the root ball
+      and at least twice as wide, plant at the same depth as in the pot, add
+      compost, backfill, firm gently and water well. Mulch 5–10 cm deep and
+      keep it away from stems. Lilly pillies and bottlebrushes may need
+      regular pruning; native grasses such as Poa can be cut back to the base
+      after flowering or every few years. Melaleucas suit soil that stays
+      wet. Most plants it recommends are the company's own trademarked or
+      PBR cultivars, so prefer local, wild-type species where they will do
+      (D-17). Greener does not use its fertiliser or spray advice.
+
+  - id: seasol-growing-australian-natives
+    title: Seasol — How to grow Australian natives
+    tier: link_catalogue
+    sourceUrl: https://www.seasol.com.au/australian-natives/australian-natives/
+    publisher: Seasol International (a division of DuluxGroup (Australia) Pty Ltd)
+    licence: "Link and summary only. © 2026 Seasol International. All rights reserved."
+    region: Australia
+    dateChecked: "2026-11-25"
+    tags: [native plants, sun, watering, mulch, pruning, pests, myrtle rust, callistemon tip borer, sawfly, psyllids, scale, root rot, commercial]
+    summary: >-
+      A garden-product brand's guide to growing natives. Greener uses only
+      its general advice, not its product, fertiliser or insect-spray
+      recommendations (D-17), and not its suggestion to mix natives with
+      exotic plants. Most natives want full sun, so plant them facing north,
+      north-east or west, and ask a local nursery about each plant's needs.
+      Dianella longifolia, Lomandra longifolia and Acacia cognata are named
+      for dry shade. Only established natives are drought tolerant: water new
+      plants often in the first month, then cut back over about three months,
+      and soak deeply in long hot spells. Use coarse mulch such as wood chip
+      or bark. Trim up to a third after flowering and remove dead branches.
+      It describes pests to watch for: callistemon tip borer (stuck-together
+      new leaves; prune them off), sawfly larvae, scale with sooty mould,
+      myrtle rust on eucalypts, bottlebrushes and melaleucas, psyllid galls
+      on lilly pillies, and root rot in waterlogged clay.
