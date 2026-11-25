@@ -18,6 +18,16 @@ function cell(s: string): string {
   return s.replace(/\|/g, "\\|").replace(/\n/g, " ");
 }
 
+/**
+ * A Markdown link. The URL goes in angle brackets, so characters such as
+ * `*`, `_` and `)` in a query string can't break the link or turn into
+ * emphasis. Brackets in the text are escaped.
+ */
+export function mdLink(text: string, url?: string): string {
+  const t = text.replace(/([[\]\\])/g, "\\$1");
+  return url ? `[${t}](<${url.replace(/[<>\s]/g, encodeURIComponent)}>)` : t;
+}
+
 function cite(ids: string[]): string {
   return ids.length ? ` [${ids.join(", ")}]` : "";
 }
@@ -30,7 +40,7 @@ export function attributions(citations: Citation[]): string[] {
     const key = `${c.publisher ?? c.title}|${c.licence ?? ""}`;
     if (seen.has(key) || (!c.licence && !c.publisher)) continue;
     seen.add(key);
-    out.push(`${c.publisher ?? c.title}${c.licence ? `, licensed ${c.licence}` : ""}${c.url ? ` (${c.url})` : ""}`);
+    out.push(`${mdLink(c.publisher ?? c.title, c.url)}${c.licence ? `, licensed ${c.licence}` : ""}`);
   }
   return out;
 }
@@ -76,9 +86,9 @@ export function planToMarkdown(plan: ActionPlan, schedule?: ScheduleResult, rese
     if (schedule.whatMoreWouldAdd) L.push("## What more time or money would add", "", schedule.whatMoreWouldAdd.summary, "");
   }
   L.push("## Monitoring", "", ...plan.monitoring.map((m) => `- ${m}`), "");
-  if (plan.localResources.length) L.push("## Local resources", "", ...plan.localResources.map((r) => `- ${r.url ? `[${r.title}](${r.url})` : r.title}${cite([r.citationId])}`), "");
+  if (plan.localResources.length) L.push("## Local resources", "", ...plan.localResources.map((r) => `- ${mdLink(r.title, r.url)}${cite([r.citationId])}`), "");
   const allCitations = [...plan.citations, ...(research?.citations ?? [])];
-  L.push("## Sources", "", ...dedupe(allCitations).map((c) => `- [${c.id}] ${c.title}${c.url ? ` — ${c.url}` : ""}${c.source === "local_kb" ? " (your own documents)" : ""}`), "");
+  L.push("## Sources", "", ...dedupe(allCitations).map((c) => `- **${c.id}**: ${mdLink(c.title, c.url)}${c.source === "local_kb" ? " (your own documents)" : ""}`), "");
   const attr = attributions(allCitations);
   if (attr.length) L.push("## Attribution", "", ...attr.map((a) => `- ${a}`), "");
   return L.join("\n");
