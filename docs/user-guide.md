@@ -1,6 +1,6 @@
 # User guide
 
-Greener helps you increase biodiversity on your own land in New South Wales. It runs inside Claude, with nothing to install. Your answers, research and plans are saved in your own Claude Project. The Greener server keeps nothing.
+Greener helps you increase biodiversity on your own land in New South Wales. It runs inside Claude, with nothing to install. Your answers, research and plans are files you keep: in your Claude Project or in a folder on your computer (see [Your site files](#your-site-files)). The Greener server keeps nothing.
 
 To install Greener, see the [install guide](install.md). Start by making a Claude Project for your site. Then turn on web access, so Claude can read the guides that Greener links to.
 
@@ -39,8 +39,16 @@ Answers cite their sources: Greener's guides, your own documents, or your site r
 
 ## 5. Add your own documents — `/greener-add-docs`
 
-Add council lists, nursery catalogues or your own notes to the Project. Claude uses them in plans and answers, and they never leave your Claude account.
+Add council lists, nursery catalogues or your own notes to the Project's knowledge with **+**. Claude uses them in plans and answers, and they never leave your Claude account.
 
 ## 6. Export — `/greener-export`
 
-Save the plan as Markdown or JSON, with all sources and credits.
+Save the plan as Markdown or YAML, with all sources and credits.
+
+## Your site files
+
+Greener keeps your site in a few files: `profile.yaml` (your answers), `research.yaml` (the research report) and `plans/v1.yaml` with `plans/v1.md` (each plan version). The Greener server keeps none of them.
+
+- **On claude.ai (web, desktop or mobile):** Claude can't put files into your Project by itself. Each time Greener makes or updates a file, download it from the chat, then open your Project and add it to the Project's knowledge with **+**. Replace the older copy. New chats in the Project can then use it. If you skip this, a new chat won't know your site, and Greener will ask you to upload or paste the file.
+- **In Claude Code:** open your site's folder, and Greener saves the files there directly.
+- **In the Claude desktop app with a filesystem connector:** Greener can save into a folder you allow. TODO: confirm the connector's current name and setup steps in Claude's help.

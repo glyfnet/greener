@@ -66,10 +66,11 @@ To update it, open `/plugin`, go to the **Installed** tab, select Greener and ch
 
 ## Set up your site
 
-1. **Make a Project for your site.** Go to [claude.ai/projects](https://claude.ai/projects) and select **+ New Project**. Name it after your site, for example "Backyard, Uralla". Greener saves your answers and plans in this Project. The Greener server keeps nothing ([privacy](privacy.md)).
+1. **Make a Project for your site.** Go to [claude.ai/projects](https://claude.ai/projects) and select **+ New Project**. Name it after your site, for example "Backyard, Uralla". Start every Greener chat for this site from the Project's page, or move a chat into it with the arrow next to the chat's name → **Add to project**. The Greener server keeps nothing ([privacy](privacy.md)).
 2. **Turn on web search**, so Claude can open the guides that Greener links to. TODO: check the current setting name in Claude's help.
 3. **Make sure Greener is on in the chat.** Select **+** at the bottom left, go to **Connectors**, and check that Greener is turned on.
-4. **Start:** type `/greener-new`. Claude asks about 20 short questions about your site. Then go on with the [user guide](user-guide.md).
+4. **Start:** type `/greener-new`. Claude asks about 20 short questions about your site.
+5. **Keep your site files.** Claude can't add files to a Project by itself. When Greener gives you `profile.yaml`, download it and add it to the Project's knowledge with **+** (on the right of the Project's page). Do the same for `research.yaml` and each plan. Later chats in the Project read them from there. See [Your site files](user-guide.md#your-site-files), then go on with the [user guide](user-guide.md).
 
 ## Mobile
 

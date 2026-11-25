@@ -124,7 +124,7 @@ describe("intake tools", () => {
     expect(ok.data).toMatchObject({ complete: false, saveAs: "profile.yaml", capacity: { upfrontAud: 0 } });
     expect(ok.data.missing).toContain("tenure");
     const text = ok.content[0]!.text;
-    expect(text).toMatch(/^Save this as profile\.yaml in the user's Project, exactly as written:\n\n```yaml\n/);
+    expect(text).toMatch(/^Save this as profile\.yaml, exactly as written: .+ adds to their Project's knowledge with \+ .+:\n\n```yaml\n/);
     expect(parse(text.split("```yaml\n")[1]!.split("```")[0]!)).toEqual(ok.data.profile);
     expect(parse(text.split("```\n\n")[1]!)).toMatchObject({ saveAs: "profile.yaml", complete: false });
     const bad = await call("save_profile", { profile: { answers: { site_type: { optionIds: ["castle"] } } } });

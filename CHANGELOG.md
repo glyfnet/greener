@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Saving site files: Claude can't add files to a claude.ai Project's knowledge, so the skills now give each file as a download and tell the user to add it with **+**. They write to a local site folder when there is one (Claude Code or a filesystem connector), and ask for a missing file instead of starting again. The install and user guides explain this (Q-21).
+
 ### Changed
 
 - Output data is YAML and documents are Markdown (D-24). Site files are now `profile.yaml`, `research.yaml` and `plans/v<n>.yaml`, and each save tool gives the exact YAML to save. `export_plan` takes `format: "yaml"` instead of `"json"`: this is a breaking change to the tool's schema, made before the first release. Tool text for Claude and the question card's profile messages are YAML. The skills say never to make HTML files or artifacts. Older `.json` site files can still be read.

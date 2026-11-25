@@ -47,7 +47,7 @@ export function ok(summary: Record<string, unknown>, text?: string): ToolResult 
  * gives Claude the exact YAML to save, then the rest of the summary.
  */
 export function okWithFile(fileName: string, key: string, data: unknown, rest: Record<string, unknown>): ToolResult {
-  const text = `Save this as ${fileName} in the user's Project, exactly as written:\n\n\`\`\`yaml\n${toYaml(data)}\`\`\`\n\n${toYaml({ saveAs: fileName, ...rest })}`;
+  const text = `Save this as ${fileName}, exactly as written: in the user's site folder if you can write one, otherwise as a file the user downloads and adds to their Project's knowledge with + (Claude can't add it to a Project itself):\n\n\`\`\`yaml\n${toYaml(data)}\`\`\`\n\n${toYaml({ saveAs: fileName, ...rest })}`;
   return ok({ [key]: data, saveAs: fileName, ...rest }, text);
 }
 
