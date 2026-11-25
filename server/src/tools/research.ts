@@ -10,7 +10,7 @@ import { imageCredit, imageMarkdown, type SpeciesImage } from "../core/images.js
 import { climateNormals as getClimate } from "../connectors/climate.js";
 import { soilProperties as getSoil } from "../connectors/soil.js";
 import { vegetationCommunity as getVegetation } from "../connectors/vegetation.js";
-import { fail, ok } from "./context.js";
+import { fail, ok, okWithFile } from "./context.js";
 import { defineTool } from "./define.js";
 
 export const DEFAULT_RADIUS_KM = 10;
@@ -205,7 +205,7 @@ export const getSpeciesImages = defineTool({
 export const saveResearch = defineTool({
   name: "save_research",
   title: "Check and save the research report",
-  description: "Validate the research report (FR-15) against its schema. Every species must cite a citation in the report. On success, save the returned report as research.json in the user's Project. The server keeps nothing (D-09).",
+  description: "Validate the research report (FR-15) against its schema. Every species must cite a citation in the report. On success, save the returned report as research.yaml in the user's Project, exactly as the result gives it. The server keeps nothing (D-09).",
   input: z.object({ research: z.unknown() }),
   handler: ({ research }) => {
     const parsed = ResearchReport.safeParse(research);
@@ -217,7 +217,7 @@ export const saveResearch = defineTool({
       for (const s of xs) for (const id of s.citationIds) if (!ids.has(id)) errors.push(`${list}: ${s.scientificName} cites '${id}', which is not in citations`);
     }
     if (errors.length) return fail("Some citations do not resolve (FR-25).", errors.slice(0, 20));
-    return ok({ research: r, counts: { keyNativePlants: r.keyNativePlants.length, keyFauna: r.keyFauna.length, threatenedSpecies: r.threatenedSpecies.length, invasiveSpecies: r.invasiveSpecies.length, dataGaps: r.dataGaps.length }, saveAs: "research.json" });
+    return okWithFile("research.yaml", "research", r, { counts: { keyNativePlants: r.keyNativePlants.length, keyFauna: r.keyFauna.length, threatenedSpecies: r.threatenedSpecies.length, invasiveSpecies: r.invasiveSpecies.length, dataGaps: r.dataGaps.length } });
   },
 });
 

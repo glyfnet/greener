@@ -15,7 +15,8 @@ import { matchName, speciesEstablishment } from "../connectors/ala.js";
 import { limited } from "../connectors/http.js";
 import type { SpeciesRecord, Location as LocationT } from "../core/models.js";
 import { Location } from "../core/models.js";
-import { fail, ok, type ToolContext } from "./context.js";
+import { toYaml } from "../core/yaml.js";
+import { fail, ok, okWithFile, type ToolContext } from "./context.js";
 import { defineTool } from "./define.js";
 
 const StartMonth = z.number().int().min(1).max(12).describe("Calendar month the plan starts (1 = January)");
@@ -215,7 +216,7 @@ export const schedulePlanTool = defineTool({
   input: z.object({ actions: z.array(Action).min(1).max(200), startMonth: StartMonth, ...CapacitySource, includeMonthly: z.boolean().default(false) }),
   handler: ({ actions, startMonth, profile, capacity, includeMonthly }, ctx) => {
     const cap = resolveCapacity(ctx, profile, capacity);
-    if (!cap) return fail("Give the site profile or the capacity.", ["Pass profile (from profile.json) or capacity { hoursPerWeek, upfrontAud, yearlyAud }."]);
+    if (!cap) return fail("Give the site profile or the capacity.", ["Pass profile (from profile.yaml) or capacity { hoursPerWeek, upfrontAud, yearlyAud }."]);
     const result = scheduleCore({ actions, capacity: cap.capacity, startMonth });
     return ok({ ...compact(result, includeMonthly), capacityUsed: cap.capacity, capacityGaps: cap.gaps });
   },
@@ -263,17 +264,20 @@ export const savePlan = defineTool({
       if (cap) schedule = compact(scheduleCore({ actions: p.actions, capacity: cap.capacity, startMonth }), false);
     }
     const strategies = strategiesFor(ctx, profile);
-    return ok({ plan: p, warnings: check.warnings, species: check.species, ...(strategies.length ? { strategies } : {}), ...(schedule ? { schedule } : {}), saveAs: `plans/v${p.version}.json`, ...(check.warnings.length ? { nextStep: "Show the warnings to the user. Fix them with the strategy each one names, then save again." } : {}) });
+    return okWithFile(`plans/v${p.version}.yaml`, "plan", p, { warnings: check.warnings, species: check.species, ...(strategies.length ? { strategies } : {}), ...(schedule ? { schedule } : {}), ...(check.warnings.length ? { nextStep: "Show the warnings to the user. Fix them with the strategy each one names, then save again." } : {}) });
   },
 });
 
 export const exportPlan = defineTool({
   name: "export_plan",
   title: "Export the plan",
-  description: "Export a saved plan as Markdown or JSON (FR-50), with sources and attribution (NFR-17). Pass startMonth and the profile to include phases and the budget table.",
-  input: z.object({ plan: ActionPlan, format: z.enum(["markdown", "json"]).default("markdown"), research: ResearchReport.optional(), profile: SiteProfile.optional(), startMonth: StartMonth.optional() }),
+  description: "Export a saved plan as Markdown or YAML (FR-50, D-24), with sources and attribution (NFR-17). Show the Markdown as Markdown; do not turn it into HTML. Pass startMonth and the profile to include phases and the budget table.",
+  input: z.object({ plan: ActionPlan, format: z.enum(["markdown", "yaml"]).default("markdown"), research: ResearchReport.optional(), profile: SiteProfile.optional(), startMonth: StartMonth.optional() }),
   handler: ({ plan, format, research, profile, startMonth }, ctx) => {
-    if (format === "json") return ok({ format, fileName: `plan-v${plan.version}.json`, json: plan });
+    if (format === "yaml") {
+      const yaml = toYaml(plan);
+      return ok({ format, fileName: `plan-v${plan.version}.yaml`, yaml }, `Save this as plan-v${plan.version}.yaml:\n\n\`\`\`yaml\n${yaml}\`\`\`\n`);
+    }
     let schedule: ScheduleResult | undefined;
     const cap = resolveCapacity(ctx, profile, undefined);
     if (startMonth && cap) schedule = scheduleCore({ actions: plan.actions, capacity: cap.capacity, startMonth });

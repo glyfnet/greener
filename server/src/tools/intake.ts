@@ -8,7 +8,7 @@ import { applyAnswer, capacityFromProfile, findQuestion, nextQuestion, renderQue
 import { bushfireProne } from "../connectors/bushfire.js";
 import { lookupAddress } from "../connectors/geocode.js";
 import { pendingGap } from "../connectors/pending.js";
-import { fail, ok } from "./context.js";
+import { fail, ok, okWithFile } from "./context.js";
 import { defineTool } from "./define.js";
 import { INTAKE_CARD_VERSION } from "../generated/intake-card.js";
 
@@ -219,7 +219,7 @@ export const saveProfile = defineTool({
     const missing = [...visible.keys()].filter((id) => !p.answers[id] && id !== "location");
     if (!p.location) missing.unshift("location");
     const { capacity, gaps } = capacityFromProfile(ctx.data.bank, p);
-    return ok({ profile: p, complete: missing.length === 0, missing, followUps: followUps(ctx.data.bank, p), capacity, capacityGaps: gaps, saveAs: "profile.json" });
+    return okWithFile("profile.yaml", "profile", p, { complete: missing.length === 0, missing, followUps: followUps(ctx.data.bank, p), capacity, capacityGaps: gaps });
   },
 });
 

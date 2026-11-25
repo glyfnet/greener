@@ -8,7 +8,7 @@ description: Use when the user asks a free-text question about their site, its s
 
 Implements FR-30–FR-34 and FR-44–FR-46.
 
-1. Read the site files you have (`profile.json`, `research.json`, the latest plan). Call `search_site` with the question and those files.
+1. Read the site files you have (`profile.yaml`, `research.yaml`, the latest plan). Call `search_site` with the question and those files.
 2. Call `search_knowledge` for the global KB, and search the user's own Project documents for the local KB (FR-44).
 3. For a plan question, call `get_plan_section` instead of reading the whole plan.
 4. For a species not in the site data, call `ala_species_profile`, and `weed_status` if it is about planting (FR-33).

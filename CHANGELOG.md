@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Output data is YAML and documents are Markdown (D-24). Site files are now `profile.yaml`, `research.yaml` and `plans/v<n>.yaml`, and each save tool gives the exact YAML to save. `export_plan` takes `format: "yaml"` instead of `"json"`: this is a breaking change to the tool's schema, made before the first release. Tool text for Claude and the question card's profile messages are YAML. The skills say never to make HTML files or artifacts. Older `.json` site files can still be read.
+=======
 ### Fixed
 
 - Sources in the Markdown export are now proper links: `- **id**: [title](<url>)`. Before, raw URLs with `*` in the query string were shown as broken text or emphasis (FR-50).

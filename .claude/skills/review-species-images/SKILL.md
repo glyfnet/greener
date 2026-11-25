@@ -16,7 +16,7 @@ If names are given in `$ARGUMENTS`, review only those species. Otherwise review 
 npm run -s images:record -- --pending
 ```
 
-It prints the unreviewed rows as JSON. If there are none, say so and stop.
+It prints the unreviewed rows as YAML. If there are none, say so and stop.
 
 ## 2. Check each photo
 

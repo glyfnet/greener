@@ -9,6 +9,7 @@ import type { CostRow } from "../core/models.js";
 import type { QuestionBank } from "../core/questionnaire.js";
 import type { HttpDeps } from "../connectors/http.js";
 import type { KbIndex } from "../rag/bm25.js";
+import { toYaml } from "../core/yaml.js";
 
 /** Read-only data built at release time and shipped with the Worker. */
 export interface StaticData {
@@ -36,13 +37,22 @@ export interface ToolResult {
   isError?: boolean;
 }
 
-/** A successful result: the summary as text (for hosts without structured output) and as data. */
+/** A successful result: the summary as YAML text for Claude (D-24) and as structured data. */
 export function ok(summary: Record<string, unknown>, text?: string): ToolResult {
-  return { content: [{ type: "text", text: text ?? JSON.stringify(summary) }], structuredContent: summary };
+  return { content: [{ type: "text", text: text ?? toYaml(summary) }], structuredContent: summary };
+}
+
+/**
+ * A result that holds a file for the user's Project (D-09, D-24). The text
+ * gives Claude the exact YAML to save, then the rest of the summary.
+ */
+export function okWithFile(fileName: string, key: string, data: unknown, rest: Record<string, unknown>): ToolResult {
+  const text = `Save this as ${fileName} in the user's Project, exactly as written:\n\n\`\`\`yaml\n${toYaml(data)}\`\`\`\n\n${toYaml({ saveAs: fileName, ...rest })}`;
+  return ok({ [key]: data, saveAs: fileName, ...rest }, text);
 }
 
 /** A structured error with fix hints, never a stack trace (Section 12.2). */
 export function fail(error: string, fixHints: string[] = []): ToolResult {
   const body = { error, fixHints };
-  return { content: [{ type: "text", text: JSON.stringify(body) }], structuredContent: body, isError: true };
+  return { content: [{ type: "text", text: toYaml(body) }], structuredContent: body, isError: true };
 }

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { parse } from "yaml";
 import { z } from "zod";
 import { buildServer, handleMcp } from "../../src/server.js";
 import { TOOLS } from "../../src/tools/registry.js";
@@ -120,8 +121,12 @@ describe("intake tools", () => {
 
   it("validates a whole profile and loads one from a file (FR-05)", async () => {
     const ok = await call("save_profile", { profile: profile({ site_type: { optionIds: ["suburban"] }, hours_per_week: { optionIds: ["h_1_2"] } }) });
-    expect(ok.data).toMatchObject({ complete: false, saveAs: "profile.json", capacity: { upfrontAud: 0 } });
+    expect(ok.data).toMatchObject({ complete: false, saveAs: "profile.yaml", capacity: { upfrontAud: 0 } });
     expect(ok.data.missing).toContain("tenure");
+    const text = ok.content[0]!.text;
+    expect(text).toMatch(/^Save this as profile\.yaml in the user's Project, exactly as written:\n\n```yaml\n/);
+    expect(parse(text.split("```yaml\n")[1]!.split("```")[0]!)).toEqual(ok.data.profile);
+    expect(parse(text.split("```\n\n")[1]!)).toMatchObject({ saveAs: "profile.yaml", complete: false });
     const bad = await call("save_profile", { profile: { answers: { site_type: { optionIds: ["castle"] } } } });
     expect(bad.isError).toBe(true);
     const hidden = await call("save_profile", { profile: { answers: { site_type: { optionIds: ["apartment"] }, soil: { optionIds: ["clay"] } } } });
@@ -240,7 +245,7 @@ describe("research tools", () => {
   });
 
   it("validates a research report and its citations (FR-15)", async () => {
-    expect((await call("save_research", { research: research() })).data).toMatchObject({ saveAs: "research.json", counts: { keyNativePlants: 3 } });
+    expect((await call("save_research", { research: research() })).data).toMatchObject({ saveAs: "research.yaml", counts: { keyNativePlants: 3 } });
     const broken = { ...research(), keyFauna: [{ scientificName: "X", tags: [], citationIds: ["missing"] }] };
     expect((await call("save_research", { research: broken })).isError).toBe(true);
     expect((await call("save_research", { research: { radiusKm: 10 } })).isError).toBe(true);
@@ -349,7 +354,7 @@ describe("knowledge and plan tools", () => {
 
   it("saves a clean plan and refuses one with a weed (FR-24)", async () => {
     const good = await call("save_plan", { plan: plan(), research: research(), profile: profile({ hours_per_week: { optionIds: ["h_2_5"] } }), startMonth: 3 });
-    expect(good.data).toMatchObject({ saveAs: "plans/v1.json", schedule: expect.any(Object) });
+    expect(good.data).toMatchObject({ saveAs: "plans/v1.yaml", schedule: expect.any(Object) });
     const weedy = plan({ plantingList: [{ scientificName: "Lantana camara", citationIds: ["ala:occ:native-plants"] }] });
     const bad = await call("save_plan", { plan: weedy, research: research(), profile: profile() });
     expect(bad.isError).toBe(true);
@@ -357,11 +362,14 @@ describe("knowledge and plan tools", () => {
     expect((await call("save_plan", { plan: { version: 1 }, research: research(), profile: profile() })).isError).toBe(true);
   });
 
-  it("exports Markdown and JSON (FR-50)", async () => {
+  it("exports Markdown and YAML (FR-50, D-24)", async () => {
     const md = await call("export_plan", { plan: plan(), research: research(), profile: profile({ hours_per_week: { optionIds: ["h_2_5"] } }), startMonth: 3 });
     expect(md.data.markdown).toContain("## Phases");
     expect(md.content[0]?.text).toContain("# Biodiversity action plan");
-    expect((await call("export_plan", { plan: plan(), format: "json" })).data).toMatchObject({ fileName: "plan-v1.json" });
+    const y = await call("export_plan", { plan: plan(), format: "yaml" });
+    expect(y.data).toMatchObject({ fileName: "plan-v1.yaml", yaml: expect.stringMatching(/^version: 1\n/m) });
+    expect(parse(y.data.yaml as string)).toEqual(JSON.parse(JSON.stringify(plan())));
+    expect((await call("export_plan", { plan: plan(), format: "json" })).isError).toBe(true);
   });
 
   it("searches the site file and gets plan sections", async () => {
@@ -390,6 +398,8 @@ describe("MCP over HTTP (stateless)", () => {
     expect(res.result.contents[0]?.text).toContain("ui/initialize");
     expect(res.result.contents[0]?.text).toContain("ui/notifications/size-changed");
     expect(res.result.contents[0]?.text).toContain("Here is my site profile");
+    expect(res.result.contents[0]?.text).toContain("function toYaml(");
+    expect(res.result.contents[0]?.text).toContain("Greener site profile so far (YAML)");
     expect(res.result.contents[0]?.text).not.toMatch(/\bexports\./);
     expect(res.result.contents[0]?.text).not.toContain("/*CARD_SCRIPT*/");
   });

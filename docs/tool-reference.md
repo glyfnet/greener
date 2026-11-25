@@ -1419,7 +1419,7 @@ Input schema:
 
 ## save_research
 
-Validate the research report (FR-15) against its schema. Every species must cite a citation in the report. On success, save the returned report as research.json in the user's Project. The server keeps nothing (D-09).
+Validate the research report (FR-15) against its schema. Every species must cite a citation in the report. On success, save the returned report as research.yaml in the user's Project, exactly as the result gives it. The server keeps nothing (D-09).
 
 Input schema:
 
@@ -3816,7 +3816,7 @@ Input schema:
 
 ## export_plan
 
-Export a saved plan as Markdown or JSON (FR-50), with sources and attribution (NFR-17). Pass startMonth and the profile to include phases and the budget table.
+Export a saved plan as Markdown or YAML (FR-50, D-24), with sources and attribution (NFR-17). Show the Markdown as Markdown; do not turn it into HTML. Pass startMonth and the profile to include phases and the budget table.
 
 Input schema:
 
@@ -4255,7 +4255,7 @@ Input schema:
       "type": "string",
       "enum": [
         "markdown",
-        "json"
+        "yaml"
       ]
     },
     "research": {

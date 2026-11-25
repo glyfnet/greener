@@ -9,7 +9,7 @@ Section 7.2 names `save_profile`, `save_research` and `save_plan`, and says each
 
 ## Decision
 
-The `save_*` tools validate the data, run the checks and return the canonical JSON with a suggested file name (`profile.json`, `research.json`, `plans/v<n>.json`). The skill then saves that output in the user's Project. Tools that need site data (`get_site`, `search_site`, `get_plan_section`, `schedule_plan`, `export_plan`) take it as input in each call. The intake card carries the draft profile between `save_answer` calls.
+The `save_*` tools validate the data, run the checks and return the canonical data with a file name (`profile.yaml`, `research.yaml`, `plans/v<n>.yaml`) and the exact YAML to save (D-24). The skill then saves that output in the user's Project. Tools that need site data (`get_site`, `search_site`, `get_plan_section`, `schedule_plan`, `export_plan`) take it as input in each call. The intake card carries the draft profile between `save_answer` calls.
 
 Coordinates are rounded to 2 decimal places (about 1 km) before they go to ALA. Logs hold the tool name, duration and result only.
 

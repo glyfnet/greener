@@ -53,7 +53,10 @@ function buildKb(): string {
 }
 
 function buildCard(): string {
-  const source = readText("server/ui/intake-card/card.ts");
+  // The card has no module loader, so the YAML writer is inlined ahead of the card script (D-24).
+  const yamlWriter = readText("server/src/core/yaml.ts").replace(/^export function /m, "function ");
+  if (/^\s*(import|export) /m.test(yamlWriter)) fail("server/src/core/yaml.ts must have no imports or other exports: it is inlined into the card");
+  const source = `${yamlWriter}\n${readText("server/ui/intake-card/card.ts")}`;
   const out = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.None, removeComments: true } });
   const js = out.outputText.replace(/^"use strict";\s*/, "").replace(/export \{\};\s*$/, "");
   const html = readText("server/ui/intake-card/card.html");

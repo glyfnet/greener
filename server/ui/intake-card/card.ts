@@ -11,6 +11,9 @@
  * Icons are text placeholders until the icon set is chosen (Q-14).
  */
 
+/** Inlined at build time from server/src/core/yaml.ts (D-24). */
+declare function toYaml(value: unknown): string;
+
 interface Option { id: string; label: string; icon?: string }
 interface QuestionData { id: string; number: number; text: string; kind: "choice" | "location"; select: "one" | "many" | "upTo3"; notSure: boolean; options: Option[] }
 interface CardData { complete?: boolean; profile?: unknown; question?: QuestionData; progress?: { index: number; total: number }; followUps?: string[] }
@@ -86,8 +89,7 @@ async function callTool(name: string, args: Record<string, unknown>): Promise<vo
     if (!result.isError && state.profile) {
       // Keep Claude's view of the profile current without starting a turn.
       // Sent as text as well, because a host may pass only `content` to the model.
-      const json = JSON.stringify(state.profile);
-      await request("ui/update-model-context", { content: [{ type: "text", text: `Greener site profile so far (JSON): ${json}` }], structuredContent: { profile: state.profile } }).catch(() => undefined);
+      await request("ui/update-model-context", { content: [{ type: "text", text: `Greener site profile so far (YAML):\n${toYaml(state.profile)}` }], structuredContent: { profile: state.profile } }).catch(() => undefined);
     }
     if (state.complete && state.profile) {
       // The server keeps nothing (D-09), so the finished profile must travel in
@@ -103,7 +105,7 @@ async function callTool(name: string, args: Record<string, unknown>): Promise<vo
 
 /** The message the card sends when every question is answered. It carries the whole profile. */
 function completionMessage(profile: unknown): string {
-  return `I have answered all the questions in the card. Here is my site profile. Use it for save_profile:\n\n\`\`\`json\n${JSON.stringify(profile, null, 2)}\n\`\`\``;
+  return `I have answered all the questions in the card. Here is my site profile. Use it for save_profile:\n\n\`\`\`yaml\n${toYaml(profile)}\`\`\``;
 }
 
 function el<K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Record<string, string> = {}, text?: string): HTMLElementTagNameMap[K] {
