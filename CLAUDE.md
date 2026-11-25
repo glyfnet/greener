@@ -50,7 +50,7 @@ relevant section before starting any task.
 
 | Path | Holds |
 | --- | --- |
-| `plugin/` | Plugin manifest, skills, commands (thin layer — spec Section 7.2) |
+| `plugin/` | Plugin manifest and skills; each skill's `name` is its slash command (thin layer — spec Sections 7.2, 7.6) |
 | `server/src/index.ts` | Worker entry, routing only; `server.ts` builds one MCP server per request |
 | `server/src/tools/` | One Zod-validated definition per MCP tool |
 | `server/src/generated/` | Built by `npm run build:index` (git-ignored) |

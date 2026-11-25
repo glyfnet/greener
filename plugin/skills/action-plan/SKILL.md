@@ -1,6 +1,6 @@
 ---
-name: action-plan
-description: Use when the user wants an action plan written or updated, wants to mark actions done, or runs /greener-plan. Needs a saved site profile and research report.
+name: greener-plan
+description: Use when the user wants an action plan written or updated, wants to mark actions done. Needs a saved site profile and research report.
 ---
 
 # Action plan
@@ -9,7 +9,7 @@ Implements FR-20–FR-27, FR-60–FR-71 and D-17. The tools enforce the rules; d
 
 **Greener is for rewilding: Australian natives only (local natives first), never invasives, and no chemicals (D-17).** Never suggest herbicides, pesticides, poison baits, sprays or synthetic fertiliser. Weeds are removed by hand and the gap is replanted with local natives.
 
-1. Read `profile.json` and `research.json`. If either is missing, run `site-intake` or `site-research` first.
+1. Read `profile.json` and `research.json`. If either is missing, run `/greener-new` or `/greener-research` first.
 2. Call `get_site_strategies` with the profile. Apartments, courtyards, rented or strata sites and bushfire-prone land are all fine: follow each strategy's guidance and `planRules`, use its `cautionTag` on the matching actions, and copy its `citations` into the plan's citations.
 3. Call `search_knowledge` for guidance that fits the site's goals, type and region. For link-catalogue results, read the live page and cite it (FR-46).
 4. Draft the actions (FR-21, FR-61, FR-62). Each needs: category, priority, effort, season, steps, target species, rationale, citation IDs (at least 1, FR-25), labour hours (low–high), materials cost (low–high AUD, or `null`), work window (calendar months), dependencies, monthly upkeep hours, and structured cautions. Use the caution tag `bushfire` for planting on bushfire-prone land, and `renter` for permanent works on rented or strata sites (FR-23).

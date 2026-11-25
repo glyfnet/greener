@@ -254,7 +254,7 @@ Skills tell Claude what to do in each step. MCP tools do the work that must be e
 
 | Part | Responsibility |
 | --- | --- |
-| `plugin/.claude-plugin/plugin.json` | Plugin manifest. Names the skills, commands and the remote connector URL. |
+| `plugin/.claude-plugin/plugin.json` | Plugin manifest. Names the remote connector URL; skills are found in `skills/`. |
 | `plugin/skills/*` | One skill for each workflow step (Section 7.2). |
 | `server/src/index.ts` | Remote MCP server (Streamable HTTP, stateless). Exposes the tools in Section 7.2. No business logic. |
 | `server/src/core/models.ts` | Schemas (Zod): SiteProfile, ResearchReport, ActionPlan, Action, SpeciesRecord, Citation. |
@@ -392,6 +392,8 @@ To continue later, the user opens the same Project or attaches the site file. An
 | `/greener-ask` | Ask about a site, its species or its plan. |
 | `/greener-add-docs` | Add documents to a site or the IEK index. |
 | `/greener-export` | Export the plan as Markdown, JSON or PDF. |
+
+Each command is a skill: `plugin/skills/<folder>/SKILL.md`, whose `name` is the command. There is no `commands/` folder, which Claude now treats as a legacy format. In Claude Code a command can also show as `/greener:greener-new`.
 
 Users can also ask in plain words. Claude picks the right skill from its description.
 
@@ -532,7 +534,7 @@ greener/
 │   ├── PULL_REQUEST_TEMPLATE.md   Checklist: "npm run check passes"
 │   └── FUNDING.yml         buy_me_a_coffee: <username> (shows a Sponsor button)
 ├── docs/                   user-guide, architecture, privacy, kb-guide, release, tool-reference, adr/, evals/
-├── plugin/                 .claude-plugin/plugin.json, skills/, commands/
+├── plugin/                 .claude-plugin/plugin.json, skills/ (one per command)
 ├── server/                 src/, ui/, test/, wrangler.toml
 ├── kb/                     sources/ (Markdown), manifest.yaml (metadata), LICENSES.md
 ├── data/                   cost-reference.csv, question-bank.yaml

@@ -23,7 +23,7 @@ export interface LogLine {
 export function buildServer(ctx: ToolContext, log: (line: LogLine) => void = () => {}): McpServer {
   const server = new McpServer(
     { name: SERVER_NAME, version: SERVER_VERSION },
-    { instructions: "Greener helps land holders in New South Wales, Australia, increase biodiversity on their site. Use the plugin skills: site-intake, site-research, action-plan, site-advisor. The server keeps no user data: pass the site file in each call and save what the tools return in the user's Project." },
+    { instructions: "Greener helps land holders in New South Wales, Australia, increase biodiversity on their site. Use the plugin skills: /greener-new (intake), /greener-research, /greener-plan, /greener-ask, /greener-add-docs and /greener-export. The server keeps no user data: pass the site file in each call and save what the tools return in the user's Project." },
   );
   for (const tool of TOOLS) {
     server.registerTool(
