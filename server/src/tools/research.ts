@@ -4,7 +4,9 @@
 import { z } from "zod";
 import { normaliseName } from "../core/checks.js";
 import { Location, ResearchReport } from "../core/models.js";
-import { speciesNear, speciesProfile } from "../connectors/ala.js";
+import { matchName, speciesNear, speciesProfile } from "../connectors/ala.js";
+import { lookupSpeciesImage } from "../connectors/images.js";
+import { imageCredit, imageMarkdown, type SpeciesImage } from "../core/images.js";
 import { climateNormals as getClimate } from "../connectors/climate.js";
 import { soilProperties as getSoil } from "../connectors/soil.js";
 import { vegetationCommunity as getVegetation } from "../connectors/vegetation.js";
@@ -140,6 +142,66 @@ export const weedStatus = defineTool({
   },
 });
 
+/** Up to 5 requests per species (ALA name match, Wikidata, Commons, ALA search, ALA image): 8 keeps a call under the free plan's 50 subrequests. */
+export const MAX_LIVE_IMAGE_LOOKUPS = 8;
+
+export const getSpeciesImages = defineTool({
+  name: "get_species_images",
+  title: "Get species photos",
+  description:
+    "Get a photo for each plant or animal species, from Wikimedia Commons or the Atlas of Living Australia (FR-17, D-23). Each result has a thumbnail link, the Commons file page, the creator, the licence, a credit line and ready-made Markdown. Use it for the key species in the research report and the planting list, and when the user asks what a species looks like. Show the credit line with every photo. Photos marked reviewed: false were not checked by Greener, so call them example photos, not identification guides. At most 8 species a call are looked up live; the rest come back in `retry`.",
+  input: z.object({ names: z.array(z.string().min(2).max(120)).min(1).max(25).describe("Scientific names, as check_species or the research report give them") }),
+  handler: async ({ names }, ctx) => {
+    const byName = new Map(ctx.data.speciesImages.map((i) => [normaliseName(i.scientificName), i]));
+    const images: (SpeciesImage & { query: string; credit: string; markdown: string })[] = [];
+    const missing: { name: string; reason: string }[] = [];
+    const retry: string[] = [];
+    const found = (query: string, img: SpeciesImage) => images.push({ query, ...img, credit: imageCredit(img), markdown: imageMarkdown(img) });
+    let live = 0;
+    for (const name of [...new Set(names.map((n) => n.trim()))]) {
+      const stored = byName.get(normaliseName(name));
+      if (stored) {
+        found(name, stored);
+        continue;
+      }
+      if (live >= MAX_LIVE_IMAGE_LOOKUPS) {
+        retry.push(name);
+        continue;
+      }
+      live++;
+      const m = await matchName(name, ctx.http);
+      if (!m.ok) {
+        missing.push({ name, reason: `ALA name matching: ${m.error}` });
+        continue;
+      }
+      const { scientificName, kingdom, taxonConceptId, vernacularName } = m.match;
+      const kind = kingdom === "Plantae" ? "flora" : kingdom === "Animalia" ? "fauna" : undefined;
+      if (!m.match.matched || !scientificName || !kind) {
+        missing.push({ name, reason: "ALA does not know this name as a plant or animal species" });
+        continue;
+      }
+      const again = byName.get(normaliseName(scientificName));
+      if (again) {
+        found(name, again);
+        continue;
+      }
+      const r = await lookupSpeciesImage(scientificName, { kind, ...(vernacularName ? { commonName: vernacularName } : {}), ...(taxonConceptId ? { alaGuid: taxonConceptId } : {}) }, ctx.http, ctx.today);
+      if (r.ok) found(name, r.image);
+      else missing.push({ name, reason: r.reason });
+    }
+    return ok({
+      images,
+      missing,
+      ...(retry.length ? { retry } : {}),
+      notes: [
+        "Show each photo with its credit line, and link it to its sourcePage (NFR-17). Do not drop the credit.",
+        "If this host does not show images, give the sourcePage link instead.",
+        "A missing photo is a data gap, not a reason to guess: do not link a photo from anywhere else.",
+      ],
+    });
+  },
+});
+
 export const saveResearch = defineTool({
   name: "save_research",
   title: "Check and save the research report",
@@ -159,4 +221,4 @@ export const saveResearch = defineTool({
   },
 });
 
-export const researchTools = [alaSpeciesNear, alaSpeciesProfile, climateNormals, soilProperties, vegetationCommunity, weedStatus, saveResearch];
+export const researchTools = [alaSpeciesNear, alaSpeciesProfile, climateNormals, soilProperties, vegetationCommunity, weedStatus, getSpeciesImages, saveResearch];

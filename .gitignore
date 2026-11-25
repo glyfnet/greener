@@ -9,3 +9,6 @@ coverage/
 .env
 .env.*
 server/src/generated/
+
+# Claude Code local settings (rule 8)
+.claude/settings.local.json

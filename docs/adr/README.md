@@ -2,7 +2,7 @@
 
 One file per decision ID in the specification's decision log (Section 2), in [MADR](https://adr.github.io/madr/) form (Section 12.4). A changed decision gets a new ADR that supersedes the old one; the old file stays, marked *Superseded by*.
 
-The closed decisions D-01 to D-22 come straight from the specification. Proposed ADRs (P-…) record choices made while building the first release that the maintainer has not yet accepted. Each needs a new decision row in specification Section 2 before it becomes final.
+The closed decisions D-01 to D-23 come straight from the specification. Proposed ADRs (P-…) record choices made while building the first release that the maintainer has not yet accepted. Each needs a new decision row in specification Section 2 before it becomes final.
 
 | ID | Decision | Status |
 | --- | --- | --- |
@@ -28,6 +28,7 @@ The closed decisions D-01 to D-22 come straight from the specification. Proposed
 | [D-20](d-20-vegetation-community-source.md) | Vegetation community source: NSW SVTM pre-clearing | Accepted |
 | [D-21](d-21-climate-source.md) | Climate source: Open-Meteo (closes Q-06) | Accepted |
 | [D-22](d-22-soil-source.md) | Soil source: Soil and Landscape Grid of Australia | Accepted |
+| [D-23](d-23-species-photos.md) | Species photos: Wikimedia Commons links, reviewed by hand | Accepted |
 | [P-01](p-01-toolchain-node-22.md) | Toolchain: Node 22, wrangler 4, Vitest 5 | Proposed |
 | [P-02](p-02-mcp-transport.md) | MCP transport: official SDK, stateless web-standard Streamable HTTP | Proposed |
 | [P-03](p-03-species-checks.md) | Species checks from ALA establishment data while the weed list is empty | Proposed |

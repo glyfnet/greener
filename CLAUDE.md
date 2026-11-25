@@ -42,6 +42,7 @@ relevant section before starting any task.
 | `npm run build:plugin` | Zip `plugin/` for upload / GitHub release |
 | `npm run docs:tools` | Regenerate `docs/tool-reference.md` from the Zod schemas |
 | `npm run fixtures:record` | Re-record ALA fixtures from live responses (on purpose only) |
+| `npm run images:record -- <name>...` | Add species photos (Commons, then ALA) to `data/species-images.csv`; review with the `/review-species-images` skill (D-23) |
 | `npm run deploy:staging` | Build index + deploy to staging Worker |
 | `npm run smoke` | Call each MCP tool on a deployed Worker and check responses |
 | `npm run release -- <version>` | Full release: check, bump, changelog, deploy, zip, tag, GitHub release |
@@ -62,6 +63,7 @@ relevant section before starting any task.
 | `data/` | `question-bank.yaml`, `cost-reference.csv`, `declared-weeds.csv` |
 | `scripts/` | `build-index.ts`, `check-kb.ts`, `gen-tool-reference.ts`, `record-fixtures.ts`, `smoke.ts`, `build-plugin.ts`, `release.ts` |
 | `docs/adr/` | One ADR per decision ID in the spec's decision log |
+| `.claude/skills/` | Maintainer skills for Claude Code in this repo (not shipped in the plugin) |
 
 Node 22 is required (`.nvmrc`).
 

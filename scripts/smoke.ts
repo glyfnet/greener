@@ -60,6 +60,7 @@ const SAMPLES: Record<string, Record<string, unknown>> = {
   soil_properties: { location: loc },
   vegetation_community: { location: loc },
   weed_status: { names: ["Lantana camara"] },
+  get_species_images: { names: ["Lomandra longifolia", "Eucalyptus melliodora"] },
   save_research: { research },
   search_knowledge: { query: "native plants birds" },
   get_site_strategies: { profile: { location: loc, answers: { site_type: { optionIds: ["apartment"] }, tenure: { optionIds: ["rent"] } } } },

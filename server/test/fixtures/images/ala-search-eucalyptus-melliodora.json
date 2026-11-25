@@ -1,0 +1,62 @@
+{
+  "url": "https://api.ala.org.au/species/search?q=Eucalyptus+melliodora&pageSize=1",
+  "recordedAt": "2026-11-25T21:31:59.694Z",
+  "status": 200,
+  "body": {
+    "searchResults": {
+      "totalRecords": 3179,
+      "facetResults": [],
+      "results": [
+        {
+          "id": "f11c348e-0a9a-41c9-96d2-5dadd2588259",
+          "guid": "https://id.biodiversity.org.au/node/apni/5294597",
+          "linkIdentifier": "Eucalyptus_melliodora",
+          "idxtype": "TAXON",
+          "name": "Eucalyptus melliodora",
+          "kingdom": "Plantae",
+          "nomenclaturalCode": "ICBN",
+          "scientificName": "Eucalyptus melliodora",
+          "scientificNameAuthorship": "A.Cunn. ex Schauer",
+          "author": "A.Cunn. ex Schauer",
+          "nameComplete": "Eucalyptus melliodora A.Cunn. ex Schauer",
+          "nameFormatted": "<span class=\"scientific-name rank-species\"><span class=\"name\">Eucalyptus</span> <span class=\"name\">melliodora</span> <span class=\"author ex-author\">A.Cunn.</span> ex <span class=\"author\">Schauer</span></span>",
+          "taxonomicStatus": "accepted",
+          "nomenclaturalStatus": null,
+          "parentGuid": "https://id.biodiversity.org.au/taxon/apni/51788529",
+          "rank": "species",
+          "rankID": 7000,
+          "commonName": "Honey-Scented Gum, Yellow Box, Honey Box, Yellow Ironbark, Yellow Ironbox, Yellow Jacket, Dargan, Bibil",
+          "commonNameSingle": "Yellow Box",
+          "occurrenceCount": 26926,
+          "conservationStatus": null,
+          "favourite": null,
+          "infoSourceName": "APC",
+          "infoSourceURL": "https://collections.ala.org.au/public/show/dr5214",
+          "image": "1b4c785a-800a-46f0-9d83-8e6c8287e310",
+          "imageUrl": "https://images.ala.org.au/image/1b4c785a-800a-46f0-9d83-8e6c8287e310/original",
+          "thumbnailUrl": "https://images.ala.org.au/image/1b4c785a-800a-46f0-9d83-8e6c8287e310/thumbnail",
+          "smallImageUrl": "https://images.ala.org.au/image/1b4c785a-800a-46f0-9d83-8e6c8287e310/original",
+          "largeImageUrl": "https://images.ala.org.au/image/1b4c785a-800a-46f0-9d83-8e6c8287e310/large",
+          "kingdomGuid": "https://id.biodiversity.org.au/taxon/apni/51795632",
+          "phylum": "Charophyta",
+          "phylumGuid": "https://id.biodiversity.org.au/taxon/apni/51795631",
+          "class": "Equisetopsida",
+          "classGuid": "https://id.biodiversity.org.au/taxon/apni/51795630",
+          "subclass": "Magnoliidae",
+          "subclassGuid": "https://id.biodiversity.org.au/taxon/apni/51794776",
+          "superorder": "Rosanae",
+          "superorderGuid": "https://id.biodiversity.org.au/taxon/apni/51788762",
+          "order": "Myrtales",
+          "orderGuid": "https://id.biodiversity.org.au/taxon/apni/51788531",
+          "family": "Myrtaceae",
+          "familyGuid": "https://id.biodiversity.org.au/taxon/apni/51788530",
+          "genus": "Eucalyptus",
+          "genusGuid": "https://id.biodiversity.org.au/taxon/apni/51788529",
+          "species": "Eucalyptus melliodora",
+          "speciesGuid": "https://id.biodiversity.org.au/node/apni/5294597"
+        }
+      ],
+      "queryTitle": "Eucalyptus melliodora"
+    }
+  }
+}

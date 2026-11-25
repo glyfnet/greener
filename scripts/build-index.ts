@@ -7,6 +7,7 @@
  * - cost-reference.json  validated `data/cost-reference.csv`
  * - declared-weeds.json  validated `data/declared-weeds.csv`
  * - native-nurseries.json validated `data/native-nurseries.csv`
+ * - species-images.json  validated `data/species-images.csv` (D-23)
  * - intake-card.ts       the question card HTML with its script inlined
  *
  * Heavy work happens here, not at request time (D-10).
@@ -19,6 +20,7 @@ import { chunkMarkdown } from "../server/src/rag/chunk.js";
 import { manifestRuleErrors } from "../server/src/rag/manifest.js";
 import { parseCostReference } from "../server/src/core/cost.js";
 import { parseNurseries } from "../server/src/core/nurseries.js";
+import { parseSpeciesImages } from "../server/src/core/images.js";
 import { fail, loadManifest, loadQuestionBank, parseDeclaredWeeds, path, readText } from "./lib.js";
 
 const OUT = path("server/src/generated");
@@ -73,6 +75,7 @@ try {
   write("cost-reference.json", JSON.stringify(parseCostReference(readText("data/cost-reference.csv"))));
   write("declared-weeds.json", JSON.stringify(parseDeclaredWeeds(readText("data/declared-weeds.csv"))));
   write("native-nurseries.json", JSON.stringify(parseNurseries(readText("data/native-nurseries.csv"))));
+  write("species-images.json", JSON.stringify(parseSpeciesImages(readText("data/species-images.csv"))));
 } catch (e) {
   fail(e instanceof Error ? e.message : String(e));
 }

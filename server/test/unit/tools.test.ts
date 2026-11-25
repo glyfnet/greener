@@ -34,6 +34,7 @@ describe("tool contract (Section 12.3)", () => {
         "soil_properties",
         "vegetation_community",
         "weed_status",
+        "get_species_images",
         "save_research",
         "search_knowledge",
         "get_site_strategies",
