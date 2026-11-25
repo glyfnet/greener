@@ -376,8 +376,8 @@ The global KB has two tiers (D-15). Open-content items are indexed in full. Link
 
 | Item | Where it lives | Note |
 | --- | --- | --- |
-| Site profile | The user's Claude account: a saved site file (YAML, D-24) in the conversation or a Claude Project | Claude sends the needed fields in each tool call. |
-| Research report, plans | The user's Claude account: the plan as a doc the user keeps, plus the YAML site file | Each new plan version replaces or adds to the site file. |
+| Site profile | With the user: `profile.yaml` (D-24) in a Claude Project's knowledge, or in a local folder (Claude Code, or a filesystem connector) | Claude sends the needed fields in each tool call. Claude can't add files to a Project's knowledge, so on claude.ai the user downloads each file and adds it with **+** (Q-21). |
+| Research report, plans | With the user, as for the profile: `research.yaml`, `plans/v<n>.yaml` and `plans/v<n>.md` | Each new plan version adds a file. |
 | User documents | The user's Claude conversation or Project | Claude reads them directly. The server never receives them whole. |
 | Global KB index (maintainer-curated) | Server, built at release time | Read-only. |
 | API cache | Server edge cache | Public data only. No user data. |
@@ -699,3 +699,4 @@ The first three questions block the build. The others can close during developme
 
 - [ ] **Q-19 Live source reading.** Closed 24 Nov 2026: the plugin asks the user to turn on web access. If they do not, answers use thorough KB summaries and links only. No server fetch tool.
 - [ ] **Q-20 Legal check.** Closed 24 Nov 2026: the maintainer confirms that the project may use council planting lists and state weed lists. Record the permission or licence for each source in kb/manifest.yaml. The terms for each source decide its tier.
+- [ ] **Q-21 Saving site files.** Checked 26 Nov 2026 in Claude's help: in claude.ai chat, only the user can add files to a Project's knowledge (with **+**). The new Project Library, which also collects files Claude makes, is in beta for Claude Code first, with chat to follow. Until then, the skills ask the user to download each site file and add it. Revisit when the Library reaches chat.

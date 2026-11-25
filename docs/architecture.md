@@ -36,7 +36,7 @@ plugin/skills/*  ──MCP (Streamable HTTP, stateless)──▶  server/src/ind
 
 ## Stateless flow (D-09)
 
-The server stores nothing. A `save_*` tool validates its input, runs the checks, and returns the canonical data and the exact YAML file to save (D-24). The skill saves that YAML in the user's Project as `profile.yaml`, `research.yaml` or `plans/v<n>.yaml`. Tools that need site data take it in the call. The question card carries the draft profile between `save_answer` calls and reports it to Claude with `ui/update-model-context`. See [ADR P-04](adr/p-04-stateless-save-tools.md).
+The server stores nothing. A `save_*` tool validates its input, runs the checks, and returns the canonical data and the exact YAML file to save (D-24). The skill saves that YAML as `profile.yaml`, `research.yaml` or `plans/v<n>.yaml`: in a local site folder when Claude can write one, otherwise as a download that the user adds to their claude.ai Project's knowledge (Claude can't add files there itself, Q-21). Tools that need site data take it in the call. The question card carries the draft profile between `save_answer` calls and reports it to Claude with `ui/update-model-context`. See [ADR P-04](adr/p-04-stateless-save-tools.md).
 
 Logs hold `{ tool, ms, result }` only. Coordinates are rounded to 2 decimal places (about 1 km) before they are sent to ALA.
 
