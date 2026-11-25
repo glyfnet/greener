@@ -316,6 +316,14 @@ items:
       hiko seedling prices fall with order size, from $3.00 each for fewer
       than 40 plants to $1.80 each for 1,000 or more. A refundable deposit
       applies to each tray. Orders go through the nursery coordinator.
+      The 2026 general list marks these species as not local to the New
+      England Tablelands: green wattle (Acacia decurrens), black wattle
+      (A. mearnsii), Ovens wattle (A. pravissima), Clarence River baeckea
+      (Baeckea angusta), Victorian silver gum (Eucalyptus crenulata), tree
+      hakea (Hakea eriantha), willow-leaved hakea (H. salicifolia), cross-leaf
+      honey myrtle (Melaleuca decussata) and swamp paperbark (M. ericifolia).
+      Under the local-first rule, plans choose local species before these
+      (D-17).
 
   - id: weedwise-northern-tablelands
     title: NSW WeedWise — Priority weeds for the Northern Tablelands
@@ -794,3 +802,162 @@ items:
       (Xerochrysum) like full sun and heat. It warns that some natives are
       weeds outside their home range, so check council or nursery lists for
       local species. Useful for the apartment strategy.
+
+  - id: atg-koala-habitat-species-list
+    title: Armidale Tree Group — Koala Habitat Species List Order Form 2026
+    tier: link_catalogue
+    sourceUrl: https://armidaletreegroup.org.au/wp-content/uploads/2026/09/ATG-Koala-Habitat-Species-List-2026.docx-1.pdf
+    publisher: Armidale Tree Group
+    licence: "Link and summary only. No licence stated (site footer: © Armidale Tree Group). Prices copied into data/cost-reference.csv as dated facts with a link."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [koala, koala habitat, koala food trees, eucalypts, hiko seedlings, order form, Armidale, New England, soil type, tree guards, prices, revegetation]
+    summary: >-
+      The Armidale Tree Group's 2026 order form for koala habitat trees,
+      sold as hiko or thumb-pot seedlings. It lists sixteen species with
+      mature height and the soils each suits (trap, basalt or granite): rough-barked
+      apple (Angophora floribunda, grown in small numbers), weeping bottlebrush,
+      wattle-leaved peppermint (Eucalyptus acaciiformis), white box (E. albens),
+      Blakely's red gum (E. blakelyi), New England stringybark (E. caliginosa),
+      mountain gum (E. dalrympleana), yellow box (E. melliodora), Hillgrove gum
+      (E. michaeliana), grey box (E. moluccana), narrow-leaved peppermint
+      (E. nicholii), New England peppermint (E. nova-anglica), snow gum
+      (E. pauciflora), orange gum (E. prava), white gum (E. viminalis) and
+      Youman's stringybark (E. youmanii). Seedlings cost $3.00 each for up to
+      39, $2.25 for 40–119, $1.90 for 120–999 and $1.80 for 1,000 or more.
+      Trays carry a refundable $5 deposit, orders over 120 plants a
+      non-refundable 25% deposit, and mixing three or more species in a tray
+      of 40 costs $5. Orders must be collected within a month. Milk-carton tree
+      guards ($0.55–$0.65) and bamboo stakes are sold too. Order by email or
+      phone with the nursery coordinator; the group also offers site
+      preparation, planting, watering and weed control. The group's Every
+      Tree Counts page adds that koalas live across the Northern Tablelands in
+      low numbers, and that food trees planted in the right places help them
+      move through the landscape.
+
+  - id: atg-saumarez-pack
+    title: Armidale Tree Group — Saumarez Pack species list
+    tier: link_catalogue
+    sourceUrl: https://armidaletreegroup.org.au/wp-content/uploads/2026/09/ATG-Saumarez-Pack.pdf
+    publisher: Armidale Tree Group
+    licence: "Link and summary only. No licence stated (site footer: © Armidale Tree Group)."
+    region: NSW Northern Tablelands (Saumarez, Armidale)
+    dateChecked: "2026-11-25"
+    tags: [Saumarez, Saumarez Ponds, Armidale, hobby farm pack, frost-hardy, endemic, koala food trees, wattles, eucalypts, hiko seedlings]
+    summary: >-
+      A ready-made tray of forty hiko seedlings from the Armidale Tree Group,
+      chosen from trees and shrubs that are endemic to the area and very
+      frost-hardy. The tray holds a selection of: silver wattle (Acacia
+      dealbata), fern-leaved wattle (A. filicifolia), white sally wattle
+      (A. floribunda), blackwood (A. melanoxylon), red-stem wattle (A. rubida,
+      a hardy nitrogen-fixing pioneer), Bakers Creek and Lana bottlebrushes
+      (Callistemon pungens), river bottlebrush (C. sieberi, fine in wet soil),
+      Blakely's red gum (Eucalyptus blakelyi, a koala favourite), mountain gum
+      (E. dalrympleana), New England peppermint (E. nova-anglica, happy on cold
+      swampy flats), snow gum (E. pauciflora), black sally (E. stellulata),
+      manna gum (E. viminalis, a main koala food tree), small-fruit hakea
+      (Hakea microcarpa, suits boggy ground) and jellybush (Leptospermum
+      polygalifolium). Heights range from small shrubs to trees of 20–40 m.
+      A good starting mix for a cold, partly wet block around Saumarez and
+      Armidale. Prices follow the group's hiko seedling rates.
+
+  - id: atg-invergowrie-pack
+    title: Armidale Tree Group — Invergowrie Pack species list
+    tier: link_catalogue
+    sourceUrl: https://armidaletreegroup.org.au/wp-content/uploads/2026/09/ATG-Invergowrie-Pack.pdf
+    publisher: Armidale Tree Group
+    licence: "Link and summary only. No licence stated (site footer: © Armidale Tree Group)."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [Invergowrie, Armidale, hobby farm pack, dry soils, frost-hardy, stringybarks, box, wattles, understorey, cockatoos, hiko seedlings]
+    summary: >-
+      A tray of forty hiko seedlings from the Armidale Tree Group for dry
+      soils, all frost-hardy. The selection draws on: Wollomombi wattle
+      (Acacia blakei), blue bush (A. covenyi, rare, good for hedges and bees),
+      fern-leaved, white sally, red-stem and sticky wattles, black she-oak
+      (Allocasuarina littoralis, whose seeds feed yellow-tailed black
+      cockatoos), rough-barked apple, blackthorn (Bursaria spinosa, food for
+      butterflies and native bees and home to wasps that prey on Christmas
+      beetles), wild rosemary (Cassinia quinquefaria), sticky hop bush
+      (Dodonaea viscosa), apple box (Eucalyptus bridgesiana), Blakely's red
+      gum, New England stringybark, silver-top stringybark (E. laevopinea),
+      red stringybark (E. macrorhyncha), yellow box, narrow-leaved peppermint,
+      orange gum, Youman's stringybark, slender tea-tree, jellybush and tree
+      hakea (Hakea eriantha). The group's own general list marks tree hakea as
+      not local to the New England Tablelands, so prefer the other species
+      where a site needs local plants only (D-17).
+
+  - id: atg-bee-pack
+    title: Armidale Tree Group — Bee Pack species list
+    tier: link_catalogue
+    sourceUrl: https://armidaletreegroup.org.au/wp-content/uploads/2026/09/ATG-Bee-Pack-1.pdf
+    publisher: Armidale Tree Group
+    licence: "Link and summary only. No licence stated (site footer: © Armidale Tree Group)."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [bees, native bees, pollinators, nectar, birds, butterflies, hobby farm pack, wattles, bottlebrushes, tea-trees, Banksia, Bursaria, hiko seedlings]
+    summary: >-
+      A tray of forty hiko seedlings from the Armidale Tree Group, chosen for
+      nectar-rich flowers that feed bees and support birds. The selection
+      draws on: box-leaf wattle (Acacia buxifolia, frost-hardy to about −7 °C,
+      winter flowering), poverty wattle (A. dawsonii), western silver wattle
+      (A. decora), granite wattle (A. granitica), sticky wattle (A. viscidula),
+      hairpin banksia (Banksia spinulosa), blackthorn (Bursaria spinosa, a
+      vital food source for butterflies, moths and native bees), Bakers Creek,
+      Lana, lemon, alpine and river bottlebrushes, small-fruit hakea, and the
+      tea-trees Leptospermum arachnoides, L. brevipes, L. gregarium,
+      L. minutifolium, L. novae-angliae and jellybush (L. polygalifolium).
+      Most are shrubs of 1.5–4 m. Together they flower across winter, spring
+      and summer, which keeps food available for pollinators through the
+      year. None of these species is marked as non-local on the group's
+      general list.
+
+  - id: atg-neighbour-hider-pack
+    title: Armidale Tree Group — Neighbour-Hider Pack species list
+    tier: link_catalogue
+    sourceUrl: https://armidaletreegroup.org.au/wp-content/uploads/2026/09/ATG-Neighbour-Hider-Pack.pdf
+    publisher: Armidale Tree Group
+    licence: "Link and summary only. No licence stated (site footer: © Armidale Tree Group)."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [screening, privacy, hedges, windbreaks, birds, nectar, hobby farm pack, wattles, bottlebrushes, hakeas, hiko seedlings, local natives]
+    summary: >-
+      A tray of forty hiko seedlings from the Armidale Tree Group for privacy
+      screening: dense shrubs, mostly 3–5 m tall, that also give nectar to
+      birds. The selection draws on: knife-leaf wattle (Acacia cultriformis),
+      white sally wattle (A. floribunda), Ovens wattle (A. pravissima),
+      jellybush (Leptospermum polygalifolium), Bakers Creek and Lana
+      bottlebrushes (Callistemon pungens), lemon bottlebrush (C. pallidus),
+      river bottlebrush (C. sieberi), weeping bottlebrush (C. viminalis), tree
+      hakea (Hakea eriantha, a food source for yellow-tailed black cockatoos)
+      and willow-leaved hakea (H. salicifolia). Caution for rewilding: the
+      group's own 2026 general list marks Ovens wattle, tree hakea and
+      willow-leaved hakea as not local to the New England Tablelands. For a
+      local-natives planting, ask the nursery for a mix without them, or
+      choose the Saumarez or Bee pack instead (D-17).
+
+  - id: atg-every-tree-counts
+    title: Armidale Tree Group — Every Tree Counts brochure
+    tier: link_catalogue
+    sourceUrl: https://armidaletreegroup.org.au/wp-content/uploads/ETC_Brochure.pdf
+    publisher: Armidale Tree Group
+    licence: "Link and summary only. No licence stated (site footer: © Armidale Tree Group)."
+    region: NSW Northern Tablelands
+    dateChecked: "2026-11-25"
+    tags: [Every Tree Counts, landscape repair, wildlife corridors, Saumarez Creek, dieback, connectivity, koalas, carbon, landholders, donations, maintenance]
+    summary: >-
+      A brochure (2017) for Every Tree Counts, the Armidale Tree Group's
+      30-year revegetation program for the New England region. It works
+      through landholder partnerships and donations, and puts quality ahead
+      of numbers: every planting gets ground preparation and two years of
+      maintenance, because weeds and lack of water stunt young trees. A $10
+      donation pays for one tree with materials, planting and up to two years
+      of care. The first projects were a Saumarez Creek wildlife corridor
+      linking the eastern and western sides of the Northern Tablelands, work
+      against dieback and for connectivity around the Gara River and Imbota
+      area, and a 3 ha urban forest on the Dumaresq Creek floodplain in
+      Armidale. The program's web page names four themes: connectivity,
+      koalas, dieback (which killed millions of New England trees in the
+      1970s and 1980s) and carbon. Landholders near these areas can ask the
+      group about joining a corridor planting. The group has grown and
+      planted more than 1.5 million trees and shrubs since 1983.
