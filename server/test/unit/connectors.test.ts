@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { matchName, NEAR_QUERIES, occurrenceUrl, roundCoord, speciesNear, speciesProfile } from "../../src/connectors/ala.js";
+import { establishmentUrl, matchName, NEAR_QUERIES, occurrenceUrl, recordsPageUrl, roundCoord, speciesNear, speciesProfile } from "../../src/connectors/ala.js";
 import { fetchJson, limited, type HttpDeps } from "../../src/connectors/http.js";
 import { fixture, fixtureFetch, memoryCache, TEST_POINT } from "../helpers.js";
 
@@ -114,6 +114,16 @@ describe("ALA connector (recorded fixtures)", () => {
     expect(r.ok && r.profile).toMatchObject({ scientificName: "Lomandra longifolia", kingdom: "Plantae", family: "Asparagaceae", taxonomicStatus: "accepted", commonName: "Spiny-headed Mat-rush" });
     const miss = await speciesProfile("Nothing here", deps(fixtureFetch().fn), "2026-11-24");
     expect(miss.ok).toBe(false);
+    expect(r.ok && r.profile.citation.url).toBe("https://bie.ala.org.au/species/https%3A%2F%2Fid.biodiversity.org.au%2Fnode%2Fapni%2F2895205");
+  });
+
+  it("cites ALA pages for people, not the JSON API", async () => {
+    expect(recordsPageUrl(establishmentUrl("Acacia dealbata", { lat: -30.5, lon: 151.55, radiusKm: 10 }))).toBe(
+      "https://biocache.ala.org.au/occurrences/search?q=*%3A*&lat=-30.5&lon=151.55&radius=10&fq=species%3A%22Acacia+dealbata%22",
+    );
+    const r = await speciesNear(TEST_POINT.lat, TEST_POINT.lon, 10, deps(fixtureFetch().fn), "2026-11-24");
+    for (const c of r.citations) expect(c.url).toMatch(/^https:\/\/biocache\.ala\.org\.au\/occurrences\/search\?q=/);
+    expect(r.citations[0]?.url).not.toContain("pageSize");
   });
 
   it("matches names to the ALA taxonomy (NFR-01)", async () => {

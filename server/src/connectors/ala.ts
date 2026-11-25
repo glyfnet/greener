@@ -29,6 +29,22 @@ import { fetchJson, limited, type HttpDeps } from "./http.js";
 const OCC = "https://biocache-ws.ala.org.au/ws/occurrences/search";
 const SPECIES = "https://api.ala.org.au/species/search";
 const NAMEMATCH = "https://api.ala.org.au/namematching/api/search";
+/** Pages for people. Citations link here, not to the JSON API (checked 26 Nov 2026: same filters, HTML). */
+const RECORDS_PAGE = "https://biocache.ala.org.au/occurrences/search";
+const SPECIES_PAGE = "https://bie.ala.org.au/species/";
+
+/** The ALA records page for an occurrence API query: the same q, location and filters. */
+export function recordsPageUrl(apiUrl: string): string {
+  const api = new URL(apiUrl);
+  const p = new URLSearchParams();
+  for (const [k, v] of api.searchParams) if (["q", "lat", "lon", "radius", "fq"].includes(k)) p.append(k, v);
+  return `${RECORDS_PAGE}?${p.toString()}`;
+}
+
+/** The ALA species page for a taxon ID such as https://id.biodiversity.org.au/node/apni/2895205. */
+export function speciesPageUrl(guid: string): string {
+  return `${SPECIES_PAGE}${encodeURIComponent(guid)}`;
+}
 
 export const ALA_PUBLISHER = "Atlas of Living Australia";
 /** NFR-17. Individual records carry their own licences, mostly CC BY. */
@@ -102,7 +118,7 @@ export async function speciesNear(lat: number, lon: number, radiusKm: number, de
     const r = results[i];
     if (r?.ok) {
       lists.set(q.key, speciesFacet(r.data));
-      citations.push({ id: `ala:occ:${q.key}`, source: "research", title: `ALA occurrence records: ${q.title} within ${radiusKm} km`, url: occurrenceUrl(lat, lon, radiusKm, q), publisher: ALA_PUBLISHER, licence: ALA_LICENCE, accessed: today });
+      citations.push({ id: `ala:occ:${q.key}`, source: "research", title: `ALA occurrence records: ${q.title} within ${radiusKm} km`, url: recordsPageUrl(occurrenceUrl(lat, lon, radiusKm, q)), publisher: ALA_PUBLISHER, licence: ALA_LICENCE, accessed: today });
     } else {
       dataGaps.push({ topic: `ALA ${q.title}`, reason: r ? r.error : "not fetched" });
     }
@@ -173,7 +189,7 @@ export async function speciesEstablishment(name: string, deps: HttpDeps, today: 
       total: r.data.totalRecords ?? 0,
       native: Math.max(facet("establishmentMeans", "native"), facet("degreeOfEstablishment", "native")),
       introduced: Math.max(facet("establishmentMeans", "introduced"), facet("degreeOfEstablishment", "established")),
-      citation: { id: `ala:${scope ? "near" : "aus"}:${slug}`, source: "research", title: `ALA records of ${name.trim()} ${scope ? `within ${scope.radiusKm} km of the site` : "across Australia"}`, url, publisher: ALA_PUBLISHER, licence: ALA_LICENCE, accessed: today },
+      citation: { id: `ala:${scope ? "near" : "aus"}:${slug}`, source: "research", title: `ALA records of ${name.trim()} ${scope ? `within ${scope.radiusKm} km of the site` : "across Australia"}`, url: recordsPageUrl(url), publisher: ALA_PUBLISHER, licence: ALA_LICENCE, accessed: today },
     },
   };
 }
@@ -237,7 +253,7 @@ export async function speciesProfile(name: string, deps: HttpDeps, today: string
       ...(hit.conservationStatus ? { conservationStatus: hit.conservationStatus } : {}),
       ...(hit.occurrenceCount !== undefined ? { occurrenceCount: hit.occurrenceCount } : {}),
       ...(hit.infoSourceName ? { nameSource: hit.infoSourceName } : {}),
-      citation: { id: `ala:species:${sci.toLowerCase().replace(/\s+/g, "-")}`, source: "research", title: `ALA species: ${sci}`, url, publisher: ALA_PUBLISHER, licence: ALA_LICENCE, accessed: today },
+      citation: { id: `ala:species:${sci.toLowerCase().replace(/\s+/g, "-")}`, source: "research", title: `ALA species: ${sci}`, url: hit.guid ? speciesPageUrl(hit.guid) : url, publisher: ALA_PUBLISHER, licence: ALA_LICENCE, accessed: today },
     },
   };
 }

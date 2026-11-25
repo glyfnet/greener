@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { lookupCosts, parseCostReference, parseCsv } from "../../src/core/cost.js";
-import { attributions, planSection, planToMarkdown, searchSite } from "../../src/core/render.js";
+import { attributions, mdLink, planSection, planToMarkdown, searchSite } from "../../src/core/render.js";
 import { schedulePlan } from "../../src/core/schedule.js";
 import { buildIndex, search, stem, tokenize, type IndexedChunk } from "../../src/rag/bm25.js";
 import { chunkMarkdown } from "../../src/rag/chunk.js";
@@ -69,6 +69,16 @@ describe("plan export and site search (FR-50, FR-30)", () => {
     expect(md).toContain("| *Lomandra longifolia* | Spiny-headed Mat-rush | 10 |");
     expect(md).toContain("Atlas of Living Australia, licensed CC BY");
     expect(md).toContain("## What more time or money would add");
+  });
+
+  it("writes links that survive query strings (FR-50)", () => {
+    const url = "https://biocache.ala.org.au/occurrences/search?q=*%3A*&lat=-30.5&fq=species%3A%22Acacia+dealbata%22";
+    expect(mdLink("ALA records of Acacia dealbata", url)).toBe(`[ALA records of Acacia dealbata](<${url}>)`);
+    expect(mdLink("A [draft] guide", "https://x.example/a b")).toBe("[A \\[draft\\] guide](<https://x.example/a%20b>)");
+    expect(mdLink("No link")).toBe("No link");
+    const p = plan();
+    p.citations = [{ id: "ala:near:acacia-dealbata", source: "research", title: "ALA records", url }];
+    expect(planToMarkdown(p)).toContain(`- **ala:near:acacia-dealbata**: [ALA records](<${url}>)`);
   });
 
   it("dedupes attribution lines", () => {
