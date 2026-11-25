@@ -6,7 +6,7 @@
  * unreviewed rows.
  *
  * Review (the `review-species-images` skill walks through it):
- *   --pending            list unreviewed rows as JSON
+ *   --pending            list unreviewed rows as YAML
  *   --approve <name>...  set `reviewed` to yes, after a person has checked it
  *   --remove <name>...   drop a wrong photo (the species then has no row)
  */
@@ -14,6 +14,7 @@ import { writeFileSync } from "node:fs";
 import { matchName } from "../server/src/connectors/ala.js";
 import { lookupSpeciesImage } from "../server/src/connectors/images.js";
 import { parseSpeciesImages, speciesImagesCsv, type SpeciesImage } from "../server/src/core/images.js";
+import { toYaml } from "../server/src/core/yaml.js";
 import { path, readText } from "./lib.js";
 
 const FILE = "data/species-images.csv";
@@ -24,7 +25,7 @@ const rows = new Map<string, SpeciesImage>(parseSpeciesImages(readText(FILE)).ma
 const save = () => writeFileSync(path(FILE), speciesImagesCsv([...rows.values()]));
 
 if (args.includes("--pending")) {
-  console.log(JSON.stringify([...rows.values()].filter((r) => !r.reviewed), null, 2));
+  console.log(toYaml([...rows.values()].filter((r) => !r.reviewed)));
   process.exit(0);
 }
 for (const flag of ["--approve", "--remove"] as const) {

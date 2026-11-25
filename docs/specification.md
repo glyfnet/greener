@@ -19,7 +19,7 @@ Out of scope for release 1 (MVP): Indigenous ecological knowledge, user accounts
 
 ## 2. Decision log
 
-Twenty-three decisions are closed. Each new decision gets a new row.
+Twenty-four decisions are closed. Each new decision gets a new row.
 
 | ID | Decision | Result | Effect on design |
 | --- | --- | --- | --- |
@@ -46,8 +46,9 @@ Twenty-three decisions are closed. Each new decision gets a new row.
 | D-21 | Climate source (closes Q-06) | Open-Meteo Historical Weather API, ERA5 1991–2020 (CC BY 4.0, free non-commercial tier; donations permitted) | `climate_normals` computes monthly temperature and rainfall and cold-night counts at 1 decimal place, cached 30 days (FR-12). |
 | D-22 | Soil source | Soil and Landscape Grid of Australia map services on `soils.csiro.au` (CC BY 4.0) | `soil_properties` returns modelled pH, clay, sand and organic carbon at 0–5 and 5–15 cm, 3 decimal places, not cached (FR-13). |
 | D-23 | Species photos | Wikimedia Commons photos picked by Wikidata (P18), else the ALA species image, stored as links in `data/species-images.csv` and reviewed by hand; other species looked up live. Only CC0, public domain, CC BY, CC BY-SA and CC BY-NC, with a named creator. | `get_species_images` returns a thumbnail link, file page, creator, licence and credit line, never image bytes. Unreviewed photos are labelled as examples (FR-17). |
+| D-24 | Output formats | YAML for output data: site files (`profile.yaml`, `research.yaml`, `plans/v<n>.yaml`), the data export and the text Claude reads from tools. Markdown for documents (plans, reports, exports), never HTML. CSV stays for repository data files. | A small YAML writer in `core/yaml.ts`, with no new dependency. HTML only for the MCP App card, which the MCP Apps spec requires. MCP `structuredContent` stays JSON, as the protocol defines it. Answer files in JSON or YAML are still accepted (FR-05). |
 
-D-05 and D-06 changed on 24 Nov 2026 so that non-technical users need no install and no local setup. D-17 was added on 24 Nov 2026 by the maintainer. D-18 to D-22 were added on 25 Nov 2026, when each data source was checked; the ADRs in `docs/adr/` record what was checked. D-23 was added on 26 Nov 2026 at the maintainer's request.
+D-05 and D-06 changed on 24 Nov 2026 so that non-technical users need no install and no local setup. D-17 was added on 24 Nov 2026 by the maintainer. D-18 to D-22 were added on 25 Nov 2026, when each data source was checked; the ADRs in `docs/adr/` record what was checked. D-23 and D-24 were added on 26 Nov 2026 at the maintainer's request.
 
 ## 3. Users and use cases
 
@@ -145,7 +146,7 @@ Priority uses MoSCoW: M = must, S = should, C = could. Release 1 contains all M 
 
 | ID | Requirement | Priority |
 | --- | --- | --- |
-| FR-50 | The system must export the plan as Markdown and JSON. | M |
+| FR-50 | The system must export the plan as Markdown and YAML (D-24). | M |
 | FR-51 | The system should export the plan as PDF. | S |
 | FR-52 | The system could produce a site map with planting zones. | C |
 
@@ -272,9 +273,9 @@ Skills tell Claude what to do in each step. MCP tools do the work that must be e
 
 | Skill | What Claude does | MCP tools it uses | Result saved |
 | --- | --- | --- | --- |
-| `site-intake` | Asks the question bank. Asks up to 3 follow-ups. | `get_question_bank`, `geocode`, `save_profile` | profile.json |
-| `site-research` | Gets data and writes the research report. | `ala_species_near`, `ala_species_profile`, `climate_normals`, `soil_properties`, `vegetation_community`, `weed_status`, `search_knowledge`, `save_research` | research.json |
-| `action-plan` | Writes the plan from the profile, report and guides. | `get_site`, `search_knowledge`, `check_species`, get\_cost\_reference, schedule\_plan, `save_plan` | plans/v\<n>.json and .md |
+| `site-intake` | Asks the question bank. Asks up to 3 follow-ups. | `get_question_bank`, `geocode`, `save_profile` | profile.yaml |
+| `site-research` | Gets data and writes the research report. | `ala_species_near`, `ala_species_profile`, `climate_normals`, `soil_properties`, `vegetation_community`, `weed_status`, `search_knowledge`, `save_research` | research.yaml |
+| `action-plan` | Writes the plan from the profile, report and guides. | `get_site`, `search_knowledge`, `check_species`, get\_cost\_reference, schedule\_plan, `save_plan` | plans/v\<n>.yaml and .md |
 | `site-advisor` | Answers questions with citations. | `search_site`, `search_knowledge`, `get_plan_section`, `ala_species_profile` | none |
 | `add-documents` | Adds the user's own items to their local KB (Claude Project files). | `none: Claude reads Project files directly` | user local KB |
 
@@ -375,8 +376,8 @@ The global KB has two tiers (D-15). Open-content items are indexed in full. Link
 
 | Item | Where it lives | Note |
 | --- | --- | --- |
-| Site profile | The user's Claude account: a saved site file (JSON) in the conversation or a Claude Project | Claude sends the needed fields in each tool call. |
-| Research report, plans | The user's Claude account: the plan as a doc the user keeps, plus the JSON site file | Each new plan version replaces or adds to the site file. |
+| Site profile | The user's Claude account: a saved site file (YAML, D-24) in the conversation or a Claude Project | Claude sends the needed fields in each tool call. |
+| Research report, plans | The user's Claude account: the plan as a doc the user keeps, plus the YAML site file | Each new plan version replaces or adds to the site file. |
 | User documents | The user's Claude conversation or Project | Claude reads them directly. The server never receives them whole. |
 | Global KB index (maintainer-curated) | Server, built at release time | Read-only. |
 | API cache | Server edge cache | Public data only. No user data. |

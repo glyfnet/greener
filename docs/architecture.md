@@ -25,6 +25,7 @@ plugin/skills/*  ──MCP (Streamable HTTP, stateless)──▶  server/src/ind
 | `core/checks.ts` | FR-22–FR-25 | Species, citation and site-constraint checks. See "Species checks". |
 | `core/schedule.ts` | 7.7, FR-61–FR-67, FR-71 | The budget and phasing engine. |
 | `core/cost.ts` | FR-68–FR-70 | Cost lookup. Local prices win over the reference table. Missing items say "no data". |
+| `core/yaml.ts` | D-24 | YAML writer for site files, the YAML export and tool text. Also inlined into the question card. |
 | `core/render.ts` | FR-50, FR-30, NFR-17 | Markdown export with sources and attribution, plan sections, site search. |
 | `connectors/http.ts` | 12.2, FR-16, NFR-07, NFR-08 | Host allow list, timeout, retry with backoff, 7-day edge cache, contact User-Agent. Never throws. |
 | `connectors/ala.ts` | FR-10, FR-11, FR-33, NFR-01 | ALA occurrence facets, species search and name matching. Fixtures are in `server/test/fixtures/ala/`. |
@@ -35,7 +36,7 @@ plugin/skills/*  ──MCP (Streamable HTTP, stateless)──▶  server/src/ind
 
 ## Stateless flow (D-09)
 
-The server stores nothing. A `save_*` tool validates its input, runs the checks, and returns the canonical JSON. The skill saves that JSON in the user's Project as `profile.json`, `research.json` or `plans/v<n>.json`. Tools that need site data take it in the call. The question card carries the draft profile between `save_answer` calls and reports it to Claude with `ui/update-model-context`. See [ADR P-04](adr/p-04-stateless-save-tools.md).
+The server stores nothing. A `save_*` tool validates its input, runs the checks, and returns the canonical data and the exact YAML file to save (D-24). The skill saves that YAML in the user's Project as `profile.yaml`, `research.yaml` or `plans/v<n>.yaml`. Tools that need site data take it in the call. The question card carries the draft profile between `save_answer` calls and reports it to Claude with `ui/update-model-context`. See [ADR P-04](adr/p-04-stateless-save-tools.md).
 
 Logs hold `{ tool, ms, result }` only. Coordinates are rounded to 2 decimal places (about 1 km) before they are sent to ALA.
 

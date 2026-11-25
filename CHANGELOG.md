@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Output data is YAML and documents are Markdown (D-24). Site files are now `profile.yaml`, `research.yaml` and `plans/v<n>.yaml`, and each save tool gives the exact YAML to save. `export_plan` takes `format: "yaml"` instead of `"json"`: this is a breaking change to the tool's schema, made before the first release. Tool text for Claude and the question card's profile messages are YAML. The skills say never to make HTML files or artifacts. Older `.json` site files can still be read.
+
 ### Added
 
 - Species photos (FR-17, D-23): the `get_species_images` tool returns a Wikimedia Commons photo for each species, with the creator, licence, a credit line and Markdown. Photos come from `data/species-images.csv` (16 starter rows from the Armidale Tree Group koala list, recorded with `npm run images:record`) or a live lookup (Wikidata and Commons, then the ALA species image). Only CC0, public domain, CC BY, CC BY-SA and CC BY-NC photos with a named creator are accepted.
