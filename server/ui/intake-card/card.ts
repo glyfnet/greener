@@ -3,7 +3,8 @@
  *
  * Talks to the host with JSON-RPC 2.0 over postMessage, as defined by the
  * MCP Apps extension (`ui/initialize`, `ui/notifications/tool-result`,
- * `tools/call`, `ui/update-model-context`, `ui/message`). No framework and no
+ * `tools/call`, `ui/update-model-context`, `ui/message`,
+ * `ui/notifications/size-changed`). No framework and no
  * network access of its own: every answer goes through the `save_answer`
  * tool on the Greener server.
  *
@@ -26,6 +27,20 @@ const skipped: string[] = [];
 
 function send(msg: RpcMessage): void {
   window.parent.postMessage(msg, "*");
+}
+
+/**
+ * Tell the host how tall the card is, so the iframe is not cut off. The MCP
+ * Apps spec (2026-01-26) says a View SHOULD send this when its size changes.
+ */
+let lastSize = "";
+function reportSize(): void {
+  const r = document.body.getBoundingClientRect();
+  const size = { width: Math.ceil(r.width), height: Math.ceil(r.height) };
+  const key = `${size.width}x${size.height}`;
+  if (key === lastSize) return;
+  lastSize = key;
+  send({ jsonrpc: "2.0", method: "ui/notifications/size-changed", params: size });
 }
 
 function request(method: string, params: Record<string, unknown>): Promise<Record<string, unknown>> {
@@ -70,16 +85,25 @@ async function callTool(name: string, args: Record<string, unknown>): Promise<vo
     onToolResult(result);
     if (!result.isError && state.profile) {
       // Keep Claude's view of the profile current without starting a turn.
-      await request("ui/update-model-context", { structuredContent: { profile: state.profile } }).catch(() => undefined);
+      // Sent as text as well, because a host may pass only `content` to the model.
+      const json = JSON.stringify(state.profile);
+      await request("ui/update-model-context", { content: [{ type: "text", text: `Greener site profile so far (JSON): ${json}` }], structuredContent: { profile: state.profile } }).catch(() => undefined);
     }
-    if (state.complete) {
-      await request("ui/message", { role: "user", content: [{ type: "text", text: "I have answered all the questions in the card." }] }).catch(() => undefined);
+    if (state.complete && state.profile) {
+      // The server keeps nothing (D-09), so the finished profile must travel in
+      // the message itself: model context updates are not delivered by every host.
+      await request("ui/message", { role: "user", content: [{ type: "text", text: completionMessage(state.profile) }] }).catch(() => undefined);
     }
   } catch (e) {
     showError(e instanceof Error ? e.message : "The answer could not be saved.");
   } finally {
     setBusy(false);
   }
+}
+
+/** The message the card sends when every question is answered. It carries the whole profile. */
+function completionMessage(profile: unknown): string {
+  return `I have answered all the questions in the card. Here is my site profile. Use it for save_profile:\n\n\`\`\`json\n${JSON.stringify(profile, null, 2)}\n\`\`\``;
 }
 
 function el<K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Record<string, string> = {}, text?: string): HTMLElementTagNameMap[K] {
@@ -95,6 +119,7 @@ function setBusy(busy: boolean): void {
 }
 
 function showError(message: string, hints: string[] = []): void {
+  app.querySelector(".err")?.remove();
   const box = el("p", { class: "msg err", role: "alert" }, [message, ...hints].join(" "));
   app.appendChild(box);
 }
@@ -121,7 +146,9 @@ function useMyLocation(): void {
 }
 
 function otherBox(placeholder: string, onSubmit: (text: string) => void): HTMLElement {
-  const row = el("form", { class: "row" });
+  // Only one answer box at a time, however often Other is tapped.
+  app.querySelector("form.other")?.remove();
+  const row = el("form", { class: "row other" });
   const label = el("label", { class: "sr", for: "other" }, placeholder);
   const input = el("input", { type: "text", id: "other", maxlength: "500", placeholder });
   const ok = el("button", { type: "submit", class: "primary" }, "Save");
@@ -210,6 +237,8 @@ async function start(): Promise<void> {
   try {
     await request("ui/initialize", { appInfo: { name: "greener-intake-card", version: "0.1.0" }, appCapabilities: {}, protocolVersion: PROTOCOL_VERSION });
     send({ jsonrpc: "2.0", method: "ui/notifications/initialized", params: {} });
+    if (typeof ResizeObserver !== "undefined") new ResizeObserver(reportSize).observe(document.body);
+    reportSize();
   } catch {
     app.replaceChildren(el("p", {}, "This host can't show the question card. Answer in the chat instead."));
   }
