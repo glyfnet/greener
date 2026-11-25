@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Armidale Tree Group: 2026 koala habitat species list, the Saumarez, Invergowrie, Bee and Neighbour-Hider pack lists, and the Every Tree Counts brochure in the KB. The wholesale entry names the 9 species the group marks as not local to the New England Tablelands, and the cost table gains tree guard and stake prices (FR-41, FR-68).
+
 ### Changed
 
 - The plugin's `/greener-…` commands are now skills (each skill's `name` is its command), and the `commands/` folder is gone, so Claude no longer warns that the plugin uses the legacy command format. `/greener-export` has its own skill. The commands keep their names.
