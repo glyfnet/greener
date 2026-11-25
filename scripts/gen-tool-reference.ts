@@ -24,7 +24,8 @@ function render(): string {
   ];
   for (const t of TOOLS) {
     L.push(`## ${t.name}`, "", t.description, "");
-    if (t.meta) L.push(`UI resource: \`${String((t.meta.ui as { resourceUri?: string } | undefined)?.resourceUri ?? "")}\``, "");
+    // The card URI ends in a content hash; show it as <hash> so card edits don't change this file.
+    if (t.meta) L.push(`UI resource: \`${String((t.meta.ui as { resourceUri?: string } | undefined)?.resourceUri ?? "").replace(/\/[0-9a-f]{12}$/, "/<hash>")}\``, "");
     L.push("Input schema:", "", "```json", JSON.stringify(z.toJSONSchema(t.input, { io: "input", unrepresentable: "any" }), null, 2), "```", "");
   }
   return L.join("\n");

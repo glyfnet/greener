@@ -97,7 +97,10 @@ for (const t of TOOLS) {
   console.log(`${isError ? "✗" : "✓"} ${t.name} (${ms} ms)`);
   if (isError) failures.push(`${t.name}: ${r.error?.message ?? JSON.stringify(r.result?.content).slice(0, 200)}`);
 }
-const res = await rpc("resources/read", { uri: "ui://intake-card" });
-if (!res.result) failures.push("ui://intake-card: resource not readable");
+// The card URI carries a content hash, so read the one the deployed server lists.
+const listed = await rpc("resources/list", {});
+const cardUri = ((listed.result?.resources as { uri: string }[] | undefined) ?? []).find((r) => r.uri.startsWith("ui://intake-card/"))?.uri;
+const res = cardUri ? await rpc("resources/read", { uri: cardUri }) : { result: undefined };
+if (!res.result) failures.push(`ui://intake-card: resource not listed or not readable (${cardUri ?? "none listed"})`);
 if (failures.length) fail(`Smoke test failed:\n  ${failures.join("\n  ")}`);
 console.log(`✓ all ${TOOLS.length} tools and the question card answered`);

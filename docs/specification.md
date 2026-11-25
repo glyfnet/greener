@@ -323,7 +323,7 @@ The MCP server shows each question as an interactive card in the conversation. T
 
 | Item | Specification |
 | --- | --- |
-| Tool | `ask_question(question_id)` returns the options as data and links a `ui://intake-card` resource. |
+| Tool | `ask_question(question_id)` returns the options as data and links a `ui://intake-card/<hash>` resource. The hash of the card HTML is in the URI, so hosts that cache by URI get a changed card. |
 | Card layout | Question text, 4–6 icon buttons in a 3 × 2 grid, *Other* button, *Back* and *Skip* links, a progress bar (for example 5 of 14). |
 | Answer | A button press sends the answer to the server, which saves it with `save_answer` and returns the next question. |
 | Other | Opens a one-line text box. Claude reads the text and maps it to the profile, or asks one follow-up. |
