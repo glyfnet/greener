@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Worker URLs on `eric-c93.workers.dev`: staging is deployed and passed the smoke test for all 25 tools, and the plugin, smoke script and install guide point at the production Worker that the first release deploys.
 - 7 KB items on native plants: the ANPSA plant guides, Botanic Gardens of Sydney's horticulturist's guide, the Casey and Cardinia indigenous plant guide (Victoria), CSIRO's Guide to Useful Native Plants from Eastern Temperate Australia, Conservation Volunteers Australia's Nature Block guide, and two online native nurseries (Native Plant Project, Australian Plants Online) with their delivery limits (FR-41).
 - Buy Me a Coffee link in `.github/FUNDING.yml` and the README (D-16).
 - Install guide for users (`docs/install.md`: plugin upload, connector-only on the Free plan, Team and Enterprise, Claude Code, Project setup) and a developer setup guide (`docs/developer-setup.md`: local testing, Cloudflare account, first deploy, free plan limits, monitoring).

@@ -35,7 +35,9 @@ Use this if you're on the Free plan, or if you only want Greener's tools without
 2. Select **+ Add**, then **Add custom connector**.
 3. For the name, enter `Greener`. For the URL, enter the Greener server address:
 
-   `TODO: the production server address is set at the first release`
+   `https://greener-production.eric-c93.workers.dev/mcp`
+
+   > TODO: this address starts working at the first release, when the production Worker is deployed.
 
 4. Select **Continue**. Under **Authentication**, choose **No sign in**, because Greener has no accounts.
 5. Select **Add**.

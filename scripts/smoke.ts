@@ -11,8 +11,8 @@
 import { TOOLS } from "../server/src/tools/registry.js";
 import { fail } from "./lib.js";
 
-// TODO: set these after the first deploy (they depend on the Cloudflare account subdomain).
-const DEFAULTS = { staging: "https://greener-staging.example.workers.dev/mcp", prod: "https://greener-production.example.workers.dev/mcp" };
+// The project's Workers on the eric-c93.workers.dev subdomain. Production is created by the first `npm run release`.
+const DEFAULTS = { staging: "https://greener-staging.eric-c93.workers.dev/mcp", prod: "https://greener-production.eric-c93.workers.dev/mcp" };
 
 const argv = process.argv.slice(2);
 const urlArg = argv.indexOf("--url");

@@ -89,7 +89,7 @@ npm run deploy:staging
 
 On the first deploy, if your account has no `workers.dev` subdomain yet, Wrangler asks you to set one up. You can see or change it later in the dashboard: **Workers & Pages → Your subdomain → Change**.
 
-The staging endpoint is then:
+The staging endpoint is then (the project's own is `https://greener-staging.eric-c93.workers.dev/mcp`):
 
 ```text
 https://greener-staging.<your-subdomain>.workers.dev/mcp
@@ -107,14 +107,13 @@ To try staging in claude.ai, add it as a custom connector (**Customize → Conne
 
 ## 5. Before the first release
 
-`npm run release` won't run until these placeholders are replaced ([release.md](release.md)):
+The project's Workers are on the `eric-c93.workers.dev` subdomain. Staging is `https://greener-staging.eric-c93.workers.dev/mcp`, and production will be `https://greener-production.eric-c93.workers.dev/mcp`. These are already set in `plugin/.claude-plugin/plugin.json`, `scripts/smoke.ts` and `docs/install.md`. If you deploy to your own account, set your own subdomain in those files, or set `SMOKE_STAGING_URL` and `SMOKE_PROD_URL` in your shell.
+
+`npm run release` won't run until this placeholder is replaced ([release.md](release.md)):
 
 | File | Set |
 | --- | --- |
 | `server/wrangler.toml` | `CONTACT_URL` in all three environments: the public repository URL, sent in the User-Agent (NFR-08) |
-| `plugin/.claude-plugin/plugin.json` | `mcpServers.greener.url`: `https://greener-production.<your-subdomain>.workers.dev/mcp` |
-| `scripts/smoke.ts` | `DEFAULTS` for staging and production, or set `SMOKE_STAGING_URL` and `SMOKE_PROD_URL` in your shell |
-| `docs/install.md` | The server address in Option B |
 
 The repository also has to be public, so that users can download the release zip and add the marketplace.
 

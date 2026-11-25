@@ -9,7 +9,7 @@
   "mcpServers": {
     "greener": {
       "type": "http",
-      "url": "https://greener.example.workers.dev/mcp"
+      "url": "https://greener-production.eric-c93.workers.dev/mcp"
     }
   },
   "commands": "./commands",
