@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- 4 more KB items: the Australian Plants Society NSW plant database, the City of Casey's web Indigenous Plant Guide, the Mornington Peninsula Shire native plant map, and WWF-Australia's native plants for balconies and gardens (FR-41).
 - 6 more KB items on growing natives: ABC News expert tips, Green Adelaide's plant choice page and local native plant map, the Phillip Island Bushbank planting guide, and the Ozbreed and Seasol guides (general advice only, no products or chemicals) (FR-41).
 - Worker URLs on `eric-c93.workers.dev`: staging is deployed and passed the smoke test for all 25 tools, and the plugin, smoke script and install guide point at the production Worker that the first release deploys.
 - 6 KB items on native plants: the ANPSA plant guides, Botanic Gardens of Sydney's horticulturist's guide, the Casey and Cardinia indigenous plant guide (Victoria), CSIRO's Guide to Useful Native Plants from Eastern Temperate Australia, Conservation Volunteers Australia's Nature Block guide, and the Native Plant Project online native nursery with its delivery limits (FR-41).

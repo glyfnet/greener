@@ -696,3 +696,101 @@ items:
       new leaves; prune them off), sawfly larvae, scale with sooty mould,
       myrtle rust on eucalypts, bottlebrushes and melaleucas, psyllid galls
       on lilly pillies, and root rot in waterlogged clay.
+
+  - id: aps-nsw-plant-database
+    title: Australian Plants Society NSW — Plant database
+    tier: link_catalogue
+    sourceUrl: https://resources.austplants.com.au/plant-database/
+    publisher: Australian Plants Society NSW (editor Dan Clarke)
+    licence: "Link and summary only. Licence not stated."
+    region: Australia (mostly NSW)
+    dateChecked: "2026-11-25"
+    tags: [plant database, plant profiles, NSW natives, trees, shrubs, ground covers, grasses, vines, ferns, cultivars, threatened species, growing natives]
+    summary: >-
+      A searchable database of growing profiles for Australian native plants,
+      written by members of the Australian Plants Society NSW. It passed 1,000
+      profiles of species and cultivars in January 2024, with a goal of 2,000.
+      Most plants are from NSW (coast, tablelands and western slopes), with
+      others from every state and territory. The table can be sorted and
+      filtered by botanical name, common name, family and category. The
+      categories are trees (usually one trunk, over 5 m), shrubs over 1 m,
+      shrubs under 1 m, ground covers, grasses and clumping plants, vines and
+      scramblers, and ferns, plus orchids and aquatic plants. Each entry links
+      to a profile page with a description and growing notes. Cultivars are
+      listed after the species, and some entries are marked as threatened,
+      such as Acacia bynoeana in NSW. Use it to check how a species grows
+      before adding it to a planting list, then confirm with Greener that the
+      species is native near the site (D-17).
+
+  - id: casey-indigenous-plant-guide-web
+    title: City of Casey — Indigenous Plant Guide (web edition)
+    tier: link_catalogue
+    sourceUrl: https://www.casey.vic.gov.au/indigenous-plant-guide
+    publisher: City of Casey
+    licence: "Link and summary only. All rights reserved (footer: 2026 City of Casey)."
+    region: VIC (City of Casey, south-east Melbourne)
+    dateChecked: "2026-11-25"
+    tags: [indigenous plants, Ecological Vegetation Classes, EVC, Casey, Victoria, butterflies, gliders, power lines, indigenous nurseries, trees, shrubs, grasses, bush foods]
+    summary: >-
+      The City of Casey's online plant guide, which replaces the older printed
+      Casey and Cardinia guide (still linked from the page) until a new
+      edition is made. It explains that indigenous plants are the ones that
+      grew in Casey before European settlement, and that not every Australian
+      native is local. Plants are grouped by the eight main pre-1750
+      Ecological Vegetation Classes in Casey, such as Grassy Woodland, with an
+      EVC map and plant list to download. Each species has notes on size,
+      vegetation class, needs and care, and uses for wildlife. Examples:
+      blackwood (Acacia melanoxylon) feeds the caterpillars of two
+      butterflies; golden wattle gum is eaten by gliders in winter; sweet
+      bursaria feeds the Bright Copper butterfly; river red gum is not
+      suitable near power lines; large kangaroo apple fruit is toxic until
+      fully ripe. Local plants need no extra water or fertiliser once
+      established. The page lists five local indigenous nurseries.
+
+  - id: mornington-peninsula-native-plant-guide
+    title: Mornington Peninsula Shire — Native plant guide (map)
+    tier: link_catalogue
+    sourceUrl: https://www.mornpen.vic.gov.au/Services/Environment/Natural-environment-and-biodiversity/Native-plant-guide
+    publisher: Mornington Peninsula Shire
+    licence: "Link and summary only. Licence not confirmed (footer: © 2026 Mornington Peninsula Shire, with a Disclaimer and Copyright link)."
+    region: VIC (Mornington Peninsula)
+    dateChecked: "2026-11-25"
+    tags: [indigenous plants, local plant lists, map, Mornington Peninsula, Victoria, vegetation types, grassy woodland, low maintenance, wildlife habitat]
+    summary: >-
+      The Mornington Peninsula Shire's native plant guide is an interactive
+      map rather than a booklet. Find a property by moving the map or typing
+      a street address, then select the pop-up to download the plant list for
+      the original vegetation type at that spot, for example a Grassy
+      Woodland plant list. The shire recommends local indigenous plants as a
+      simple way to get a low-maintenance garden that also gives habitat to
+      local wildlife. The page itself names no species; the species are in the
+      downloadable lists. It links to the shire's Plants of the Peninsula
+      pages and to its online biodiversity maps. For a site on the Mornington
+      Peninsula, tell the user to look up their address in this map and bring
+      the list back to Greener, which checks each species (D-17). Greener does
+      not send the address to this service.
+
+  - id: wwf-native-plants-balcony-garden
+    title: WWF-Australia — 9 Australian native plants to attract wildlife and bees to your balcony or garden
+    tier: link_catalogue
+    sourceUrl: https://wwf.org.au/blogs/9-australian-native-plants-and-trees-to-attract-wildlife-and-bees-to-your-apartment-balcony-or-garden
+    publisher: WWF-Australia
+    licence: "Link and summary only. The site says its text is under a Creative Commons licence but does not name which one; photos © WWF or used with permission."
+    region: Australia
+    dateChecked: "2026-11-25"
+    tags: [wildlife gardening, native bees, birds, balconies, apartments, pots, Eucalyptus, Banksia, Callistemon, Acacia, Telopea, Grevillea, Anigozanthos, Wahlenbergia, Xerochrysum]
+    summary: >-
+      A 2023 WWF-Australia article on nine groups of native plants that feed
+      wildlife in gardens and on apartment balconies. Gum trees (Eucalyptus)
+      support koalas, native bees and large birds. Banksias give nectar to
+      bees, birds and small mammals. Bottlebrushes (Callistemon) feed and
+      shelter possums, flying-foxes, lizards, insects and nectar-eating birds,
+      with little care. Wattles (Acacia) give birds food and shelter and bees
+      pollen. Waratahs (Telopea) attract many native birds. Grevilleas attract
+      insects, bees, butterflies and honeyeaters. Kangaroo paws (Anigozanthos)
+      give nectar to birds, insects and mammals and grow well in a sunny pot.
+      Native bluebell (Wahlenbergia stricta) suits pots and hanging baskets in
+      light shade and attracts bees and butterflies. Everlasting daisies
+      (Xerochrysum) like full sun and heat. It warns that some natives are
+      weeds outside their home range, so check council or nursery lists for
+      local species. Useful for the apartment strategy.
