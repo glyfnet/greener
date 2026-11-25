@@ -10,8 +10,13 @@ import { lookupAddress } from "../connectors/geocode.js";
 import { pendingGap } from "../connectors/pending.js";
 import { fail, ok } from "./context.js";
 import { defineTool } from "./define.js";
+import { INTAKE_CARD_VERSION } from "../generated/intake-card.js";
 
-export const INTAKE_CARD_URI = "ui://intake-card";
+/**
+ * The card's URI includes a hash of its HTML. Hosts cache UI resources by URI,
+ * so a new card needs a new URI or users keep seeing the old one.
+ */
+export const INTAKE_CARD_URI = `ui://intake-card/${INTAKE_CARD_VERSION}`;
 
 /**
  * Text the model reads with a card question. The card shows the question and

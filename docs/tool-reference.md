@@ -245,7 +245,7 @@ Input schema:
 
 Show one intake question as a card with buttons (MCP App). Hosts without MCP Apps get a numbered list in the text (FR-09). Omit questionId to get the next unanswered question; skipIds lists questions the user skipped for now.
 
-UI resource: `ui://intake-card`
+UI resource: `ui://intake-card/<hash>`
 
 Input schema:
 

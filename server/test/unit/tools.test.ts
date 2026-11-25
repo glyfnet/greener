@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import { buildServer, handleMcp } from "../../src/server.js";
 import { TOOLS } from "../../src/tools/registry.js";
+import { INTAKE_CARD_URI } from "../../src/tools/intake.js";
 import type { Tool } from "../../src/tools/define.js";
 import { action, FIRE_POINT, fixtureFetch, location, plan, profile, research, TEST_POINT, testContext } from "../helpers.js";
 
@@ -85,7 +86,9 @@ describe("intake tools", () => {
   });
 
   it("links the question card UI resource on ask_question (MCP Apps)", () => {
-    expect(tool("ask_question").meta).toMatchObject({ ui: { resourceUri: "ui://intake-card" }, "ui/resourceUri": "ui://intake-card" });
+    expect(tool("ask_question").meta).toMatchObject({ ui: { resourceUri: INTAKE_CARD_URI }, "ui/resourceUri": INTAKE_CARD_URI });
+    // A content hash in the URI, so hosts that cache by URI fetch a changed card.
+    expect(INTAKE_CARD_URI).toMatch(/^ui:\/\/intake-card\/[0-9a-f]{12}$/);
   });
 
   it("shows one card: save_answer has no card, and ask_question tells Claude not to repeat the card in chat", async () => {
@@ -377,11 +380,11 @@ describe("MCP over HTTP (stateless)", () => {
     expect(init).toMatchObject({ result: { serverInfo: { name: "greener" } } });
     const list = (await (await handleMcp(rpc({ jsonrpc: "2.0", id: 2, method: "tools/list", params: {} }), ctx)).json()) as { result: { tools: { name: string; _meta?: unknown }[] } };
     expect(list.result.tools).toHaveLength(TOOLS.length);
-    expect(list.result.tools.find((t) => t.name === "ask_question")?._meta).toMatchObject({ ui: { resourceUri: "ui://intake-card" } });
+    expect(list.result.tools.find((t) => t.name === "ask_question")?._meta).toMatchObject({ ui: { resourceUri: INTAKE_CARD_URI } });
     const called = (await (await handleMcp(rpc({ jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "geocode", arguments: { lat: -33.87, lon: 151.21 } } }), ctx, (l) => log.push(l))).json()) as { result: { structuredContent: unknown } };
     expect(called.result.structuredContent).toMatchObject({ location: { lat: -33.87 } });
     expect(log).toEqual([{ tool: "geocode", ms: expect.any(Number), result: "ok" }]);
-    const res = (await (await handleMcp(rpc({ jsonrpc: "2.0", id: 4, method: "resources/read", params: { uri: "ui://intake-card" } }), ctx)).json()) as { result: { contents: { mimeType: string; text: string }[] } };
+    const res = (await (await handleMcp(rpc({ jsonrpc: "2.0", id: 4, method: "resources/read", params: { uri: INTAKE_CARD_URI } }), ctx)).json()) as { result: { contents: { mimeType: string; text: string }[] } };
     expect(res.result.contents[0]?.mimeType).toBe("text/html;profile=mcp-app");
     expect(res.result.contents[0]?.text).toContain("ui/initialize");
     expect(res.result.contents[0]?.text).toContain("ui/notifications/size-changed");
