@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Question card: it now tells the host its height, so it is no longer cut off (MCP Apps `ui/notifications/size-changed`). Only `ask_question` opens a card, so answers saved from chat no longer add another card. The model is told not to repeat a card's question as text, and tapping Other more than once shows only one answer box. When the card finishes, its message to Claude now carries the whole profile, because some hosts do not pass on model context updates and the answers were lost (FR-07, FR-09, D-09).
+
 ### Added
 
 - 4 more KB items: the Australian Plants Society NSW plant database, the City of Casey's web Indigenous Plant Guide, the Mornington Peninsula Shire native plant map, and WWF-Australia's native plants for balconies and gardens (FR-41).

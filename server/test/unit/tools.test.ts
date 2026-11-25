@@ -88,6 +88,15 @@ describe("intake tools", () => {
     expect(tool("ask_question").meta).toMatchObject({ ui: { resourceUri: "ui://intake-card" }, "ui/resourceUri": "ui://intake-card" });
   });
 
+  it("shows one card: save_answer has no card, and ask_question tells Claude not to repeat the card in chat", async () => {
+    expect(tool("save_answer").meta).toBeUndefined();
+    const first = await call("ask_question", {});
+    expect(first.content[0]?.text).toMatch(/^If this host shows MCP App cards/);
+    expect(first.content[0]?.text).toContain("do not repeat the question");
+    const saved = await call("save_answer", { questionId: "location", answer: { optionIds: ["use_my_location"] }, location });
+    expect(saved.content[0]?.text).not.toContain("MCP App cards");
+  });
+
   it("refuses an answer that does not fit, and an unknown question", async () => {
     expect((await call("save_answer", { questionId: "site_type", answer: { optionIds: ["castle"] } })).isError).toBe(true);
     expect((await call("save_answer", { questionId: "nope", answer: { optionIds: ["x"] } })).isError).toBe(true);
@@ -375,6 +384,9 @@ describe("MCP over HTTP (stateless)", () => {
     const res = (await (await handleMcp(rpc({ jsonrpc: "2.0", id: 4, method: "resources/read", params: { uri: "ui://intake-card" } }), ctx)).json()) as { result: { contents: { mimeType: string; text: string }[] } };
     expect(res.result.contents[0]?.mimeType).toBe("text/html;profile=mcp-app");
     expect(res.result.contents[0]?.text).toContain("ui/initialize");
+    expect(res.result.contents[0]?.text).toContain("ui/notifications/size-changed");
+    expect(res.result.contents[0]?.text).toContain("Here is my site profile");
+    expect(res.result.contents[0]?.text).not.toMatch(/\bexports\./);
     expect(res.result.contents[0]?.text).not.toContain("/*CARD_SCRIPT*/");
   });
 });

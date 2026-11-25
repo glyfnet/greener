@@ -465,9 +465,7 @@ Input schema:
 
 ## save_answer
 
-Save one answer and get the next question. Also use it to change one answer later without repeating the questionnaire (FR-06). Returns the updated profile: keep it and pass it to the next call.
-
-UI resource: `ui://intake-card`
+Save one answer and get the next question. Use it when the user answers in chat; while a question card is open, the card calls it itself. Also use it to change one answer later without repeating the questionnaire (FR-06). Returns the updated profile: keep it and pass it to the next call.
 
 Input schema:
 

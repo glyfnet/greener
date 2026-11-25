@@ -13,6 +13,14 @@ import { defineTool } from "./define.js";
 
 export const INTAKE_CARD_URI = "ui://intake-card";
 
+/**
+ * Text the model reads with a card question. The card shows the question and
+ * saves the answers itself, so Claude must not repeat it in chat or call the
+ * intake tools again while the card is open (one card, not one per answer).
+ */
+export const CARD_NOTE =
+  "If this host shows MCP App cards, the user now sees this question in a Greener card with buttons, and the card saves each answer and moves to the next question itself. Then do not repeat the question or its options in chat, and do not call ask_question or save_answer while the card is in use: say one short line such as \"Answer in the card above.\" and wait until the user says they have finished. If the host cannot show cards (for example a terminal), or the user says no card appeared, ask in chat with this numbered list and use save_answer for each reply:\n\n";
+
 const Draft = SiteProfile.optional().describe("The site profile so far. Omit to start a new site.");
 
 function questionPayload(q: Question, progress: { index: number; total: number }) {
@@ -77,16 +85,16 @@ export const askQuestion = defineTool({
       if (!next) return ok({ complete: true, profile: p, followUps: followUps(ctx.data.bank, p) }, "All questions are answered. Call save_profile to check and save the profile.");
       payload = questionPayload(next.question, next.progress);
     }
-    return ok({ complete: false, profile: p, ...payload }, payload.numberedList);
+    return ok({ complete: false, profile: p, ...payload }, CARD_NOTE + payload.numberedList);
   },
 });
 
 export const saveAnswer = defineTool({
   name: "save_answer",
   title: "Save an answer",
-  description: "Save one answer and get the next question. Also use it to change one answer later without repeating the questionnaire (FR-06). Returns the updated profile: keep it and pass it to the next call.",
+  description: "Save one answer and get the next question. Use it when the user answers in chat; while a question card is open, the card calls it itself. Also use it to change one answer later without repeating the questionnaire (FR-06). Returns the updated profile: keep it and pass it to the next call.",
   input: z.object({ profile: Draft, questionId: z.string().min(1), answer: Answer, location: Location.optional().describe("Only for the location question") }),
-  meta: { ui: { resourceUri: INTAKE_CARD_URI }, "ui/resourceUri": INTAKE_CARD_URI },
+  // No card here: the open card calls this tool itself, and a card per saved answer stacks up in chat.
   handler: ({ profile, questionId, answer, location }, ctx) => {
     const p = profile ?? SiteProfile.parse({});
     const q = findQuestion(ctx.data.bank, p.answers, questionId);
