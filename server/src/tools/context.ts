@@ -3,6 +3,7 @@
  * Worker keeps no mutable state between requests (Section 12.2).
  */
 import type { DeclaredWeed } from "../core/checks.js";
+import type { SpeciesImage } from "../core/images.js";
 import type { Nursery } from "../core/nurseries.js";
 import type { CostRow } from "../core/models.js";
 import type { QuestionBank } from "../core/questionnaire.js";
@@ -16,6 +17,7 @@ export interface StaticData {
   costTable: CostRow[];
   declaredWeeds: DeclaredWeed[];
   nurseries: Nursery[];
+  speciesImages: SpeciesImage[];
   intakeCardHtml: string;
 }
 

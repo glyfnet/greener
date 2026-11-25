@@ -42,6 +42,7 @@ relevant section before starting any task.
 | `npm run build:plugin` | Zip `plugin/` for upload / GitHub release |
 | `npm run docs:tools` | Regenerate `docs/tool-reference.md` from the Zod schemas |
 | `npm run fixtures:record` | Re-record ALA fixtures from live responses (on purpose only) |
+| `npm run images:record -- <name>...` | Add Commons species photos to `data/species-images.csv` (review each row by hand — D-23) |
 | `npm run deploy:staging` | Build index + deploy to staging Worker |
 | `npm run smoke` | Call each MCP tool on a deployed Worker and check responses |
 | `npm run release -- <version>` | Full release: check, bump, changelog, deploy, zip, tag, GitHub release |

@@ -28,6 +28,7 @@ plugin/skills/*  ──MCP (Streamable HTTP, stateless)──▶  server/src/ind
 | `core/render.ts` | FR-50, FR-30, NFR-17 | Markdown export with sources and attribution, plan sections, site search. |
 | `connectors/http.ts` | 12.2, FR-16, NFR-07, NFR-08 | Host allow list, timeout, retry with backoff, 7-day edge cache, contact User-Agent. Never throws. |
 | `connectors/ala.ts` | FR-10, FR-11, FR-33, NFR-01 | ALA occurrence facets, species search and name matching. Fixtures are in `server/test/fixtures/ala/`. |
+| `core/images.ts`, `connectors/images.ts` | FR-17, D-23 | Species photos: the licence allow list, the `data/species-images.csv` schema, and the live Wikidata → Commons lookup. |
 | `connectors/pending.ts` | Section 8 | Sources still marked "To check" return a data gap (rule 4). |
 | `rag/*` | 7.4, D-06 | Manifest schema and tier rules, Markdown chunking (about 500 tokens, 15% overlap), BM25 with an access filter and re-ranking. |
 | `ui/intake-card/` | 7.3, FR-07 | MCP App question card: plain HTML and TypeScript, inlined at build time. |
@@ -99,6 +100,7 @@ These are warnings, not refusals: `save_plan` returns them with the `strategyId`
 | Native nursery directory (FR-20) | 4 entries in Armidale and Uralla (`data/native-nurseries.csv`). Other regions still to add. |
 | Declared weed list | 126 Greater Sydney priority weeds from NSW WeedWise, applied across NSW. Other regions are still to add. |
 | Cost reference | 2 rows (YAN nurseries, southern tablelands). Sydney prices are listed in `data/README.md`, still to be checked by hand (Q-12). |
+| Species photos (FR-17) | `get_species_images` is done (D-23). Showing photos in the research report, plan and export is the next step. 16 starter rows, all still to review by hand. |
 | Icon set | Text placeholders (Q-14). |
 | Apartment question count | 17, not the "about 14" in Section 7.3 (TODO in `data/question-bank.yaml`). |
 | Contact URL | Placeholder until the repository is public. `npm run release` refuses to run while it is set. The Worker URLs are set; staging is deployed and passed `npm run smoke`, and production is deployed by the first release. |

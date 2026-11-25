@@ -19,6 +19,7 @@ The server is stateless (D-09): tools that need site data take it as input, and 
 | [`soil_properties`](#soil_properties) | Get soil properties |
 | [`vegetation_community`](#vegetation_community) | Get the pre-clearing vegetation community |
 | [`weed_status`](#weed_status) | Check declared weed status |
+| [`get_species_images`](#get_species_images) | Get species photos |
 | [`save_research`](#save_research) | Check and save the research report |
 | [`search_knowledge`](#search_knowledge) | Search the global knowledge base |
 | [`get_site_strategies`](#get_site_strategies) | Get strategies for this site |
@@ -1379,6 +1380,35 @@ Input schema:
       "default": "NSW",
       "type": "string",
       "const": "NSW"
+    }
+  },
+  "required": [
+    "names"
+  ]
+}
+```
+
+## get_species_images
+
+Get a photo for each plant or animal species, from Wikimedia Commons (FR-17, D-23). Each result has a thumbnail link, the Commons file page, the creator, the licence, a credit line and ready-made Markdown. Use it for the key species in the research report and the planting list, and when the user asks what a species looks like. Show the credit line with every photo. Photos marked reviewed: false were not checked by Greener, so call them example photos, not identification guides. At most 12 species a call are looked up live; the rest come back in `retry`.
+
+Input schema:
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "names": {
+      "minItems": 1,
+      "maxItems": 25,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 120
+      },
+      "description": "Scientific names, as check_species or the research report give them"
     }
   },
   "required": [

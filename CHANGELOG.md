@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Species photos (FR-17, D-23): the `get_species_images` tool returns a Wikimedia Commons photo for each species, with the creator, licence, a credit line and Markdown. Photos come from `data/species-images.csv` (16 starter rows from the Armidale Tree Group koala list, recorded with `npm run images:record`) or a live Wikidata and Commons lookup. Only CC0, public domain, CC BY and CC BY-SA photos are accepted.
 - Armidale Tree Group: 2026 koala habitat species list, the Saumarez, Invergowrie, Bee and Neighbour-Hider pack lists, and the Every Tree Counts brochure in the KB. The wholesale entry names the 9 species the group marks as not local to the New England Tablelands, and the cost table gains tree guard and stake prices (FR-41, FR-68).
 
 ### Changed

@@ -1,7 +1,7 @@
 /**
  * `npm run fixtures:record [-- <source>...]` — record live API responses as
  * test fixtures (rule 4, Section 12.3). Run on purpose only, never in a normal
- * test run. Sources: ala, bushfire, geocode, vegetation, climate, soil. With
+ * test run. Sources: ala, bushfire, geocode, vegetation, climate, soil, images. With
  * no argument, all are recorded.
  *
  * Test points are public places, not user sites: Hyde Park in central Sydney,
@@ -14,6 +14,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { establishmentUrl, NEAR_QUERIES, occurrenceUrl } from "../server/src/connectors/ala.js";
 import { bushfireUrl } from "../server/src/connectors/bushfire.js";
 import { climateUrl } from "../server/src/connectors/climate.js";
+import { commonsInfoUrl, wikidataImageUrl } from "../server/src/connectors/images.js";
 import { addressUrl } from "../server/src/connectors/geocode.js";
 import { SOIL_ATTRIBUTES, soilUrl } from "../server/src/connectors/soil.js";
 import { vegetationUrl } from "../server/src/connectors/vegetation.js";
@@ -62,6 +63,13 @@ const SOURCES: Record<string, Target[]> = {
   ],
   climate: [
     { name: "katoomba", url: climateUrl(FIRE_POINT.lat, FIRE_POINT.lon) },
+  ],
+  images: [
+    { name: "wikidata-lomandra-longifolia", url: wikidataImageUrl("Lomandra longifolia") },
+    { name: "commons-lomandra-longifolia", url: commonsInfoUrl("Lomandra_longifolia.jpg") },
+    { name: "wikidata-phascolarctos-cinereus", url: wikidataImageUrl("Phascolarctos cinereus") },
+    { name: "commons-phascolarctos-cinereus", url: commonsInfoUrl("Koala_climbing_tree.jpg") },
+    { name: "wikidata-not-a-plant", url: wikidataImageUrl("Notaplant fakeus") },
   ],
   soil: SOIL_ATTRIBUTES.map((a) => ({ name: `sydney-${a.code.toLowerCase()}`, url: soilUrl(a.code, TEST_POINT.lat, TEST_POINT.lon) })),
 };

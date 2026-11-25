@@ -24,6 +24,9 @@ export const ALLOWED_HOSTS = new Set([
   "soils.csiro.au",
   // D-21: Open-Meteo Historical Weather API.
   "archive-api.open-meteo.com",
+  // D-23: species photos (Wikidata image, Commons licence and creator).
+  "www.wikidata.org",
+  "commons.wikimedia.org",
 ]);
 
 /** FR-16 default cache time to live. */

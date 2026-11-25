@@ -19,7 +19,7 @@ Out of scope for release 1 (MVP): Indigenous ecological knowledge, user accounts
 
 ## 2. Decision log
 
-Twenty-two decisions are closed. Each new decision gets a new row.
+Twenty-three decisions are closed. Each new decision gets a new row.
 
 | ID | Decision | Result | Effect on design |
 | --- | --- | --- | --- |
@@ -45,8 +45,9 @@ Twenty-two decisions are closed. Each new decision gets a new row.
 | D-20 | Vegetation community source | NSW State Vegetation Type Map, pre-clearing (CC BY) | `vegetation_community` returns the likely original Plant Community Type at 3 decimal places, not cached (FR-14). |
 | D-21 | Climate source (closes Q-06) | Open-Meteo Historical Weather API, ERA5 1991–2020 (CC BY 4.0, free non-commercial tier; donations permitted) | `climate_normals` computes monthly temperature and rainfall and cold-night counts at 1 decimal place, cached 30 days (FR-12). |
 | D-22 | Soil source | Soil and Landscape Grid of Australia map services on `soils.csiro.au` (CC BY 4.0) | `soil_properties` returns modelled pH, clay, sand and organic carbon at 0–5 and 5–15 cm, 3 decimal places, not cached (FR-13). |
+| D-23 | Species photos | Wikimedia Commons photos picked by Wikidata (P18), stored as links in `data/species-images.csv` and reviewed by hand; other species looked up live. Only CC0, public domain, CC BY and CC BY-SA. | `get_species_images` returns a thumbnail link, file page, creator, licence and credit line, never image bytes. Unreviewed photos are labelled as examples (FR-17). |
 
-D-05 and D-06 changed on 24 Nov 2026 so that non-technical users need no install and no local setup. D-17 was added on 24 Nov 2026 by the maintainer. D-18 to D-22 were added on 25 Nov 2026, when each data source was checked; the ADRs in `docs/adr/` record what was checked.
+D-05 and D-06 changed on 24 Nov 2026 so that non-technical users need no install and no local setup. D-17 was added on 24 Nov 2026 by the maintainer. D-18 to D-22 were added on 25 Nov 2026, when each data source was checked; the ADRs in `docs/adr/` record what was checked. D-23 was added on 26 Nov 2026 at the maintainer's request.
 
 ## 3. Users and use cases
 
@@ -100,6 +101,7 @@ Priority uses MoSCoW: M = must, S = should, C = could. Release 1 contains all M 
 | FR-14 | The system should identify the pre-clearing vegetation community for the site from state vegetation maps. | S |
 | FR-15 | The research agent must write a report. It must list key native plants, key fauna, threatened species, invasive species and data gaps. | M |
 | FR-16 | The system must cache API responses. Default time to live: 7 days. | M |
+| FR-17 | The system should show a photo of key species in research and plan output, with the creator, licence and a link to the source page. Only licences that allow reuse with attribution, and no image bytes on the server (D-23). | S |
 
 ### 4.3 Action plan
 
@@ -464,6 +466,7 @@ ALA is the primary species source. Rows marked *Confirmed* have a decision row a
 | Pre-clearing vegetation | [NSW State Vegetation Type Map, pre-clearing](https://data.nsw.gov.au/data/dataset/nsw-state-vegetation-type-map-pre-clearing) `VIS/SVTM_NSW_1750_PCT` identify | Public, CC BY | Confirmed (D-20) |
 | Climate | [Open-Meteo Historical Weather API](https://open-meteo.com/en/docs/historical-weather-api) (ERA5) | Free non-commercial tier, CC BY 4.0 | Confirmed (D-21) |
 | Soil | Soil and Landscape Grid of Australia map services, `soils.csiro.au/arcgis/rest/services/TERN` | Public, CC BY 4.0 | Confirmed (D-22) |
+| Species photos | [Wikidata](https://www.wikidata.org/w/api.php) taxon image (P225 name, P18 image) and [Wikimedia Commons](https://commons.wikimedia.org/w/api.php) `imageinfo` | Public; licence per file (CC0, PD, CC BY, CC BY-SA used) | Confirmed (D-23). ALA's preferred images were checked and rejected: most are CC BY-NC or have no licence |
 | Bushfire-prone land | [NSW RFS Bush Fire Prone Land](https://data.nsw.gov.au/data/dataset/bush-fire-prone-land) FeatureServer on `portal.spatial.nsw.gov.au` | Public, CC BY | Confirmed (D-18) |
 | Geocoding | [NSW Address Location Service](https://data.nsw.gov.au/data/dataset/1602c6c4-d396-4890-a031-388d83635b5a) on `maps.six.nsw.gov.au` | Public, CC BY | Confirmed for street addresses (D-19). Suburb centroids: licence to check |
 | Council planting lists | Council websites, as documents for RAG | Public documents | Manual collection |

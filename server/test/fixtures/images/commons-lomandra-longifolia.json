@@ -1,0 +1,57 @@
+{
+  "url": "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3ALomandra_longifolia.jpg&prop=imageinfo&iiprop=url%7Cextmetadata&iiurlwidth=320&iiextmetadatafilter=LicenseShortName%7CArtist&format=json&formatversion=2",
+  "recordedAt": "2026-11-25T21:01:27.440Z",
+  "status": 200,
+  "body": {
+    "batchcomplete": true,
+    "query": {
+      "normalized": [
+        {
+          "fromencoded": false,
+          "from": "File:Lomandra_longifolia.jpg",
+          "to": "File:Lomandra longifolia.jpg"
+        }
+      ],
+      "pages": [
+        {
+          "pageid": 8448658,
+          "ns": 6,
+          "title": "File:Lomandra longifolia.jpg",
+          "imagerepository": "local",
+          "imageinfo": [
+            {
+              "thumburl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Lomandra_longifolia.jpg/330px-Lomandra_longifolia.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+              "thumbwidth": 320,
+              "thumbheight": 482,
+              "responsiveUrls": {
+                "2": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Lomandra_longifolia.jpg/960px-Lomandra_longifolia.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+              },
+              "thumbattribs": {
+                "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Lomandra_longifolia.jpg/330px-Lomandra_longifolia.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+                "decoding": "async",
+                "loading": "lazy",
+                "width": 320,
+                "height": 482,
+                "srcset": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Lomandra_longifolia.jpg/960px-Lomandra_longifolia.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail 2x"
+              },
+              "url": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Lomandra_longifolia.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+              "descriptionurl": "https://commons.wikimedia.org/wiki/File:Lomandra_longifolia.jpg",
+              "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/8448658",
+              "extmetadata": {
+                "Artist": {
+                  "value": "<a href=\"//commons.wikimedia.org/wiki/User:Eric_in_SF\" title=\"User:Eric in SF\">Eric in SF</a>",
+                  "source": "commons-desc-page"
+                },
+                "LicenseShortName": {
+                  "value": "CC BY-SA 3.0",
+                  "source": "commons-desc-page",
+                  "hidden": ""
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
