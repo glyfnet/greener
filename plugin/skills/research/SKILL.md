@@ -1,5 +1,5 @@
 ---
-name: greener-research
+name: research
 description: Use when the user wants local species, climate and soil data for their site, a research report. Needs a saved site profile.
 ---
 
@@ -7,7 +7,7 @@ description: Use when the user wants local species, climate and soil data for th
 
 Implements FR-10–FR-16 and NFR-07.
 
-1. Read `profile.yaml` (see *Site files*) and call `get_site`. If there is no location, run `/greener-new` first.
+1. Read `profile.yaml` (see *Site files*) and call `get_site`. If there is no location, run `/greener:new` first.
 2. Call `ala_species_near` with the profile's `location` (default radius 10 km).
 3. Call `ala_species_profile` for up to 10 key species: the most recorded native plants, and threatened species that fit the user's goals.
 4. Call `weed_status` with the introduced and invasive species names. These are removal targets for hand weeding, never for spraying (D-17).

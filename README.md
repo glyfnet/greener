@@ -15,7 +15,7 @@ Decision log).
 
 Follow the [install guide](docs/install.md): upload the plugin in
 **Customize → Plugins** (paid plans), or add the connector in
-**Customize → Connectors** (any plan). Then run `/greener-new` in a
+**Customize → Connectors** (any plan). Then run `/greener:new` in a
 Project for your site. No API key and no local setup.
 
 ## For developers

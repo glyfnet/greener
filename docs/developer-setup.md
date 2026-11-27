@@ -46,7 +46,7 @@ claude mcp add --transport http greener-local http://localhost:8787/mcp
 claude --plugin-dir plugin
 ```
 
-`--plugin-dir` loads the skills (the `/greener-…` commands) from your working copy. The plugin's own server entry points at the deployed URL in `plugin/.claude-plugin/plugin.json`, so use the `greener-local` tools while you test.
+`--plugin-dir` loads the skills (the `/greener:…` commands) from your working copy. The plugin's own server entry points at the deployed URL in `plugin/.claude-plugin/plugin.json`, so use the `greener-local` tools while you test.
 
 You don't need a Cloudflare account for any of this.
 

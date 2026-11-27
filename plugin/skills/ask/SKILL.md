@@ -1,5 +1,5 @@
 ---
-name: greener-ask
+name: ask
 argument-hint: "<question>"
 description: Use when the user asks a free-text question about their site, its species, its plan or biodiversity on their land.
 ---

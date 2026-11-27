@@ -389,14 +389,14 @@ To continue later, the user opens the same Project or attaches the site file. An
 
 | Command | Action |
 | --- | --- |
-| `/greener-new` | Start the intake skill for a new site. |
-| `/greener-research` | Get data and write the report. |
-| `/greener-plan` | Write a new plan version. |
-| `/greener-ask` | Ask about a site, its species or its plan. |
-| `/greener-add-docs` | Add documents to a site or the IEK index. |
-| `/greener-export` | Export the plan as Markdown, JSON or PDF. |
+| `/greener:new` | Start the intake skill for a new site. |
+| `/greener:research` | Get data and write the report. |
+| `/greener:plan` | Write a new plan version. |
+| `/greener:ask` | Ask about a site, its species or its plan. |
+| `/greener:add-docs` | Add documents to a site or the IEK index. |
+| `/greener:export` | Export the plan as Markdown, YAML or PDF. |
 
-Each command is a skill: `plugin/skills/<folder>/SKILL.md`, whose `name` is the command. There is no `commands/` folder, which Claude now treats as a legacy format. In Claude Code a command can also show as `/greener:greener-new`.
+Each command is a skill: `plugin/skills/<name>/SKILL.md`, whose `name` is the command. Claude adds the plugin name as a prefix, so the skill `new` is `/greener:new`; the names carry no `greener-` of their own. There is no `commands/` folder, which Claude now treats as a legacy format.
 
 Users can also ask in plain words. Claude picks the right skill from its description.
 

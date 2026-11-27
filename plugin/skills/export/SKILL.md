@@ -1,5 +1,5 @@
 ---
-name: greener-export
+name: export
 description: Use when the user wants to export, download or save their Greener action plan as Markdown, YAML or PDF.
 argument-hint: "[markdown|yaml]"
 ---
