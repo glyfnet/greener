@@ -1,5 +1,5 @@
 ---
-name: greener-add-docs
+name: add-docs
 description: Use when the user wants to add their own documents or notes to their site's local knowledge base.
 ---
 
@@ -17,8 +17,8 @@ Project knowledge or a local folder), and it must never go to the server
    files*). On claude.ai, the user adds it to the Project's knowledge with
    **+**. A file already in the Project needs nothing more. Keep items
    organised per site if the user manages more than one.
-3. Confirm what was saved and remind the user that `/greener-ask` and
-   `/greener-plan` will search this local KB alongside the global one, and
+3. Confirm what was saved and remind the user that `/greener:ask` and
+   `/greener:plan` will search this local KB alongside the global one, and
    will cite it by source (FR-44).
 
 ## Site files

@@ -7,14 +7,14 @@ Menu names below come from Claude's help pages, checked on 25 November 2026. Cla
 ## What you need
 
 - A Claude account at [claude.ai](https://claude.ai). You can use the web, the desktop app or the mobile app.
-- For the full Greener plugin, with its guided `/greener-…` commands, you need a **paid plan**: Pro, Max, Team or Enterprise. Claude's help page lists plugins for paid plans only.
+- For the full Greener plugin, with its guided `/greener:…` commands, you need a **paid plan**: Pro, Max, Team or Enterprise. Claude's help page lists plugins for paid plans only.
 - On the **Free** plan you can still add the Greener *connector* (see [Option B](#option-b-connector-only-any-plan)). You get Greener's data and checks, but not the guided commands.
 
 Greener is free. It has no account, no sign-in and no API key.
 
 ## Option A: install the plugin (paid plans, recommended)
 
-The plugin gives you the guided commands (`/greener-new`, `/greener-plan` and the others) and connects to the Greener server for you.
+The plugin gives you the guided commands (`/greener:new`, `/greener:plan` and the others) and connects to the Greener server for you.
 
 1. Download the latest `greener-plugin-<version>.zip` from the [Greener releases page](https://github.com/glyfnet/greener/releases). Don't unzip it.
 2. In Claude, open **Customize → Plugins**.
@@ -44,7 +44,7 @@ Use this if you're on the Free plan, or if you only want Greener's tools without
 
 The Free plan allows one custom connector.
 
-Without the plugin, there are no `/greener-…` commands. Ask in plain words instead, for example: *"Use Greener to help me plan native plantings for my backyard in Armidale."*
+Without the plugin, there are no `/greener:…` commands. Ask in plain words instead, for example: *"Use Greener to help me plan native plantings for my backyard in Armidale."*
 
 ## Team and Enterprise plans
 
@@ -69,7 +69,7 @@ To update it, open `/plugin`, go to the **Installed** tab, select Greener and ch
 1. **Make a Project for your site.** Go to [claude.ai/projects](https://claude.ai/projects) and select **+ New Project**. Name it after your site, for example "Backyard, Uralla". Start every Greener chat for this site from the Project's page, or move a chat into it with the arrow next to the chat's name → **Add to project**. The Greener server keeps nothing ([privacy](privacy.md)).
 2. **Turn on web search**, so Claude can open the guides that Greener links to. TODO: check the current setting name in Claude's help.
 3. **Make sure Greener is on in the chat.** Select **+** at the bottom left, go to **Connectors**, and check that Greener is turned on.
-4. **Start:** type `/greener-new`. Claude asks about 20 short questions about your site.
+4. **Start:** type `/greener:new`. Claude asks about 20 short questions about your site.
 5. **Keep your site files.** Claude can't add files to a Project by itself. When Greener gives you `profile.yaml`, download it and add it to the Project's knowledge with **+** (on the right of the Project's page). Do the same for `research.yaml` and each plan. Later chats in the Project read them from there. See [Your site files](user-guide.md#your-site-files), then go on with the [user guide](user-guide.md).
 
 ## Mobile
@@ -88,7 +88,7 @@ Removing Greener doesn't delete your Project. Your answers and plans stay in you
 
 | Problem | What to try |
 | --- | --- |
-| `/greener-new` doesn't appear when you type `/` | Check the plugin is turned on, and that **Code execution and file creation** is on. |
+| `/greener:new` doesn't appear when you type `/` | Check the plugin is turned on, and that **Code execution and file creation** is on. |
 | Claude says it can't reach Greener | Check Greener is on in the chat's **+ → Connectors** menu. If it still fails, the server may be down for a while, so try again later. |
 | An answer says "data gap" | Greener couldn't get that data, for example because your site is outside NSW or a public data service didn't answer. This is expected, and Greener won't guess. |
 | Something else | Open an issue on the [GitHub repository](https://github.com/glyfnet/greener/issues). |

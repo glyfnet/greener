@@ -1,5 +1,5 @@
 ---
-name: greener-new
+name: new
 description: Use when the user wants to start a new Greener site, change an answer about their site, load site answers from a file. Builds the site profile with the standard question bank.
 ---
 
